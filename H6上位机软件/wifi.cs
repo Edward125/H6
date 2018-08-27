@@ -181,13 +181,91 @@ namespace H6
 
         }
 
-        public enum DOT11_CHIPER_ALGORITHM
+        public enum DOT11_CIPER_ALGORITHM
         {
-            DOT11_CHIPER_ALGO_NONE = 0,
-            DOT11_CHIPER_ALGO_WEP40 = 1,
-            DOT11_CHIPER_ALGO_TKIP =2,
-            DOT11_CHIPER_ALGO_CCMP = 4,            
+            DOT11_CIPER_ALGO_NONE = 0,
+            DOT11_CIPER_ALGO_WEP40 = 1,
+            DOT11_CIPER_ALGO_TKIP =2,
+            DOT11_CIPER_ALGO_CCMP = 4,
+            DOT11_CIPER_ALGO_WEP104 = 5,
+            DOT11_CIPER_ALGO_WPA_USE_GROUP = 256,
+            DOT11_CIPER_ALGO_RSN_USE_GROUP = 256,
+            DOT11_CIPER_ALGO_WEP = 257,
+            DOT11_CIPER_ALGO_IHV_START=-2147483648,
+            DOT11_CIPER_ALGO_IHV_END = -1
 
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        public struct WLAN_AVAILABLE_NETWORK
+        {
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+            public string strProfileName;
+            public DOT11_SSID dot11Ssid;
+            public DOT11_BSS_TYPE dot11BssType;
+            public uint uNumberOfBssids;
+            public bool bNetworkConnectable;
+            public uint wlanNotConnectableReason;
+            public uint uNumberOfPhyTypes;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
+            public DOT11_PHY_TYPE[] dot11PhyTypes;
+            public bool bMorePhyTypes;
+            public uint wlanSignalQuality;
+            public bool bSecurityEnabled;
+            public DOT11_AUTH_ALGORITHM dot11DefaultAuthAlgorithm;
+            public DOT11_CIPER_ALGORITHM dot11DefaultCipherAlgorithm;
+            public uint dwFlags;
+            public uint dwReserved;
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        struct WLAN_AVALABLE_NETWORK_LIST
+        {
+
+            internal uint dwNumberOfItems;
+            internal uint dwIndex;
+            internal WLAN_AVAILABLE_NETWORK[] wlanAvailableNetwork;
+            internal WLAN_AVALABLE_NETWORK_LIST(IntPtr ppAvailableNetworkList)
+            {
+                dwNumberOfItems = (uint)Marshal.ReadInt32(ppAvailableNetworkList);
+                dwIndex = (uint)Marshal.ReadInt32(ppAvailableNetworkList, 4);
+                wlanAvailableNetwork = new WLAN_AVAILABLE_NETWORK[dwNumberOfItems];
+                for (int i = 0; i < dwNumberOfItems; i++)
+                {
+                    IntPtr pWlanAvailableNetwork = new IntPtr(ppAvailableNetworkList.ToInt32() + i * Marshal.SizeOf(typeof(WLAN_AVAILABLE_NETWORK)) + 8);
+                    wlanAvailableNetwork[i] = (WLAN_AVAILABLE_NETWORK)Marshal.PtrToStructure(pWlanAvailableNetwork, typeof(WLAN_AVAILABLE_NETWORK));
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void EnumerateAvailableNetwork()
+        {
+            uint serviceVersion = 0;
+            IntPtr handle = IntPtr.Zero;
+            int result;
+            result = (int)WlanOpenHandle(2, IntPtr.Zero, out serviceVersion, ref handle);
+            Console.WriteLine(result);
+            IntPtr ppInterfaceList = IntPtr.Zero;
+            WLAN_AVALABLE_NETWORK_LIST interfaceList;
+
+            if(WlanEnumInterfaces(handle,IntPtr.Zero,ref ppInterfaceList) == 0)
+            {
+                interfaceList = new WLAN_AVALABLE_NETWORK_LIST(ppInterfaceList);
+                Console.WriteLine("有{0}个无线网络适配器", interfaceList.dwNumberOfItems);
+
+
+            }
         }
     }
 }
