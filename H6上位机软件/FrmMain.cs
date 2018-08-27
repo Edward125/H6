@@ -88,7 +88,8 @@ namespace H6
             gb_StatusCommand.Width = 458;
             gb_StatusCommand.Height = 475;
             //设定状态显示窗口位置
-            gb_StatusCommand.Location = new Point(453,11);
+            //gb_StatusCommand.Location = new Point(453,11);
+            gb_StatusCommand.Location = new Point(453, 90);
             //状态命令大小
             lb_StateInfo.Width = 440;
             lb_StateInfo.Height = 450;
@@ -104,7 +105,7 @@ namespace H6
             //不能使用最小化窗口： 
             this.MinimizeBox = false;
             //私版
-            this.Text = "恒安警用装备 V1.0.4"; 
+            this.Text = "恒安警用执法记录仪管理软件,Ver:" + Application.ProductVersion; 
             //公版
             //this.Text = "执法仪上位机 V1.0.4";
             ezUSB.AddUSBEventWatcher(USBEventHandler, USBEventHandler, new TimeSpan(0, 0, 3));
@@ -1046,7 +1047,8 @@ namespace H6
             this.btn_Edit.Enabled = false;
             this.btn_OK.Enabled = false;
             this.btn_EcjetSD.Enabled = false;
-            this.btn_4G.Enabled = false;
+            //this.btn_4G.Enabled = false;
+           this.btn_4G.Enabled = true;
             //this.btn_ChangePassword.Enabled = false;
             this.btn_FilePathChose.Enabled = false;
             //this.btn_Format.Enabled = false;
@@ -1240,7 +1242,7 @@ namespace H6
                 gb_StatusCommand.Width = 458;
                 gb_StatusCommand.Height = 293;
                 //设定状态显示窗口位置
-                gb_StatusCommand.Location = new Point(453, 194);
+                gb_StatusCommand.Location = new Point(453, 274);
                 //状态命令大小
                 lb_StateInfo.Width = 440;
                 lb_StateInfo.Height = 278;
@@ -1320,7 +1322,8 @@ namespace H6
                 gb_StatusCommand.Width = 458;
                 gb_StatusCommand.Height = 475;
                 //设定状态显示窗口位置
-                gb_StatusCommand.Location = new Point(453, 11);
+                //gb_StatusCommand.Location = new Point(453, 11);
+                gb_StatusCommand.Location = new Point(453, 90);
                 //状态命令大小
                 lb_StateInfo.Width = 440;
                 lb_StateInfo.Height = 450;
