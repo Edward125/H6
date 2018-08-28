@@ -1037,7 +1037,18 @@ namespace H6
         //关闭按钮
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            ezUSB.RemoveUSBEventWatcher();
+
+            DialogResult dr = MessageBox.Show("是否确认退出软件,退出点击是(Y),不退出点击否(N)?", "Exit?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dr == DialogResult.Yes)
+            {
+
+                ezUSB.RemoveUSBEventWatcher();
+                Environment.Exit(0);
+            }
+            else
+                e.Cancel = true;
+
+      
         }
 
         //UI初始化设置
