@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace H6
 {
@@ -249,7 +250,7 @@ namespace H6
         /// <summary>
         /// 
         /// </summary>
-        public void EnumerateAvailableNetwork()
+        public static  void EnumerateAvailableNetwork()
         {
             uint serviceVersion = 0;
             IntPtr handle = IntPtr.Zero;
@@ -257,14 +258,109 @@ namespace H6
             result = (int)WlanOpenHandle(2, IntPtr.Zero, out serviceVersion, ref handle);
             Console.WriteLine(result);
             IntPtr ppInterfaceList = IntPtr.Zero;
-            WLAN_AVALABLE_NETWORK_LIST interfaceList;
+            WLAN_INTERFACE_INFO_LIST  interfaceList;
 
             if(WlanEnumInterfaces(handle,IntPtr.Zero,ref ppInterfaceList) == 0)
             {
-                interfaceList = new WLAN_AVALABLE_NETWORK_LIST(ppInterfaceList);
+                interfaceList = new WLAN_INTERFACE_INFO_LIST (ppInterfaceList );
                 Console.WriteLine("有{0}个无线网络适配器", interfaceList.dwNumberOfItems);
+                Console.WriteLine("Enumerating Wireless Network Adapters...");
+                for (int i = 0; i < interfaceList.dwNumberOfItems; i++)
+                {
+                    Console.WriteLine("{0}", interfaceList.InterfaceInfo[i].strInterfaceDescription);
+                    IntPtr ppAvailableNetworkList = new IntPtr();
+                    Guid pInterfaceGuid = interfaceList.InterfaceInfo[i].InterfaceGuid;
+                    WlanGetAvailableNetworkList (handle,ref pInterfaceGuid ,0x00000002,new IntPtr(),ref ppAvailableNetworkList );
+                    WLAN_AVALABLE_NETWORK_LIST wlanAvailableNetworkList = new WLAN_AVALABLE_NETWORK_LIST(ppAvailableNetworkList);
+                    WlanFreeMemory(ppAvailableNetworkList);
+                    WlanCloseHandle(handle, IntPtr.Zero);
+                    for (int j = 0;j <wlanAvailableNetworkList.dwNumberOfItems ;j ++)
+                    {
+                        WLAN_AVAILABLE_NETWORK network = wlanAvailableNetworkList.wlanAvailableNetwork[j];
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Available Network:");
+                        Console.WriteLine("SSID:" + network.dot11Ssid.ucSSID );
+                       
+                        Console.WriteLine("StrProfile:" + network.strProfileName);
+                        Console.WriteLine("Encrypted:" + network.bSecurityEnabled);
+                        Console.WriteLine("Signal Strength:" + network.wlanSignalQuality);
+                        Console.WriteLine ("Default Authentication:"+ network.dot11DefaultAuthAlgorithm.ToString ());
+                        Console.WriteLine("Default Cipher:" + network.dot11DefaultCipherAlgorithm.ToString());
+                        Console.WriteLine();
+
+                    }
+                }
 
 
+            }
+        }
+
+
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static void EnumerateAvailableNetwork(ComboBox comboSsid,ListBox lstMsg)
+        {
+            comboSsid.Items.Clear();
+
+            uint serviceVersion = 0;
+            IntPtr handle = IntPtr.Zero;
+            int result;
+            result = (int)WlanOpenHandle(2, IntPtr.Zero, out serviceVersion, ref handle);
+            Console.WriteLine(result);
+            IntPtr ppInterfaceList = IntPtr.Zero;
+            WLAN_INTERFACE_INFO_LIST  interfaceList;
+
+            if (WlanEnumInterfaces(handle, IntPtr.Zero, ref ppInterfaceList) == 0)
+            {
+                interfaceList = new WLAN_INTERFACE_INFO_LIST (ppInterfaceList );
+                //Console.WriteLine("有{0}个无线网络适配器", interfaceList.dwNumberOfItems);
+                //Console.WriteLine("Enumerating Wireless Network Adapters...");
+                H6.frmMain.updateMessage (lstMsg,"有" +  interfaceList.dwNumberOfItems +"个无线网络适配器");
+               // H6.FrmMain.updateMessage (lstMsg,"Enumerating Wireless Network Adapters...");
+                for (int i = 0; i < interfaceList.dwNumberOfItems; i++)
+                {
+                    //Console.WriteLine("{0}", interfaceList.InterfaceInfo[i].strInterfaceDescription);
+                   // H6.FrmMain.updateMessage(lstMsg, interfaceList.InterfaceInfo[i].strInterfaceDescription);
+                    IntPtr ppAvailableNetworkList = new IntPtr();
+                    Guid pInterfaceGuid = interfaceList.InterfaceInfo[i].InterfaceGuid;
+                    WlanGetAvailableNetworkList (handle,ref pInterfaceGuid ,0x00000002,new IntPtr(),ref ppAvailableNetworkList );
+                    WLAN_AVALABLE_NETWORK_LIST wlanAvailableNetworkList = new WLAN_AVALABLE_NETWORK_LIST(ppAvailableNetworkList);
+                    WlanFreeMemory(ppAvailableNetworkList);
+                    WlanCloseHandle(handle, IntPtr.Zero);
+                    H6.frmMain.updateMessage(lstMsg, "共计发现" + wlanAvailableNetworkList .dwNumberOfItems  + "个可用的WLAN SSID");
+                    for (int j = 0;j <wlanAvailableNetworkList.dwNumberOfItems ;j ++)
+                    {
+                        WLAN_AVAILABLE_NETWORK network = wlanAvailableNetworkList.wlanAvailableNetwork[j];
+                        //Console.ForegroundColor = ConsoleColor.Red;
+                        //Console.WriteLine("Available Network:");
+                        //Console.WriteLine("SSID:" + network.dot11Ssid.ucSSID );
+                        //Console.WriteLine("StrProfile:" + network.strProfileName);
+                        //Console.WriteLine("Encrypted:" + network.bSecurityEnabled);
+                        //Console.WriteLine("Signal Strength:" + network.wlanSignalQuality);
+                        //Console.WriteLine ("Default Authentication:"+ network.dot11DefaultAuthAlgorithm.ToString ());
+                        //Console.WriteLine("Default Cipher:" + network.dot11DefaultCipherAlgorithm.ToString());
+                        //Console.WriteLine();
+                       //// H6.FrmMain.updateMessage(lstMsg, "Available Network:");
+                       // H6.FrmMain.updateMessage(lstMsg, "SSID:" + network.dot11Ssid.ucSSID);
+                        comboSsid.Items.Add(network.dot11Ssid.ucSSID);
+                       // H6.FrmMain.updateMessage(lstMsg, "Encrypted:" + network.bSecurityEnabled);
+                        //H6.FrmMain.updateMessage(lstMsg, "Signal Strength:" + network.wlanSignalQuality);
+
+                    }
+                }
+
+                if (comboSsid.Items.Count > 0)
+                    comboSsid.SelectedIndex = 0;
+
+                
+            }
+            else
+            {
+               H6.frmMain.updateMessage (lstMsg ,"本机没有发现无线网络适配器.");
             }
         }
     }

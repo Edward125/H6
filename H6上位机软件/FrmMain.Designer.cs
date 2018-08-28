@@ -1,6 +1,6 @@
 ﻿namespace H6
 {
-    partial class FrmMain
+    partial class frmMain
     {
         /// <summary>
         /// 必需的设计器变量。
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.btn_CheckDev = new System.Windows.Forms.Button();
             this.btn_Logon = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -89,6 +89,8 @@
             this.label15 = new System.Windows.Forms.Label();
             this.lblTitle = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.comboWifiName = new System.Windows.Forms.ComboBox();
+            this.btnRefreshWifi = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -498,6 +500,8 @@
             // gb_Wireless
             // 
             this.gb_Wireless.BackColor = System.Drawing.Color.Transparent;
+            this.gb_Wireless.Controls.Add(this.btnRefreshWifi);
+            this.gb_Wireless.Controls.Add(this.comboWifiName);
             this.gb_Wireless.Controls.Add(this.btn_Wireless);
             this.gb_Wireless.Controls.Add(this.label18);
             this.gb_Wireless.Controls.Add(this.btn_Wireles_Edit);
@@ -506,15 +510,14 @@
             this.gb_Wireless.Controls.Add(this.label17);
             this.gb_Wireless.Controls.Add(this.tb_ServerPort);
             this.gb_Wireless.Controls.Add(this.lb_WifiPassWord);
-            this.gb_Wireless.Controls.Add(this.lb_WifiName);
             this.gb_Wireless.Controls.Add(this.label14);
             this.gb_Wireless.Controls.Add(this.label11);
             this.gb_Wireless.Controls.Add(this.label10);
             this.gb_Wireless.Controls.Add(this.label2);
             this.gb_Wireless.Location = new System.Drawing.Point(455, 91);
-            this.gb_Wireless.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.gb_Wireless.Margin = new System.Windows.Forms.Padding(2);
             this.gb_Wireless.Name = "gb_Wireless";
-            this.gb_Wireless.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.gb_Wireless.Padding = new System.Windows.Forms.Padding(2);
             this.gb_Wireless.Size = new System.Drawing.Size(458, 183);
             this.gb_Wireless.TabIndex = 12;
             this.gb_Wireless.TabStop = false;
@@ -522,9 +525,9 @@
             // 
             // btn_Wireless
             // 
-            this.btn_Wireless.Location = new System.Drawing.Point(353, 88);
+            this.btn_Wireless.Location = new System.Drawing.Point(374, 88);
             this.btn_Wireless.Name = "btn_Wireless";
-            this.btn_Wireless.Size = new System.Drawing.Size(75, 35);
+            this.btn_Wireless.Size = new System.Drawing.Size(68, 35);
             this.btn_Wireless.TabIndex = 22;
             this.btn_Wireless.Text = "确定";
             this.btn_Wireless.UseVisualStyleBackColor = true;
@@ -543,9 +546,9 @@
             // 
             // btn_Wireles_Edit
             // 
-            this.btn_Wireles_Edit.Location = new System.Drawing.Point(247, 88);
+            this.btn_Wireles_Edit.Location = new System.Drawing.Point(223, 87);
             this.btn_Wireles_Edit.Name = "btn_Wireles_Edit";
-            this.btn_Wireles_Edit.Size = new System.Drawing.Size(75, 35);
+            this.btn_Wireles_Edit.Size = new System.Drawing.Size(68, 35);
             this.btn_Wireles_Edit.TabIndex = 18;
             this.btn_Wireles_Edit.Text = "编辑";
             this.btn_Wireles_Edit.UseVisualStyleBackColor = true;
@@ -558,7 +561,7 @@
             "AP（无线接入）",
             "STA（无线终端）"});
             this.Lb_WifiMode.Location = new System.Drawing.Point(88, 18);
-            this.Lb_WifiMode.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Lb_WifiMode.Margin = new System.Windows.Forms.Padding(2);
             this.Lb_WifiMode.Name = "Lb_WifiMode";
             this.Lb_WifiMode.Size = new System.Drawing.Size(117, 20);
             this.Lb_WifiMode.TabIndex = 13;
@@ -566,7 +569,7 @@
             // tb_ServerIP
             // 
             this.tb_ServerIP.Location = new System.Drawing.Point(321, 11);
-            this.tb_ServerIP.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tb_ServerIP.Margin = new System.Windows.Forms.Padding(2);
             this.tb_ServerIP.MaxLength = 15;
             this.tb_ServerIP.Name = "tb_ServerIP";
             this.tb_ServerIP.Size = new System.Drawing.Size(117, 21);
@@ -587,7 +590,7 @@
             // tb_ServerPort
             // 
             this.tb_ServerPort.Location = new System.Drawing.Point(321, 52);
-            this.tb_ServerPort.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tb_ServerPort.Margin = new System.Windows.Forms.Padding(2);
             this.tb_ServerPort.Name = "tb_ServerPort";
             this.tb_ServerPort.Size = new System.Drawing.Size(117, 21);
             this.tb_ServerPort.TabIndex = 6;
@@ -596,7 +599,7 @@
             // lb_WifiPassWord
             // 
             this.lb_WifiPassWord.Location = new System.Drawing.Point(88, 92);
-            this.lb_WifiPassWord.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.lb_WifiPassWord.Margin = new System.Windows.Forms.Padding(2);
             this.lb_WifiPassWord.Name = "lb_WifiPassWord";
             this.lb_WifiPassWord.Size = new System.Drawing.Size(117, 21);
             this.lb_WifiPassWord.TabIndex = 5;
@@ -604,8 +607,8 @@
             // 
             // lb_WifiName
             // 
-            this.lb_WifiName.Location = new System.Drawing.Point(88, 54);
-            this.lb_WifiName.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.lb_WifiName.Location = new System.Drawing.Point(1007, 168);
+            this.lb_WifiName.Margin = new System.Windows.Forms.Padding(2);
             this.lb_WifiName.Name = "lb_WifiName";
             this.lb_WifiName.Size = new System.Drawing.Size(117, 21);
             this.lb_WifiName.TabIndex = 4;
@@ -655,7 +658,7 @@
             // tb_4GAPN
             // 
             this.tb_4GAPN.Location = new System.Drawing.Point(662, 73);
-            this.tb_4GAPN.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tb_4GAPN.Margin = new System.Windows.Forms.Padding(2);
             this.tb_4GAPN.Name = "tb_4GAPN";
             this.tb_4GAPN.Size = new System.Drawing.Size(117, 21);
             this.tb_4GAPN.TabIndex = 12;
@@ -665,7 +668,7 @@
             // tb_4GPIN
             // 
             this.tb_4GPIN.Location = new System.Drawing.Point(342, 73);
-            this.tb_4GPIN.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tb_4GPIN.Margin = new System.Windows.Forms.Padding(2);
             this.tb_4GPIN.Name = "tb_4GPIN";
             this.tb_4GPIN.Size = new System.Drawing.Size(117, 21);
             this.tb_4GPIN.TabIndex = 11;
@@ -717,12 +720,31 @@
             this.pictureBox1.TabIndex = 14;
             this.pictureBox1.TabStop = false;
             // 
-            // FrmMain
+            // comboWifiName
+            // 
+            this.comboWifiName.FormattingEnabled = true;
+            this.comboWifiName.Location = new System.Drawing.Point(86, 57);
+            this.comboWifiName.Name = "comboWifiName";
+            this.comboWifiName.Size = new System.Drawing.Size(119, 20);
+            this.comboWifiName.TabIndex = 15;
+            // 
+            // btnRefreshWifi
+            // 
+            this.btnRefreshWifi.Enabled = false;
+            this.btnRefreshWifi.Location = new System.Drawing.Point(298, 87);
+            this.btnRefreshWifi.Name = "btnRefreshWifi";
+            this.btnRefreshWifi.Size = new System.Drawing.Size(68, 35);
+            this.btnRefreshWifi.TabIndex = 23;
+            this.btnRefreshWifi.Text = "刷新WiFi";
+            this.btnRefreshWifi.UseVisualStyleBackColor = true;
+            this.btnRefreshWifi.Click += new System.EventHandler(this.btnRefreshWifi_Click);
+            // 
+            // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::H6.Properties.Resources.b;
-            this.ClientSize = new System.Drawing.Size(928, 579);
+            this.ClientSize = new System.Drawing.Size(935, 579);
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.gb_Wireless);
@@ -730,6 +752,7 @@
             this.Controls.Add(this.gb_StatusCommand);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.tb_4GPIN);
+            this.Controls.Add(this.lb_WifiName);
             this.Controls.Add(this.tb_4GAPN);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -737,7 +760,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label15);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "FrmMain";
+            this.Name = "frmMain";
             this.Text = "HAC H6 Tool";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -821,6 +844,8 @@
         private System.Windows.Forms.Button btn_ChangePWd;
         private System.Windows.Forms.Label lblTitle;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.ComboBox comboWifiName;
+        private System.Windows.Forms.Button btnRefreshWifi;
     }
 }
 

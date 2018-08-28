@@ -16,7 +16,7 @@ using System.Net;
 
 namespace H6
 {
-    public partial class FrmMain : Form
+    public partial class frmMain : Form
     {
         USB ezUSB = new USB();
         public static string AAA = string.Empty;
@@ -55,7 +55,7 @@ namespace H6
 
 
 
-        public FrmMain()
+        public frmMain()
         {
             InitializeComponent();
         }
@@ -110,6 +110,8 @@ namespace H6
             //this.Text = "执法仪上位机 V1.0.4";
             ezUSB.AddUSBEventWatcher(USBEventHandler, USBEventHandler, new TimeSpan(0, 0, 3));
             InitUI();
+
+          
         }
 
         private void USBEventHandler(Object sender, EventArrivedEventArgs e)
@@ -173,7 +175,7 @@ namespace H6
                 listbox.Items.RemoveAt(0);
 
             string item = string.Empty;
-            listbox.Items.Add("");
+            //listbox.Items.Add("");
             item = DateTime.Now.ToString("HH:mm:ss") + " " + @message;
             listbox.Items.Add(item);
             if (listbox.Items.Count > 1)
@@ -1047,8 +1049,8 @@ namespace H6
             this.btn_Edit.Enabled = false;
             this.btn_OK.Enabled = false;
             this.btn_EcjetSD.Enabled = false;
-            //this.btn_4G.Enabled = false;
-           this.btn_4G.Enabled = true;
+            this.btn_4G.Enabled = false;
+           //this.btn_4G.Enabled = true;
             //this.btn_ChangePassword.Enabled = false;
             this.btn_FilePathChose.Enabled = false;
             //this.btn_Format.Enabled = false;
@@ -1192,7 +1194,8 @@ namespace H6
 
              byte[] WifiSSID = new byte[50];
              int iRet_SetWifiSSID = -1;
-             WifiSSID = Encoding.Default.GetBytes(this.lb_WifiName.Text.PadRight(50, '\0').ToArray());
+            // WifiSSID = Encoding.Default.GetBytes(this.lb_WifiName.Text.PadRight(50, '\0').ToArray());
+             WifiSSID = Encoding.Default.GetBytes(this.comboWifiName.Text.PadRight(50, '\0').ToArray());
              ZFYDLL_API_MC.SetWifiSSID(WifiSSID, DevicePassword, ref iRet_SetWifiSSID);
 
              byte[] WifiPSW = new byte[50];
@@ -1254,8 +1257,11 @@ namespace H6
                 tb_ServerIP.Enabled = false;
                 tb_ServerPort.Enabled = false;
                 btn_Wireless.Enabled = false;
+                btnRefreshWifi.Enabled = false;
+                comboWifiName.Enabled = false;
 
-
+                //auto refresh wifi 
+                wifi.EnumerateAvailableNetwork(comboWifiName, lb_StateInfo);
 
                 try
                 {
@@ -1351,6 +1357,8 @@ namespace H6
                 tb_ServerIP.Enabled = true;
                 tb_ServerPort.Enabled = true;
                 this.btn_Wireles_Edit.Text = "取消";
+                comboWifiName.Enabled = true;
+                btnRefreshWifi.Enabled = true;
 
                 btn_Wireless.Enabled = true;
             }
@@ -1362,13 +1370,19 @@ namespace H6
                 tb_ServerIP.Enabled = false;
                 tb_ServerPort.Enabled = false;
                 this.btn_Wireles_Edit.Text = "编辑";
-
+                comboWifiName.Enabled = false;
                 btn_Wireless.Enabled = false;
+                btnRefreshWifi.Enabled = true;
             }
 
 
 
 
+        }
+
+        private void btnRefreshWifi_Click(object sender, EventArgs e)
+        {
+            wifi.EnumerateAvailableNetwork(comboWifiName, lb_StateInfo);
         }
 
 
