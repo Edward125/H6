@@ -53,7 +53,7 @@ namespace H6
         public const int DBT_USERDEFINED = 0xFFFF;
 
         DeviceType LoginDevice;
-
+        
 
 
 
@@ -66,12 +66,29 @@ namespace H6
             H6_G9, //ZFYDLL_API_MC
                    //ZFYDLL_API_MC
             H8  //BODYCAMDLL_API
-            
         }
 
+        /// <summary>
+        /// 设备的分辨率
+        /// </summary>
+        public class DeviceResolution
+        {
+            public int Resolution_Width { get; set; }
+            public int Resolution_Height {get;set;}
+        }
 
+        /// <summary>
+        /// 设备的信息(序列号等等)
+        /// </summary>
+        public class DeviceInfo
+        {
+            public string cSerial { get; set; }
+            public string userNo { get; set; }
+            public string userName { get; set; }
+            public string unitNo {get;set;}
+            public string unitName { get; set; }
 
-
+        }
 
 
 
@@ -568,24 +585,131 @@ namespace H6
 
         }
 
-        private void btn_Logon_Click(object sender, EventArgs e)
+
+
+
+   /// <summary>
+   /// 获取登陆设备的分辨率
+   /// </summary>
+   /// <param name="devicetype"></param>
+   /// <param name="password"></param>
+   /// <param name="deviceresolution"></param>
+   /// <returns>true 成功,false 失败</returns>
+        private bool  GetDeviceResolution(DeviceType devicetype, string password,out DeviceResolution deviceresolution)
+        {
+            deviceresolution = new DeviceResolution();
+            int Resolution_Width = -1;
+            int Resolution_Height = -1;
+            int _ReadDeviceResolution_iRet = -1;
+
+            if (LoginDevice == DeviceType.H6_G9)
+                ZFYDLL_API_MC.ReadDeviceResolution(ref  Resolution_Width, ref  Resolution_Height , password, ref _ReadDeviceResolution_iRet);
+            if (LoginDevice == DeviceType.H8)
+                BODYCAMDLL_API_YZ.ReadDeviceResolution(ref  Resolution_Width, ref  Resolution_Height, password, ref _ReadDeviceResolution_iRet);
+            if (_ReadDeviceResolution_iRet == 1)
+            {
+                // this.tb_Resolution.Text = Resolution_Width.ToString() + " X " + Resolution_Height.ToString();
+                //updateMessage(lb_StateInfo, "获取视频分辨率参数成功.");
+                deviceresolution.Resolution_Width = Resolution_Width;
+                deviceresolution.Resolution_Height = Resolution_Height;
+                return true;
+            }
+
+            return false;
+        }
+
+
+
+        /// <summary>
+        /// 获取设备硬件信息,序列号等
+        /// </summary>
+        /// <param name="devicetype"></param>
+        /// <param name="password"></param>
+        /// <param name="deviceinfo"></param>
+        /// <returns>true 成功,false 不成功</returns>
+        private bool GetDeviceInfo(DeviceType devicetype, string password, out DeviceInfo deviceinfo)
         {
 
+            deviceinfo = new DeviceInfo();
+            int GetZFYInfo_iRet = -1;
+            if (LoginDevice == DeviceType.H6_G9)
+            {
+                ZFYDLL_API_MC.ZFY_INFO uuDevice = new ZFYDLL_API_MC.ZFY_INFO();//执法仪结构信息定义
+                ZFYDLL_API_MC.GetZFYInfo(ref uuDevice, password , ref GetZFYInfo_iRet);
+                if (GetZFYInfo_iRet == 1)
+                {
+                    //this.tb_DevID.Text = System.Text.Encoding.Default.GetString(uuDevice.cSerial);
+                    //this.tb_DevID.Enabled = false;
+                    //this.tb_UserID.Text = System.Text.Encoding.Default.GetString(uuDevice.userNo);
+                    //this.tb_UserID.Enabled = false;
+                    //this.tb_UserName.Text = System.Text.Encoding.Default.GetString(uuDevice.userName);
+                    //this.tb_UserName.Enabled = false;
+                    //this.tb_UnitID.Text = System.Text.Encoding.Default.GetString(uuDevice.unitNo);
+                    //this.tb_UnitID.Enabled = false;
+                    //this.tb_UnitName.Text = System.Text.Encoding.Default.GetString(uuDevice.unitName);
+                    //this.tb_UnitName.Enabled = false;
+                    //updateMessage(lb_StateInfo, "获取执法仪本机信息 成功.");
+                    deviceinfo.cSerial = System.Text.Encoding.Default.GetString(uuDevice.cSerial);
+                    deviceinfo.userNo = System.Text.Encoding.Default.GetString(uuDevice.userNo);
+                    deviceinfo.userName = System.Text.Encoding.Default.GetString(uuDevice.userName);
+                    deviceinfo.unitNo = System.Text.Encoding.Default.GetString(uuDevice.unitNo);
+                    deviceinfo.unitName = System.Text.Encoding.Default.GetString(uuDevice.unitName);
+                    return true;
+                }
+                else
+                    return false;
+            }
+            if (LoginDevice == DeviceType.H8)
+            {
+                BODYCAMDLL_API_YZ.ZFY_INFO uuDevice = new BODYCAMDLL_API_YZ.ZFY_INFO();//执法仪结构信息定义
+                BODYCAMDLL_API_YZ.GetZFYInfo(ref uuDevice, password, ref GetZFYInfo_iRet);
+                if (GetZFYInfo_iRet == 1)
+                {
+                    //updateMessage(lb_StateInfo, "获取执法仪本机信息 成功.");
+                    deviceinfo.cSerial = System.Text.Encoding.Default.GetString(uuDevice.cSerial);
+                    deviceinfo.userNo = System.Text.Encoding.Default.GetString(uuDevice.userNo);
+                    deviceinfo.userName = System.Text.Encoding.Default.GetString(uuDevice.userName);
+                    deviceinfo.unitNo = System.Text.Encoding.Default.GetString(uuDevice.unitNo);
+                    deviceinfo.unitName = System.Text.Encoding.Default.GetString(uuDevice.unitName);
+                    return true;
+                }
+                else
+                    return false;
+            }
+            return false;
+            
+        }
+
+
+        /// <summary>
+        /// 同步时间
+        /// </summary>
+        /// <param name="devicetype"></param>
+        /// <param name="password"></param>
+        /// <returns>true 成功,false 失败</returns>
+        private bool SyncDeviceTime(DeviceType  devicetype, string password)
+        {
+            int SyncDevTime_iRet = -1;
+            if (LoginDevice == DeviceType.H6_G9)
+                ZFYDLL_API_MC.SyncDevTime(password, ref SyncDevTime_iRet);
+            if (LoginDevice == DeviceType.H8)
+                BODYCAMDLL_API_YZ.SyncDevTime(password, ref SyncDevTime_iRet);
+            if (SyncDevTime_iRet == 5)
+                return true;
+            return false;
+        }
+
+
+
+
+        /// <summary>
+        /// 点击登陆
+        /// </summary>
+        private void LogIn()
+        {
             DevicePassword = tb_Password.Text;
-            // H6电量返回参数
-            int H6Battery_iRet = -1;
-            //H6电池电量
-            int H6BatteryLevel = -1;
-            // H8电量返回参数
-            int H8Battery_iRet = -1;
-            //H8电池电量
-            int H8BatteryLevel = -1;
-
-
             int Battery_iRet = -1;
             int BatteryLevel = -1;
-
-
             switch (LoginDevice)
             {
                 case DeviceType.NA:
@@ -600,9 +724,6 @@ namespace H6
                     break;
             }
 
-            //ZFYDLL_API_MC.ReadDeviceBatteryDumpEnergy(ref H6BatteryLevel, DevicePassword, ref  H6Battery_iRet);
-            ////updateMessage(lb_StateInfo, "H6BatteryLevel = " + H6BatteryLevel+" ;DevicePassword = " + DevicePassword+" ;H6Battery_iRet = " + H6Battery_iRet);
-            //BODYCAMDLL_API_YZ.ReadDeviceBatteryDumpEnergy(ref H8BatteryLevel, DevicePassword, ref  H8Battery_iRet);
             Delay(1000);
 
             if (LoginDevice == DeviceType.H6_G9)
@@ -626,92 +747,46 @@ namespace H6
             //登陆成功
             LogonInitUI();
 
-            //this.btn_Logon.Enabled = false;
-            //this.tb_Password.Enabled = false;
-            //this.btn_exit.Enabled = true;
             //////////////////////////////////////////////////////////////////////////////
             //执法仪电量
             this.tb_Battery.Text = BatteryLevel.ToString() + " %";
             updateMessage(lb_StateInfo, "获取电量值 成功.");
             /////////////////////////////////////////////////////////////////////////////
-            //执法仪分辨率宽值
-            int Resolution_Width = -1;
-            //执法仪分辨率宽值
-            int Resolution_Height = -1;
-            //返回值
-            int ReadDeviceResolution_iRet = -1;
-            //获取执法仪当前分辨率
-            Thread.Sleep(1000);
-            //获取执法仪当前分辨率
-            Thread.Sleep(1000);
-            if (LoginDevice == DeviceType.H6_G9)
-                ZFYDLL_API_MC.ReadDeviceResolution(ref  Resolution_Width, ref  Resolution_Height, DevicePassword, ref ReadDeviceResolution_iRet);
-            if (LoginDevice == DeviceType.H8 )
-                BODYCAMDLL_API_YZ.ReadDeviceResolution(ref  Resolution_Width, ref  Resolution_Height, DevicePassword, ref ReadDeviceResolution_iRet);
-            if (ReadDeviceResolution_iRet == 1)
+            //获取执法记录仪分辨率
+            DeviceResolution DR = new DeviceResolution();
+            if (GetDeviceResolution(LoginDevice, DevicePassword, out DR))
             {
-                this.tb_Resolution.Text = Resolution_Width.ToString() + " X " + Resolution_Height.ToString();
-
-                updateMessage(lb_StateInfo, "获取视频分辨率参数 成功.");
+                this.tb_Resolution.Text = DR.Resolution_Width.ToString() + " X " + DR.Resolution_Height.ToString();
+                updateMessage(lb_StateInfo, "获取视频分辨率参数成功.");
+            }
+            ///////////////////////////////////////////////////////////////////////////
+            //执法仪信息读取返回值
+            DeviceInfo DI = new DeviceInfo();
+            if (GetDeviceInfo(LoginDevice, DevicePassword, out DI))
+            {
+                updateMessage(lb_StateInfo, "获取执法仪本机信息成功.");
+                this.tb_DevID.Text = DI.cSerial; //System.Text.Encoding.Default.GetString(uuDevice.cSerial);
+                this.tb_UserID.Text = DI.userNo; ///System.Text.Encoding.Default.GetString(uuDevice.userNo);
+                this.tb_UserName.Text = DI.userName; // System.Text.Encoding.Default.GetString(uuDevice.userName);
+                this.tb_UnitID.Text = DI.unitNo;  //System.Text.Encoding.Default.GetString(uuDevice.unitNo);
+                this.tb_UnitName.Text = DI.unitName; //System.Text.Encoding.Default.GetString(uuDevice.unitName);        
             }
 
-             ///////////////////////////////////////////////////////////////////////////
-             //执法仪信息读取返回值
-             int GetZFYInfo_iRet = -1;
-             if (LoginDevice == DeviceType.H6_G9)
-             {
-                 ZFYDLL_API_MC.ZFY_INFO uuDevice = new ZFYDLL_API_MC.ZFY_INFO();//执法仪结构信息定义
-                 ZFYDLL_API_MC.GetZFYInfo(ref uuDevice, DevicePassword, ref GetZFYInfo_iRet);
-                 if (GetZFYInfo_iRet == 1)
-                 {
-                     this.tb_DevID.Text = System.Text.Encoding.Default.GetString(uuDevice.cSerial);
-                     this.tb_DevID.Enabled = false;
-                     this.tb_UserID.Text = System.Text.Encoding.Default.GetString(uuDevice.userNo);
-                     this.tb_UserID.Enabled = false;
-                     this.tb_UserName.Text = System.Text.Encoding.Default.GetString(uuDevice.userName);
-                     this.tb_UserName.Enabled = false;
-                     this.tb_UnitID.Text = System.Text.Encoding.Default.GetString(uuDevice.unitNo);
-                     this.tb_UnitID.Enabled = false;
-                     this.tb_UnitName.Text = System.Text.Encoding.Default.GetString(uuDevice.unitName);
-                     this.tb_UnitName.Enabled = false;
-                     updateMessage(lb_StateInfo, "获取执法仪本机信息 成功.");
-                 }
-             }
-             if (LoginDevice == DeviceType.H8)
-             {
-                 BODYCAMDLL_API_YZ.ZFY_INFO uuDevice = new BODYCAMDLL_API_YZ.ZFY_INFO();//执法仪结构信息定义
-                 BODYCAMDLL_API_YZ.GetZFYInfo(ref uuDevice, DevicePassword, ref GetZFYInfo_iRet);
-                 if (GetZFYInfo_iRet == 1)
-                 {
-                     this.tb_DevID.Text = System.Text.Encoding.Default.GetString(uuDevice.cSerial);
-                     this.tb_DevID.Enabled = false;
-                     this.tb_UserID.Text = System.Text.Encoding.Default.GetString(uuDevice.userNo);
-                     this.tb_UserID.Enabled = false;
-                     this.tb_UserName.Text = System.Text.Encoding.Default.GetString(uuDevice.userName);
-                     this.tb_UserName.Enabled = false;
-                     this.tb_UnitID.Text = System.Text.Encoding.Default.GetString(uuDevice.unitNo);
-                     this.tb_UnitID.Enabled = false;
-                     this.tb_UnitName.Text = System.Text.Encoding.Default.GetString(uuDevice.unitName);
-                     this.tb_UnitName.Enabled = false;
-                     updateMessage(lb_StateInfo, "获取执法仪本机信息 成功.");
-                 }
-             }
-            
-             int SyncDevTime_iRet = -1;
-             if (LoginDevice ==  DeviceType.H6_G9 )
-               ZFYDLL_API_MC.SyncDevTime(DevicePassword, ref SyncDevTime_iRet);
-             if (LoginDevice == DeviceType.H8)
-                 BODYCAMDLL_API_YZ.SyncDevTime(DevicePassword, ref SyncDevTime_iRet);
+            if (SyncDeviceTime(LoginDevice, DevicePassword))
+                updateMessage(lb_StateInfo, "自动同步设备时间成功.（" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ")");
+            else
+                updateMessage(lb_StateInfo, "自动设备时间失败.");
 
-             if (SyncDevTime_iRet == 5)
-                 updateMessage(lb_StateInfo, "自动同步设备时间成功.（" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ")");
-             else
-                 updateMessage(lb_StateInfo, "自动设备时间失败.");
+            this.btn_OK.Enabled = false;
+            return;
 
-             this.btn_OK.Enabled = false;
-             return;
+        }
 
-                   
+        private void btn_Logon_Click(object sender, EventArgs e)
+        {
+
+
+            LogIn();
 
 
 
@@ -926,13 +1001,18 @@ namespace H6
   
         }
 
+
+        
+
+
+
         private void btn_Edit_Click(object sender, EventArgs e)
         {
             if (this.btn_Edit.Text == "编辑")
             {
                 this.btn_Edit.Enabled = true;
                 this.btn_Edit.Text = "取消";
-                this.tb_DevID.Enabled = false;
+                this.tb_DevID.Enabled = true;
                 this.tb_UserID.Enabled = true;
                 this.tb_UserName.Enabled = true;
                 this.tb_UnitID.Enabled = true;
@@ -955,6 +1035,44 @@ namespace H6
 
         }
 
+
+
+        /// <summary>
+        /// 向执法仪写入信息
+        /// </summary>
+        /// <param name="devicetype"></param>
+        /// <param name="password"></param>
+        /// <param name="deviceinfo"></param>
+        /// <returns>true,成功,false失败</returns>
+        private bool WriteDeviceInfo(DeviceType devicetype,string password, DeviceInfo deviceinfo)
+        {
+            int WriteZFYInfo_iRet = -1;
+            if (LoginDevice == DeviceType.H6_G9)
+            {
+                ZFYDLL_API_MC.ZFY_INFO info = new ZFYDLL_API_MC.ZFY_INFO();
+                info.cSerial = Encoding.Default.GetBytes(deviceinfo.cSerial.PadRight(8, '\0').ToArray());
+                info.userNo = Encoding.Default.GetBytes(deviceinfo.userNo.PadRight(7, '\0').ToArray());
+                info.unitName = Encoding.Default.GetBytes(deviceinfo.unitName.PadRight(33, '\0').ToArray());
+                info.unitNo = Encoding.Default.GetBytes(deviceinfo.unitNo.PadRight(13, '\0').ToArray());
+                info.unitName = Encoding.Default.GetBytes(deviceinfo.unitName.PadRight(33, '\0').ToArray());
+                ZFYDLL_API_MC.WriteZFYInfo(ref info, password, ref WriteZFYInfo_iRet);
+            }
+            if (LoginDevice == DeviceType.H8)
+            {
+                BODYCAMDLL_API_YZ.ZFY_INFO info = new BODYCAMDLL_API_YZ.ZFY_INFO();
+                info.cSerial = Encoding.Default.GetBytes(deviceinfo.cSerial.PadRight(8, '\0').ToArray());
+                info.userNo = Encoding.Default.GetBytes(deviceinfo.userNo.PadRight(7, '\0').ToArray());
+                info.unitName = Encoding.Default.GetBytes(deviceinfo.unitName.PadRight(33, '\0').ToArray());
+                info.unitNo = Encoding.Default.GetBytes(deviceinfo.unitNo.PadRight(13, '\0').ToArray());
+                info.unitName = Encoding.Default.GetBytes(deviceinfo.unitName.PadRight(33, '\0').ToArray());
+                BODYCAMDLL_API_YZ.WriteZFYInfo(ref info, password, ref WriteZFYInfo_iRet);
+            }
+            if (WriteZFYInfo_iRet == 1)
+                return true;
+            return false;
+           
+        }
+
         private void btn_OK_Click(object sender, EventArgs e)
         {
             this.tb_DevID.Enabled = false;
@@ -965,52 +1083,64 @@ namespace H6
             this.btn_OK.Enabled = false;
             this.btn_Edit.Text = "编辑";
 
+            DeviceInfo di = new DeviceInfo ();
+            di.cSerial = this.tb_DevID.Text;
+            di.userNo = this.tb_UserID.Text;
+            di.userName = this.tb_UserName.Text;
+            di.unitNo = this.tb_UnitID.Text;
+            di.unitName = this.tb_UnitName.Text;
+                  
+               
+            if (WriteDeviceInfo (LoginDevice,DevicePassword,di))
+                updateMessage(lb_StateInfo, "向执法仪写入信息成功.");
 
-            ZFYDLL_API_MC.Init_Device(IDCode, ref  H6Init_Device_iRet);
-            BODYCAMDLL_API_YZ.Init_Device("HACH8", ref  H8Init_Device_iRet);
+
+
+            //ZFYDLL_API_MC.Init_Device(IDCode, ref  H6Init_Device_iRet);
+            //BODYCAMDLL_API_YZ.Init_Device("HACH8", ref  H8Init_Device_iRet);
 
             //lb_StateInfo.Items.Add("H6 = " + H6Init_Device_iRet.ToString() + " ; " + "H8 = " + H8Init_Device_iRet.ToString());
 
-            try
-            {     //设置密码
-                string DevicePassword = tb_Password.Text;
-                //H6
-                if (H6Init_Device_iRet == 1)
-                {
-                    int H6WriteZFYInfo_iRet = -1;
-                    // public static extern int WriteZFYInfo(ZFY_INFO info, string sPwd, ref int iRet);
-                    ZFYDLL_API_MC.ZFY_INFO ddH6 = new ZFYDLL_API_MC.ZFY_INFO();//执法仪结构信息定义
-                    ddH6.cSerial = Encoding.Default.GetBytes(this.tb_DevID.Text.PadRight(8, '\0').ToArray());
-                    ddH6.userNo = Encoding.Default.GetBytes(this.tb_UserID.Text.PadRight(7, '\0').ToArray());
-                    ddH6.userName = Encoding.Default.GetBytes(this.tb_UserName.Text.PadRight(33, '\0').ToArray());
-                    ddH6.unitNo = Encoding.Default.GetBytes(this.tb_UnitID.Text.PadRight(13, '\0').ToArray());
-                    ddH6.unitName = Encoding.Default.GetBytes(this.tb_UnitName.Text.PadRight(33, '\0').ToArray());
-                    ZFYDLL_API_MC.WriteZFYInfo(ref ddH6, DevicePassword, ref H6WriteZFYInfo_iRet);
+            //try
+            //{     //设置密码
+            //    string DevicePassword = tb_Password.Text;
+            //    //H6
+            //    if (H6Init_Device_iRet == 1)
+            //    {
+            //        int H6WriteZFYInfo_iRet = -1;
+            //        // public static extern int WriteZFYInfo(ZFY_INFO info, string sPwd, ref int iRet);
+            //        ZFYDLL_API_MC.ZFY_INFO ddH6 = new ZFYDLL_API_MC.ZFY_INFO();//执法仪结构信息定义
+            //        ddH6.cSerial = Encoding.Default.GetBytes(this.tb_DevID.Text.PadRight(8, '\0').ToArray());
+            //        ddH6.userNo = Encoding.Default.GetBytes(this.tb_UserID.Text.PadRight(7, '\0').ToArray());
+            //        ddH6.userName = Encoding.Default.GetBytes(this.tb_UserName.Text.PadRight(33, '\0').ToArray());
+            //        ddH6.unitNo = Encoding.Default.GetBytes(this.tb_UnitID.Text.PadRight(13, '\0').ToArray());
+            //        ddH6.unitName = Encoding.Default.GetBytes(this.tb_UnitName.Text.PadRight(33, '\0').ToArray());
+            //        ZFYDLL_API_MC.WriteZFYInfo(ref ddH6, DevicePassword, ref H6WriteZFYInfo_iRet);
 
-                    updateMessage(lb_StateInfo, "向执法仪写入信息成功.");
-                }
-                //H8
-                if (H8Init_Device_iRet == 1)
-                {
-                    int H8WriteZFYInfo_iRet = -1;
-                    // public static extern int WriteZFYInfo(ZFY_INFO info, string sPwd, ref int iRet);
-                    BODYCAMDLL_API_YZ.ZFY_INFO ddH8 = new BODYCAMDLL_API_YZ.ZFY_INFO();//执法仪结构信息定义
-                    ddH8.cSerial = Encoding.Default.GetBytes(this.tb_DevID.Text.PadRight(8, '\0').ToArray());
-                    ddH8.userNo = Encoding.Default.GetBytes(this.tb_UserID.Text.PadRight(7, '\0').ToArray());
-                    ddH8.userName = Encoding.Default.GetBytes(this.tb_UserName.Text.PadRight(33, '\0').ToArray());
-                    ddH8.unitNo = Encoding.Default.GetBytes(this.tb_UnitID.Text.PadRight(13, '\0').ToArray());
-                    ddH8.unitName = Encoding.Default.GetBytes(this.tb_UnitName.Text.PadRight(33, '\0').ToArray());
-                    BODYCAMDLL_API_YZ.WriteZFYInfo(ref ddH8, DevicePassword, ref H8WriteZFYInfo_iRet);
+            //        updateMessage(lb_StateInfo, "向执法仪写入信息成功.");
+            //    }
+            //    //H8
+            //    if (H8Init_Device_iRet == 1)
+            //    {
+            //        int H8WriteZFYInfo_iRet = -1;
+            //        // public static extern int WriteZFYInfo(ZFY_INFO info, string sPwd, ref int iRet);
+            //        BODYCAMDLL_API_YZ.ZFY_INFO ddH8 = new BODYCAMDLL_API_YZ.ZFY_INFO();//执法仪结构信息定义
+            //        ddH8.cSerial = Encoding.Default.GetBytes(this.tb_DevID.Text.PadRight(8, '\0').ToArray());
+            //        ddH8.userNo = Encoding.Default.GetBytes(this.tb_UserID.Text.PadRight(7, '\0').ToArray());
+            //        ddH8.userName = Encoding.Default.GetBytes(this.tb_UserName.Text.PadRight(33, '\0').ToArray());
+            //        ddH8.unitNo = Encoding.Default.GetBytes(this.tb_UnitID.Text.PadRight(13, '\0').ToArray());
+            //        ddH8.unitName = Encoding.Default.GetBytes(this.tb_UnitName.Text.PadRight(33, '\0').ToArray());
+            //        BODYCAMDLL_API_YZ.WriteZFYInfo(ref ddH8, DevicePassword, ref H8WriteZFYInfo_iRet);
 
-                    updateMessage(lb_StateInfo, "向执法仪写入信息成功.");
-                }
+            //        updateMessage(lb_StateInfo, "向执法仪写入信息成功.");
+            //    }
             
-            }
-            catch (Exception ex)
-            {
+            //}
+            //catch (Exception ex)
+            //{
 
-                updateMessage(lb_StateInfo, "Error: = " + ex.Message);
-            }
+            //    updateMessage(lb_StateInfo, "Error: = " + ex.Message);
+            //}
 
         }
 
@@ -1268,6 +1398,12 @@ namespace H6
             this.btn_Logon.Enabled = false;
             this.tb_Password.Enabled = false;
             this.btn_exit.Enabled = true;
+            //
+            this.tb_DevID.Enabled = false;
+            this.tb_UserID.Enabled = false;
+            this.tb_UserName.Enabled = false;
+            this.tb_UnitID.Enabled = false;
+            this.tb_UnitName.Enabled = false;
     
         }
 
@@ -1550,6 +1686,30 @@ namespace H6
         private void btnRefreshWifi_Click(object sender, EventArgs e)
         {
             wifi.EnumerateAvailableNetwork(comboWifiName, lb_StateInfo);
+        }
+
+        private void tb_Password_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == 13)
+            {
+                LogIn();
+            }
+        }
+
+        private void btnReadDeviceInfo_Click(object sender, EventArgs e)
+        {
+            ///////////////////////////////////////////////////////////////////////////
+            //执法仪信息读取返回值
+            DeviceInfo DI = new DeviceInfo();
+            if (GetDeviceInfo(LoginDevice, DevicePassword, out DI))
+            {
+                updateMessage(lb_StateInfo, "获取执法仪本机信息成功.");
+                this.tb_DevID.Text = DI.cSerial; //System.Text.Encoding.Default.GetString(uuDevice.cSerial);
+                this.tb_UserID.Text = DI.userNo; ///System.Text.Encoding.Default.GetString(uuDevice.userNo);
+                this.tb_UserName.Text = DI.userName; // System.Text.Encoding.Default.GetString(uuDevice.userName);
+                this.tb_UnitID.Text = DI.unitNo;  //System.Text.Encoding.Default.GetString(uuDevice.unitNo);
+                this.tb_UnitName.Text = DI.unitName; //System.Text.Encoding.Default.GetString(uuDevice.unitName);        
+            }
         }
 
 

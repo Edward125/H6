@@ -41,10 +41,11 @@
             this.tb_Resolution = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.btnReadDeviceInfo = new System.Windows.Forms.Button();
             this.btn_OK = new System.Windows.Forms.Button();
-            this.btn_Edit = new System.Windows.Forms.Button();
             this.tb_UnitName = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
+            this.btn_Edit = new System.Windows.Forms.Button();
             this.tb_UserName = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.tb_UnitID = new System.Windows.Forms.TextBox();
@@ -65,34 +66,33 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.btn_ChangePWd = new System.Windows.Forms.Button();
-            this.btn_4G = new System.Windows.Forms.Button();
             this.btn_EcjetSD = new System.Windows.Forms.Button();
             this.btn_SyncDevTime = new System.Windows.Forms.Button();
             this.btn_SetMSDC = new System.Windows.Forms.Button();
+            this.btn_4G = new System.Windows.Forms.Button();
             this.gb_Wireless = new System.Windows.Forms.GroupBox();
+            this.btnReadWireless = new System.Windows.Forms.Button();
             this.btnRefreshWifi = new System.Windows.Forms.Button();
             this.comboWifiName = new System.Windows.Forms.ComboBox();
             this.btn_Wireless = new System.Windows.Forms.Button();
             this.label18 = new System.Windows.Forms.Label();
             this.btn_Wireles_Edit = new System.Windows.Forms.Button();
             this.Lb_WifiMode = new System.Windows.Forms.ComboBox();
+            this.tb_4GPIN = new System.Windows.Forms.TextBox();
             this.tb_ServerIP = new System.Windows.Forms.TextBox();
             this.label17 = new System.Windows.Forms.Label();
+            this.tb_4GAPN = new System.Windows.Forms.TextBox();
             this.tb_ServerPort = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
             this.lb_WifiPassWord = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.lb_WifiName = new System.Windows.Forms.TextBox();
-            this.tb_4GAPN = new System.Windows.Forms.TextBox();
-            this.tb_4GPIN = new System.Windows.Forms.TextBox();
-            this.label16 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
             this.lblTitle = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.btnReadDeviceInfo = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -140,6 +140,8 @@
             this.tb_Password.PasswordChar = '*';
             this.tb_Password.Size = new System.Drawing.Size(70, 21);
             this.tb_Password.TabIndex = 3;
+            this.tb_Password.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tb_Password.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tb_Password_KeyPress);
             // 
             // groupBox1
             // 
@@ -238,6 +240,16 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "执法仪信息";
             // 
+            // btnReadDeviceInfo
+            // 
+            this.btnReadDeviceInfo.Location = new System.Drawing.Point(356, 88);
+            this.btnReadDeviceInfo.Name = "btnReadDeviceInfo";
+            this.btnReadDeviceInfo.Size = new System.Drawing.Size(59, 31);
+            this.btnReadDeviceInfo.TabIndex = 18;
+            this.btnReadDeviceInfo.Text = "读取";
+            this.btnReadDeviceInfo.UseVisualStyleBackColor = true;
+            this.btnReadDeviceInfo.Click += new System.EventHandler(this.btnReadDeviceInfo_Click);
+            // 
             // btn_OK
             // 
             this.btn_OK.Location = new System.Drawing.Point(356, 50);
@@ -247,16 +259,6 @@
             this.btn_OK.Text = "确定";
             this.btn_OK.UseVisualStyleBackColor = true;
             this.btn_OK.Click += new System.EventHandler(this.btn_OK_Click);
-            // 
-            // btn_Edit
-            // 
-            this.btn_Edit.Location = new System.Drawing.Point(356, 14);
-            this.btn_Edit.Name = "btn_Edit";
-            this.btn_Edit.Size = new System.Drawing.Size(61, 35);
-            this.btn_Edit.TabIndex = 16;
-            this.btn_Edit.Text = "编辑";
-            this.btn_Edit.UseVisualStyleBackColor = true;
-            this.btn_Edit.Click += new System.EventHandler(this.btn_Edit_Click);
             // 
             // tb_UnitName
             // 
@@ -275,6 +277,16 @@
             this.label9.Size = new System.Drawing.Size(53, 12);
             this.label9.TabIndex = 14;
             this.label9.Text = "单位名称";
+            // 
+            // btn_Edit
+            // 
+            this.btn_Edit.Location = new System.Drawing.Point(356, 14);
+            this.btn_Edit.Name = "btn_Edit";
+            this.btn_Edit.Size = new System.Drawing.Size(61, 35);
+            this.btn_Edit.TabIndex = 16;
+            this.btn_Edit.Text = "编辑";
+            this.btn_Edit.UseVisualStyleBackColor = true;
+            this.btn_Edit.Click += new System.EventHandler(this.btn_Edit_Click);
             // 
             // tb_UserName
             // 
@@ -459,16 +471,6 @@
             this.btn_ChangePWd.Text = "修改密码";
             this.btn_ChangePWd.UseVisualStyleBackColor = true;
             // 
-            // btn_4G
-            // 
-            this.btn_4G.Location = new System.Drawing.Point(1028, 459);
-            this.btn_4G.Name = "btn_4G";
-            this.btn_4G.Size = new System.Drawing.Size(61, 35);
-            this.btn_4G.TabIndex = 3;
-            this.btn_4G.Text = "4G模式";
-            this.btn_4G.UseVisualStyleBackColor = true;
-            this.btn_4G.Click += new System.EventHandler(this.btn_4G_Click);
-            // 
             // btn_EcjetSD
             // 
             this.btn_EcjetSD.Location = new System.Drawing.Point(183, 20);
@@ -499,10 +501,20 @@
             this.btn_SetMSDC.UseVisualStyleBackColor = true;
             this.btn_SetMSDC.Click += new System.EventHandler(this.btn_SetMSDC_Click);
             // 
+            // btn_4G
+            // 
+            this.btn_4G.Location = new System.Drawing.Point(1028, 459);
+            this.btn_4G.Name = "btn_4G";
+            this.btn_4G.Size = new System.Drawing.Size(61, 35);
+            this.btn_4G.TabIndex = 3;
+            this.btn_4G.Text = "4G模式";
+            this.btn_4G.UseVisualStyleBackColor = true;
+            this.btn_4G.Click += new System.EventHandler(this.btn_4G_Click);
+            // 
             // gb_Wireless
             // 
             this.gb_Wireless.BackColor = System.Drawing.Color.Transparent;
-            this.gb_Wireless.Controls.Add(this.button1);
+            this.gb_Wireless.Controls.Add(this.btnReadWireless);
             this.gb_Wireless.Controls.Add(this.btnRefreshWifi);
             this.gb_Wireless.Controls.Add(this.comboWifiName);
             this.gb_Wireless.Controls.Add(this.btn_Wireless);
@@ -530,9 +542,17 @@
             this.gb_Wireless.TabStop = false;
             this.gb_Wireless.Text = "无线通信";
             // 
+            // btnReadWireless
+            // 
+            this.btnReadWireless.Location = new System.Drawing.Point(250, 141);
+            this.btnReadWireless.Name = "btnReadWireless";
+            this.btnReadWireless.Size = new System.Drawing.Size(68, 35);
+            this.btnReadWireless.TabIndex = 24;
+            this.btnReadWireless.Text = "读取";
+            this.btnReadWireless.UseVisualStyleBackColor = true;
+            // 
             // btnRefreshWifi
             // 
-            this.btnRefreshWifi.Enabled = false;
             this.btnRefreshWifi.Location = new System.Drawing.Point(92, 141);
             this.btnRefreshWifi.Name = "btnRefreshWifi";
             this.btnRefreshWifi.Size = new System.Drawing.Size(68, 35);
@@ -592,6 +612,15 @@
             this.Lb_WifiMode.Size = new System.Drawing.Size(117, 20);
             this.Lb_WifiMode.TabIndex = 13;
             // 
+            // tb_4GPIN
+            // 
+            this.tb_4GPIN.Location = new System.Drawing.Point(255, 50);
+            this.tb_4GPIN.Margin = new System.Windows.Forms.Padding(2);
+            this.tb_4GPIN.Name = "tb_4GPIN";
+            this.tb_4GPIN.Size = new System.Drawing.Size(115, 21);
+            this.tb_4GPIN.TabIndex = 11;
+            this.tb_4GPIN.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // tb_ServerIP
             // 
             this.tb_ServerIP.Location = new System.Drawing.Point(69, 113);
@@ -613,6 +642,15 @@
             this.label17.Text = "服务器IP";
             this.label17.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
+            // tb_4GAPN
+            // 
+            this.tb_4GAPN.Location = new System.Drawing.Point(253, 18);
+            this.tb_4GAPN.Margin = new System.Windows.Forms.Padding(2);
+            this.tb_4GAPN.Name = "tb_4GAPN";
+            this.tb_4GAPN.Size = new System.Drawing.Size(117, 21);
+            this.tb_4GAPN.TabIndex = 12;
+            this.tb_4GAPN.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // tb_ServerPort
             // 
             this.tb_ServerPort.Location = new System.Drawing.Point(276, 111);
@@ -621,6 +659,16 @@
             this.tb_ServerPort.Size = new System.Drawing.Size(94, 21);
             this.tb_ServerPort.TabIndex = 6;
             this.tb_ServerPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(208, 54);
+            this.label16.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(41, 12);
+            this.label16.TabIndex = 8;
+            this.label16.Text = "4G PIN";
             // 
             // lb_WifiPassWord
             // 
@@ -662,6 +710,16 @@
             this.label10.TabIndex = 1;
             this.label10.Text = "WiFi名称";
             // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(208, 22);
+            this.label15.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(41, 12);
+            this.label15.TabIndex = 7;
+            this.label15.Text = "4G APN";
+            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -680,48 +738,6 @@
             this.lb_WifiName.Size = new System.Drawing.Size(117, 21);
             this.lb_WifiName.TabIndex = 4;
             this.lb_WifiName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // tb_4GAPN
-            // 
-            this.tb_4GAPN.Location = new System.Drawing.Point(253, 18);
-            this.tb_4GAPN.Margin = new System.Windows.Forms.Padding(2);
-            this.tb_4GAPN.Name = "tb_4GAPN";
-            this.tb_4GAPN.Size = new System.Drawing.Size(117, 21);
-            this.tb_4GAPN.TabIndex = 12;
-            this.tb_4GAPN.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tb_4GAPN.Visible = false;
-            // 
-            // tb_4GPIN
-            // 
-            this.tb_4GPIN.Location = new System.Drawing.Point(255, 50);
-            this.tb_4GPIN.Margin = new System.Windows.Forms.Padding(2);
-            this.tb_4GPIN.Name = "tb_4GPIN";
-            this.tb_4GPIN.Size = new System.Drawing.Size(115, 21);
-            this.tb_4GPIN.TabIndex = 11;
-            this.tb_4GPIN.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tb_4GPIN.Visible = false;
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(208, 54);
-            this.label16.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(41, 12);
-            this.label16.TabIndex = 8;
-            this.label16.Text = "4G PIN";
-            this.label16.Visible = false;
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(208, 22);
-            this.label15.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(41, 12);
-            this.label15.TabIndex = 7;
-            this.label15.Text = "4G APN";
-            this.label15.Visible = false;
             // 
             // lblTitle
             // 
@@ -746,30 +762,12 @@
             this.pictureBox1.TabIndex = 14;
             this.pictureBox1.TabStop = false;
             // 
-            // btnReadDeviceInfo
-            // 
-            this.btnReadDeviceInfo.Location = new System.Drawing.Point(356, 88);
-            this.btnReadDeviceInfo.Name = "btnReadDeviceInfo";
-            this.btnReadDeviceInfo.Size = new System.Drawing.Size(59, 31);
-            this.btnReadDeviceInfo.TabIndex = 18;
-            this.btnReadDeviceInfo.Text = "读取";
-            this.btnReadDeviceInfo.UseVisualStyleBackColor = true;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(250, 141);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(68, 35);
-            this.button1.TabIndex = 24;
-            this.button1.Text = "确定";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::H6.Properties.Resources.b;
-            this.ClientSize = new System.Drawing.Size(1240, 739);
+            this.ClientSize = new System.Drawing.Size(935, 739);
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.btn_4G);
             this.Controls.Add(this.pictureBox1);
@@ -869,7 +867,7 @@
         private System.Windows.Forms.ComboBox comboWifiName;
         private System.Windows.Forms.Button btnRefreshWifi;
         private System.Windows.Forms.Button btnReadDeviceInfo;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnReadWireless;
     }
 }
 

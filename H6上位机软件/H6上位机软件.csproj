@@ -130,6 +130,15 @@
   <ItemGroup>
     <Content Include="01.ico" />
     <Content Include="bitbug_favicon %284%29.ico" />
+    <Content Include="EZUSB.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="LibBodycam.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="zfyMC.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Resources\t.png" />
     <None Include="Resources\s1.png" />
     <None Include="Resources\b.png" />
