@@ -545,9 +545,6 @@ namespace H6
             DevicePassword = tb_Password.Text;
 
 
-           
-
-
             // H6电量返回参数
             int H6Battery_iRet = -1;
             //H6电池电量
@@ -559,8 +556,6 @@ namespace H6
             int H8BatteryLevel = -1;
 
             ZFYDLL_API_MC.ReadDeviceBatteryDumpEnergy(ref H6BatteryLevel, DevicePassword, ref  H6Battery_iRet);
-
-
 
             //updateMessage(lb_StateInfo, "H6BatteryLevel = " + H6BatteryLevel+" ;DevicePassword = " + DevicePassword+" ;H6Battery_iRet = " + H6Battery_iRet);
 
@@ -1061,7 +1056,7 @@ namespace H6
             this.btn_OK.Enabled = false;
             this.btn_EcjetSD.Enabled = false;
             this.btn_4G.Enabled = false;
-           //this.btn_4G.Enabled = true;
+            //this.btn_4G.Enabled = true;
             //this.btn_ChangePassword.Enabled = false;
             this.btn_FilePathChose.Enabled = false;
             //this.btn_Format.Enabled = false;
