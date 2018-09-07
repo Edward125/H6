@@ -23,7 +23,7 @@ namespace H6
         public static string IDCode = string.Empty; //执法仪识别码
         public static int H6Init_Device_iRet = -1; //H6 初始化返回值
         public static int H8Init_Device_iRet = -1; //H8 初始化返回值
-        public static int G8Init_Device_iRet = -1; //G8 初始化返回值
+        public static int G9Init_Device_iRet = -1; //G8 初始化返回值
                     //设置密码
         public static string DevicePassword = string.Empty;
             //设备初始化返回值
@@ -51,6 +51,26 @@ namespace H6
         public const int DBT_DEVNODES_CHANGED = 0x0007;
         public const int DBT_QUERYCHANGECONFIG = 0x0017;
         public const int DBT_USERDEFINED = 0xFFFF;
+
+        DeviceType LoginDevice;
+
+
+
+
+        /// <summary>
+        /// 登陆的设备类型
+        /// </summary>
+        public enum DeviceType
+        {
+            NA,
+            H6_G9, //ZFYDLL_API_MC
+                   //ZFYDLL_API_MC
+            H8  //BODYCAMDLL_API
+            
+        }
+
+
+
 
 
 
@@ -83,16 +103,16 @@ namespace H6
             //updateMessage(lb_StateInfo, "无线信息" + gb_Wireless.Location.X.ToString() + "X" + gb_Wireless.Location.Y.ToString());
 
             //隐藏无线参数框
-            gb_Wireless.Visible = false;
-            //设定状态显示窗体大小
-            gb_StatusCommand.Width = 458;
-            gb_StatusCommand.Height = 475;
-            //设定状态显示窗口位置
-            //gb_StatusCommand.Location = new Point(453,11);
-            gb_StatusCommand.Location = new Point(453, 90);
-            //状态命令大小
-            lb_StateInfo.Width = 440;
-            lb_StateInfo.Height = 450;
+            gb_Wireless.Visible = true;
+            ////设定状态显示窗体大小
+            //gb_StatusCommand.Width = 458;
+            //gb_StatusCommand.Height = 475;
+            ////设定状态显示窗口位置
+            ////gb_StatusCommand.Location = new Point(453,11);
+            //gb_StatusCommand.Location = new Point(453, 90);
+            ////状态命令大小
+            //lb_StateInfo.Width = 440;
+            //lb_StateInfo.Height = 450;
 
             //LibBodycam.log
             //删除文件
@@ -110,6 +130,8 @@ namespace H6
             //this.Text = "执法仪上位机 V1.0.4";
             ezUSB.AddUSBEventWatcher(USBEventHandler, USBEventHandler, new TimeSpan(0, 0, 3));
             InitUI();
+            //
+            LoginDevice = DeviceType.NA;
 
           
         }
@@ -509,7 +531,7 @@ namespace H6
         {
             H6Init_Device_iRet = -1; //H6 初始化返回值
             H8Init_Device_iRet = -1; //H8 初始化返回值
-            G8Init_Device_iRet = -1; //G8 初始化返回值
+            G9Init_Device_iRet = -1; //G9 初始化返回值
             //System.Diagnostics.Process.Start(@"C:\Windows\Fonts");
             //System.Diagnostics.Process.Start("C:\\window");
             try
@@ -521,6 +543,13 @@ namespace H6
                 //G8
                 ZFYDLL_API_MC_4G.Init_Device(IDCode, ref  H6Init_Device_iRet);
                 //lb_StateInfo.Items.Add("H8=" + H8Init_Device_iRet.ToString());
+
+                //判断登陆设备
+                if (H6Init_Device_iRet == 1)
+                    LoginDevice = DeviceType.H6_G9;
+                if (H8Init_Device_iRet == 1)
+                    LoginDevice = DeviceType.H8;
+
                 if (H6Init_Device_iRet == 1 || H8Init_Device_iRet ==1)
                 {
  
@@ -543,232 +572,357 @@ namespace H6
         {
 
             DevicePassword = tb_Password.Text;
-
-
             // H6电量返回参数
             int H6Battery_iRet = -1;
             //H6电池电量
             int H6BatteryLevel = -1;
-
             // H8电量返回参数
             int H8Battery_iRet = -1;
             //H8电池电量
             int H8BatteryLevel = -1;
 
-            ZFYDLL_API_MC.ReadDeviceBatteryDumpEnergy(ref H6BatteryLevel, DevicePassword, ref  H6Battery_iRet);
 
-            //updateMessage(lb_StateInfo, "H6BatteryLevel = " + H6BatteryLevel+" ;DevicePassword = " + DevicePassword+" ;H6Battery_iRet = " + H6Battery_iRet);
+            int Battery_iRet = -1;
+            int BatteryLevel = -1;
 
-            BODYCAMDLL_API_YZ.ReadDeviceBatteryDumpEnergy(ref H8BatteryLevel, DevicePassword, ref  H8Battery_iRet);
-               
+
+            switch (LoginDevice)
+            {
+                case DeviceType.NA:
+                    break;
+                case DeviceType.H6_G9:
+                    ZFYDLL_API_MC.ReadDeviceBatteryDumpEnergy(ref BatteryLevel, DevicePassword, ref  Battery_iRet);
+                    break;
+                case DeviceType.H8:
+                    BODYCAMDLL_API_YZ.ReadDeviceBatteryDumpEnergy(ref BatteryLevel, DevicePassword, ref  Battery_iRet);
+                    break;
+                default:
+                    break;
+            }
+
+            //ZFYDLL_API_MC.ReadDeviceBatteryDumpEnergy(ref H6BatteryLevel, DevicePassword, ref  H6Battery_iRet);
+            ////updateMessage(lb_StateInfo, "H6BatteryLevel = " + H6BatteryLevel+" ;DevicePassword = " + DevicePassword+" ;H6Battery_iRet = " + H6Battery_iRet);
+            //BODYCAMDLL_API_YZ.ReadDeviceBatteryDumpEnergy(ref H8BatteryLevel, DevicePassword, ref  H8Battery_iRet);
             Delay(1000);
+
+            if (LoginDevice == DeviceType.H6_G9)
+            {
+                if (DevicePassword != "000000")
+                {
+                    updateMessage(lb_StateInfo, "密码错误，登录失败.");
+                    return;
+                }
+            }
+
+            if (LoginDevice == DeviceType.H8)
+            {
+                if (DevicePassword != "888888")
+                {
+                    updateMessage(lb_StateInfo, "密码错误，登录失败.");
+                    return;
+                }
+            }
+
+            //登陆成功
+            LogonInitUI();
+
+            //this.btn_Logon.Enabled = false;
+            //this.tb_Password.Enabled = false;
+            //this.btn_exit.Enabled = true;
+            //////////////////////////////////////////////////////////////////////////////
+            //执法仪电量
+            this.tb_Battery.Text = BatteryLevel.ToString() + " %";
+            updateMessage(lb_StateInfo, "获取电量值 成功.");
+            /////////////////////////////////////////////////////////////////////////////
+            //执法仪分辨率宽值
+            int Resolution_Width = -1;
+            //执法仪分辨率宽值
+            int Resolution_Height = -1;
+            //返回值
+            int ReadDeviceResolution_iRet = -1;
+            //获取执法仪当前分辨率
+            Thread.Sleep(1000);
+            //获取执法仪当前分辨率
+            Thread.Sleep(1000);
+            if (LoginDevice == DeviceType.H6_G9)
+                ZFYDLL_API_MC.ReadDeviceResolution(ref  Resolution_Width, ref  Resolution_Height, DevicePassword, ref ReadDeviceResolution_iRet);
+            if (LoginDevice == DeviceType.H8 )
+                BODYCAMDLL_API_YZ.ReadDeviceResolution(ref  Resolution_Width, ref  Resolution_Height, DevicePassword, ref ReadDeviceResolution_iRet);
+            if (ReadDeviceResolution_iRet == 1)
+            {
+                this.tb_Resolution.Text = Resolution_Width.ToString() + " X " + Resolution_Height.ToString();
+
+                updateMessage(lb_StateInfo, "获取视频分辨率参数 成功.");
+            }
+
+             ///////////////////////////////////////////////////////////////////////////
+             //执法仪信息读取返回值
+             int GetZFYInfo_iRet = -1;
+             if (LoginDevice == DeviceType.H6_G9)
+             {
+                 ZFYDLL_API_MC.ZFY_INFO uuDevice = new ZFYDLL_API_MC.ZFY_INFO();//执法仪结构信息定义
+                 ZFYDLL_API_MC.GetZFYInfo(ref uuDevice, DevicePassword, ref GetZFYInfo_iRet);
+                 if (GetZFYInfo_iRet == 1)
+                 {
+                     this.tb_DevID.Text = System.Text.Encoding.Default.GetString(uuDevice.cSerial);
+                     this.tb_DevID.Enabled = false;
+                     this.tb_UserID.Text = System.Text.Encoding.Default.GetString(uuDevice.userNo);
+                     this.tb_UserID.Enabled = false;
+                     this.tb_UserName.Text = System.Text.Encoding.Default.GetString(uuDevice.userName);
+                     this.tb_UserName.Enabled = false;
+                     this.tb_UnitID.Text = System.Text.Encoding.Default.GetString(uuDevice.unitNo);
+                     this.tb_UnitID.Enabled = false;
+                     this.tb_UnitName.Text = System.Text.Encoding.Default.GetString(uuDevice.unitName);
+                     this.tb_UnitName.Enabled = false;
+                     updateMessage(lb_StateInfo, "获取执法仪本机信息 成功.");
+                 }
+             }
+             if (LoginDevice == DeviceType.H8)
+             {
+                 BODYCAMDLL_API_YZ.ZFY_INFO uuDevice = new BODYCAMDLL_API_YZ.ZFY_INFO();//执法仪结构信息定义
+                 BODYCAMDLL_API_YZ.GetZFYInfo(ref uuDevice, DevicePassword, ref GetZFYInfo_iRet);
+                 if (GetZFYInfo_iRet == 1)
+                 {
+                     this.tb_DevID.Text = System.Text.Encoding.Default.GetString(uuDevice.cSerial);
+                     this.tb_DevID.Enabled = false;
+                     this.tb_UserID.Text = System.Text.Encoding.Default.GetString(uuDevice.userNo);
+                     this.tb_UserID.Enabled = false;
+                     this.tb_UserName.Text = System.Text.Encoding.Default.GetString(uuDevice.userName);
+                     this.tb_UserName.Enabled = false;
+                     this.tb_UnitID.Text = System.Text.Encoding.Default.GetString(uuDevice.unitNo);
+                     this.tb_UnitID.Enabled = false;
+                     this.tb_UnitName.Text = System.Text.Encoding.Default.GetString(uuDevice.unitName);
+                     this.tb_UnitName.Enabled = false;
+                     updateMessage(lb_StateInfo, "获取执法仪本机信息 成功.");
+                 }
+             }
             
-            //H6
-            if (H6Battery_iRet == 1)
-            {
-                if (DevicePassword == "000000")
-                {
+             int SyncDevTime_iRet = -1;
+             if (LoginDevice ==  DeviceType.H6_G9 )
+               ZFYDLL_API_MC.SyncDevTime(DevicePassword, ref SyncDevTime_iRet);
+             if (LoginDevice == DeviceType.H8)
+                 BODYCAMDLL_API_YZ.SyncDevTime(DevicePassword, ref SyncDevTime_iRet);
 
-                    LogonInitUI();
-                    //初始化成功
+             if (SyncDevTime_iRet == 5)
+                 updateMessage(lb_StateInfo, "自动同步设备时间成功.（" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ")");
+             else
+                 updateMessage(lb_StateInfo, "自动设备时间失败.");
 
-                   // WirelessInfo();
+             this.btn_OK.Enabled = false;
+             return;
 
-                    /*
-                    try
-                    {
+                   
 
-                        DevicePassword = tb_Password.Text;
 
-                        //读取Wifi SSID
-                        Byte[] WifiSSID = new Byte[100]; //新建字节数组
-                        int iRet_ReadWifiSSID = -1;
-                        ZFYDLL_API_MC.ReadWifiSSID(ref WifiSSID[0], DevicePassword, ref iRet_ReadWifiSSID);
-                        lb_WifiName.Text = System.Text.Encoding.Default.GetString(WifiSSID, 0, WifiSSID.Length);    //将字节数组转换为字符串
 
-                        //读取Wifi 密码
-                        Byte[] WifiPSW = new Byte[100];
-                        int iRet_ReadWifiPSW = -1;
-                        ZFYDLL_API_MC.ReadWifiPSW(ref WifiPSW[0], DevicePassword, ref iRet_ReadWifiPSW);
-                        lb_WifiPassWord.Text = System.Text.Encoding.Default.GetString(WifiPSW, 0, WifiPSW.Length);    //将字节数组转换为字符串
 
-                        //读取Wifi模式 0:AP;1:STA
-                        int mode =-1;
-                        int iRet_ReadWifiMode = -1;
-                        ZFYDLL_API_MC.ReadWifiMode(ref mode, DevicePassword, ref iRet_ReadWifiMode);
+
+            ////H6
+            ////if (H6Battery_iRet == 1)
+            //if (LoginDevice == DeviceType.H6_G9)
+            //{
+            //    if (DevicePassword == "000000")
+            //    {
+            //        LogonInitUI();
+            //        //初始化成功
+            //       // WirelessInfo();
+            //        /*
+            //        try
+            //        {
+
+            //            DevicePassword = tb_Password.Text;
+
+            //            //读取Wifi SSID
+            //            Byte[] WifiSSID = new Byte[100]; //新建字节数组
+            //            int iRet_ReadWifiSSID = -1;
+            //            ZFYDLL_API_MC.ReadWifiSSID(ref WifiSSID[0], DevicePassword, ref iRet_ReadWifiSSID);
+            //            lb_WifiName.Text = System.Text.Encoding.Default.GetString(WifiSSID, 0, WifiSSID.Length);    //将字节数组转换为字符串
+
+            //            //读取Wifi 密码
+            //            Byte[] WifiPSW = new Byte[100];
+            //            int iRet_ReadWifiPSW = -1;
+            //            ZFYDLL_API_MC.ReadWifiPSW(ref WifiPSW[0], DevicePassword, ref iRet_ReadWifiPSW);
+            //            lb_WifiPassWord.Text = System.Text.Encoding.Default.GetString(WifiPSW, 0, WifiPSW.Length);    //将字节数组转换为字符串
+
+            //            //读取Wifi模式 0:AP;1:STA
+            //            int mode =-1;
+            //            int iRet_ReadWifiMode = -1;
+            //            ZFYDLL_API_MC.ReadWifiMode(ref mode, DevicePassword, ref iRet_ReadWifiMode);
                         
-                        MessageBox.Show(mode.ToString());
+            //            MessageBox.Show(mode.ToString());
                        
-                        if (mode == 0)
-                        {
-                            Lb_WifiMode.Text = "AP（无线接入）";
-                        }
-                        else if (mode == 1)
-                        {
-                            Lb_WifiMode.Text = "STA（无线终端）";
-                        }
+            //            if (mode == 0)
+            //            {
+            //                Lb_WifiMode.Text = "AP（无线接入）";
+            //            }
+            //            else if (mode == 1)
+            //            {
+            //                Lb_WifiMode.Text = "STA（无线终端）";
+            //            }
 
 
-                        //获取服务器IP地址
-                        Byte[] IP = new Byte[100];
-                        int iRet_ReadServerIP = -1;
-                        ZFYDLL_API_MC.ReadServerIP(ref IP[0], DevicePassword, ref iRet_ReadServerIP);
-                        tb_ServerIP.Text = System.Text.Encoding.Default.GetString(IP, 0, IP.Length);    //将字节数组转换为字符串
+            //            //获取服务器IP地址
+            //            Byte[] IP = new Byte[100];
+            //            int iRet_ReadServerIP = -1;
+            //            ZFYDLL_API_MC.ReadServerIP(ref IP[0], DevicePassword, ref iRet_ReadServerIP);
+            //            tb_ServerIP.Text = System.Text.Encoding.Default.GetString(IP, 0, IP.Length);    //将字节数组转换为字符串
 
-                        //获取服务器端口
-                        Byte[] Port = new Byte[100];
-                        int iRet_ReadServerPort = -1;
-                        ZFYDLL_API_MC.ReadServerPort(ref Port[0], DevicePassword, ref iRet_ReadServerPort);
-                        tb_ServerPort.Text = System.Text.Encoding.Default.GetString(Port, 0, Port.Length);    //将字节数组转换为字符串
+            //            //获取服务器端口
+            //            Byte[] Port = new Byte[100];
+            //            int iRet_ReadServerPort = -1;
+            //            ZFYDLL_API_MC.ReadServerPort(ref Port[0], DevicePassword, ref iRet_ReadServerPort);
+            //            tb_ServerPort.Text = System.Text.Encoding.Default.GetString(Port, 0, Port.Length);    //将字节数组转换为字符串
 
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Error:" + ex.Message);
-                    }
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            MessageBox.Show("Error:" + ex.Message);
+            //        }
 
-                    */
+            //        */
 
-                    updateMessage(lb_StateInfo, "H6 登录成功.");
-                    this.btn_Logon.Enabled = false;
-                    this.tb_Password.Enabled = false;
-                    this.btn_exit.Enabled = true;
-                    //////////////////////////////////////////////////////////////////////////////
-                    //执法仪电量
-                    this.tb_Battery.Text = H6BatteryLevel.ToString() + " %";
+            //        updateMessage(lb_StateInfo, "H6 登录成功.");
+            //        this.btn_Logon.Enabled = false;
+            //        this.tb_Password.Enabled = false;
+            //        this.btn_exit.Enabled = true;
+            //        //////////////////////////////////////////////////////////////////////////////
+            //        //执法仪电量
+            //        this.tb_Battery.Text = H6BatteryLevel.ToString() + " %";
+            //        updateMessage(lb_StateInfo, "获取电量值 成功.");
+            //        /////////////////////////////////////////////////////////////////////////////
+            //        //执法仪分辨率宽值
+            //        int Resolution_Width = -1;
+            //        //执法仪分辨率宽值
+            //        int Resolution_Height = -1;
+            //        //返回值
+            //        int ReadDeviceResolution_iRet = -1;
+            //        //获取执法仪当前分辨率
+            //        Thread.Sleep(1000);
+            //        ZFYDLL_API_MC.ReadDeviceResolution(ref  Resolution_Width, ref  Resolution_Height, DevicePassword, ref ReadDeviceResolution_iRet);
+            //        if (ReadDeviceResolution_iRet == 1)
+            //        {
+            //            this.tb_Resolution.Text = Resolution_Width.ToString() + " X " + Resolution_Height.ToString();
 
-                    updateMessage(lb_StateInfo, "获取电量值 成功.");
-                    /////////////////////////////////////////////////////////////////////////////
-                    //执法仪分辨率宽值
-                    int Resolution_Width = -1;
-                    //执法仪分辨率宽值
-                    int Resolution_Height = -1;
-                    //返回值
-                    int ReadDeviceResolution_iRet = -1;
-                    //获取执法仪当前分辨率
-                    Thread.Sleep(1000);
-                    ZFYDLL_API_MC.ReadDeviceResolution(ref  Resolution_Width, ref  Resolution_Height, DevicePassword, ref ReadDeviceResolution_iRet);
-                    if (ReadDeviceResolution_iRet == 1)
-                    {
-                        this.tb_Resolution.Text = Resolution_Width.ToString() + " X " + Resolution_Height.ToString();
-
-                        updateMessage(lb_StateInfo, "获取视频分辨率参数 成功.");
-                    }
-                    /////////////////////////////////////////////////////////////////////////////
-                    //执法仪信息读取返回值
-                    int GetZFYInfo_iRet = -1;
+            //            updateMessage(lb_StateInfo, "获取视频分辨率参数 成功.");
+            //        }
+            //        /////////////////////////////////////////////////////////////////////////////
+            //        //执法仪信息读取返回值
+            //        int GetZFYInfo_iRet = -1;
 
 
-                    ZFYDLL_API_MC.ZFY_INFO uuH6 = new ZFYDLL_API_MC.ZFY_INFO();//执法仪结构信息定义
-                    ZFYDLL_API_MC.GetZFYInfo(ref uuH6, DevicePassword, ref GetZFYInfo_iRet);
-                    if (GetZFYInfo_iRet == 1)
-                    {
-                        this.tb_DevID.Text = System.Text.Encoding.Default.GetString(uuH6.cSerial);
-                        this.tb_DevID.Enabled = false;
-                        this.tb_UserID.Text = System.Text.Encoding.Default.GetString(uuH6.userNo);
-                        this.tb_UserID.Enabled = false;
-                        this.tb_UserName.Text = System.Text.Encoding.Default.GetString(uuH6.userName);
-                        this.tb_UserName.Enabled = false;
-                        this.tb_UnitID.Text = System.Text.Encoding.Default.GetString(uuH6.unitNo);
-                        this.tb_UnitID.Enabled = false;
-                        this.tb_UnitName.Text = System.Text.Encoding.Default.GetString(uuH6.unitName);
-                        this.tb_UnitName.Enabled = false;
+            //        ZFYDLL_API_MC.ZFY_INFO uuH6 = new ZFYDLL_API_MC.ZFY_INFO();//执法仪结构信息定义
+            //        ZFYDLL_API_MC.GetZFYInfo(ref uuH6, DevicePassword, ref GetZFYInfo_iRet);
+            //        if (GetZFYInfo_iRet == 1)
+            //        {
+            //            this.tb_DevID.Text = System.Text.Encoding.Default.GetString(uuH6.cSerial);
+            //            this.tb_DevID.Enabled = false;
+            //            this.tb_UserID.Text = System.Text.Encoding.Default.GetString(uuH6.userNo);
+            //            this.tb_UserID.Enabled = false;
+            //            this.tb_UserName.Text = System.Text.Encoding.Default.GetString(uuH6.userName);
+            //            this.tb_UserName.Enabled = false;
+            //            this.tb_UnitID.Text = System.Text.Encoding.Default.GetString(uuH6.unitNo);
+            //            this.tb_UnitID.Enabled = false;
+            //            this.tb_UnitName.Text = System.Text.Encoding.Default.GetString(uuH6.unitName);
+            //            this.tb_UnitName.Enabled = false;
 
-                        updateMessage(lb_StateInfo, "获取执法仪本机信息 成功.");
-                    }
-                    int H6SyncDevTime_iRet = -1;
-                    ZFYDLL_API_MC.SyncDevTime(DevicePassword, ref H6SyncDevTime_iRet);
+            //            updateMessage(lb_StateInfo, "获取执法仪本机信息 成功.");
+            //        }
+            //        int H6SyncDevTime_iRet = -1;
+            //        ZFYDLL_API_MC.SyncDevTime(DevicePassword, ref H6SyncDevTime_iRet);
 
-                    if (H6SyncDevTime_iRet == 5)
-                    {
-                        updateMessage(lb_StateInfo, "自动同步设备时间成功.（" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ")");
-                    }
-                    else
-                    {
-                        updateMessage(lb_StateInfo, "自动设备时间失败.");
-                    }
+            //        if (H6SyncDevTime_iRet == 5)
+            //        {
+            //            updateMessage(lb_StateInfo, "自动同步设备时间成功.（" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ")");
+            //        }
+            //        else
+            //        {
+            //            updateMessage(lb_StateInfo, "自动设备时间失败.");
+            //        }
 
-                    this.btn_OK.Enabled = false;
-                }
-                else
-                {
-                   updateMessage(lb_StateInfo, "密码错误，登录失败.");
-                }
-            }
+            //        this.btn_OK.Enabled = false;
+            //    }
+            //    else
+            //    {
+            //       updateMessage(lb_StateInfo, "密码错误，登录失败.");
+            //    }
+            //}
   
-            //H8
-            if (H8Battery_iRet == 1)
-            {
-                if (DevicePassword == "888888")
-                {
-                    LogonInitUI();
-                    //初始化成功
-                    updateMessage(lb_StateInfo, "H8 登录成功.");
-                    this.btn_4G.Enabled = false;
-                    this.btn_Logon.Enabled = false;
-                    this.tb_Password.Enabled = false;
-                    this.btn_exit.Enabled = true;
-                    //////////////////////////////////////////////////////////////////////////////
-                    //执法仪电量
-                    this.tb_Battery.Text = H8BatteryLevel.ToString() + " %";
-                    updateMessage(lb_StateInfo, "获取电量值 成功.");
-                    /////////////////////////////////////////////////////////////////////////////
-                    //执法仪分辨率宽值
-                    int Resolution_Width = -1;
-                    //执法仪分辨率宽值
-                    int Resolution_Height = -1;
-                    //返回值
-                    int ReadDeviceResolution_iRet = -1;
-                    //获取执法仪当前分辨率
-                    BODYCAMDLL_API_YZ.ReadDeviceResolution(ref  Resolution_Width, ref  Resolution_Height, DevicePassword, ref ReadDeviceResolution_iRet);
-                    if (ReadDeviceResolution_iRet == 1)
-                    {
-                        this.tb_Resolution.Text = Resolution_Width.ToString() + " X " + Resolution_Height.ToString();
-                        updateMessage(lb_StateInfo, "获取视频分辨率参数 成功.");
-                    }
-                    /////////////////////////////////////////////////////////////////////////////
-                    //执法仪信息读取返回值
-                    int GetZFYInfo_iRet = -1;
+            ////H8
+            ////if (H8Battery_iRet == 1)
+            //if (LoginDevice == DeviceType.H8 )
+            //{
+            //    if (DevicePassword == "888888")
+            //    {
+            //        LogonInitUI();
+            //        //初始化成功
+            //        updateMessage(lb_StateInfo, "H8 登录成功.");
+            //        this.btn_4G.Enabled = false;
+            //        this.btn_Logon.Enabled = false;
+            //        this.tb_Password.Enabled = false;
+            //        this.btn_exit.Enabled = true;
+            //        //////////////////////////////////////////////////////////////////////////////
+            //        //执法仪电量
+            //        this.tb_Battery.Text = H8BatteryLevel.ToString() + " %";
+            //        updateMessage(lb_StateInfo, "获取电量值 成功.");
+            //        /////////////////////////////////////////////////////////////////////////////
+            //        //执法仪分辨率宽值
+            //        int Resolution_Width = -1;
+            //        //执法仪分辨率宽值
+            //        int Resolution_Height = -1;
+            //        //返回值
+            //        int ReadDeviceResolution_iRet = -1;
+            //        //获取执法仪当前分辨率
+            //        BODYCAMDLL_API_YZ.ReadDeviceResolution(ref  Resolution_Width, ref  Resolution_Height, DevicePassword, ref ReadDeviceResolution_iRet);
+            //        if (ReadDeviceResolution_iRet == 1)
+            //        {
+            //            this.tb_Resolution.Text = Resolution_Width.ToString() + " X " + Resolution_Height.ToString();
+            //            updateMessage(lb_StateInfo, "获取视频分辨率参数 成功.");
+            //        }
+            //        /////////////////////////////////////////////////////////////////////////////
+            //        //执法仪信息读取返回值
+            //        int GetZFYInfo_iRet = -1;
 
-                    BODYCAMDLL_API_YZ.ZFY_INFO uuH8 = new BODYCAMDLL_API_YZ.ZFY_INFO();//执法仪结构信息定义
-                    BODYCAMDLL_API_YZ.GetZFYInfo(ref uuH8, DevicePassword, ref GetZFYInfo_iRet);
-                    if (GetZFYInfo_iRet == 1)
-                    {
-                        this.tb_DevID.Text = System.Text.Encoding.Default.GetString(uuH8.cSerial);
-                        this.tb_DevID.Enabled = false;
-                        this.tb_UserID.Text = System.Text.Encoding.Default.GetString(uuH8.userNo);
-                        this.tb_UserID.Enabled = false;
-                        this.tb_UserName.Text = System.Text.Encoding.Default.GetString(uuH8.userName);
-                        this.tb_UserName.Enabled = false;
-                        this.tb_UnitID.Text = System.Text.Encoding.Default.GetString(uuH8.unitNo);
-                        this.tb_UnitID.Enabled = false;
-                        this.tb_UnitName.Text = System.Text.Encoding.Default.GetString(uuH8.unitName);
-                        this.tb_UnitName.Enabled = false;
+            //        BODYCAMDLL_API_YZ.ZFY_INFO uuH8 = new BODYCAMDLL_API_YZ.ZFY_INFO();//执法仪结构信息定义
+            //        BODYCAMDLL_API_YZ.GetZFYInfo(ref uuH8, DevicePassword, ref GetZFYInfo_iRet);
+            //        if (GetZFYInfo_iRet == 1)
+            //        {
+            //            this.tb_DevID.Text = System.Text.Encoding.Default.GetString(uuH8.cSerial);
+            //            this.tb_DevID.Enabled = false;
+            //            this.tb_UserID.Text = System.Text.Encoding.Default.GetString(uuH8.userNo);
+            //            this.tb_UserID.Enabled = false;
+            //            this.tb_UserName.Text = System.Text.Encoding.Default.GetString(uuH8.userName);
+            //            this.tb_UserName.Enabled = false;
+            //            this.tb_UnitID.Text = System.Text.Encoding.Default.GetString(uuH8.unitNo);
+            //            this.tb_UnitID.Enabled = false;
+            //            this.tb_UnitName.Text = System.Text.Encoding.Default.GetString(uuH8.unitName);
+            //            this.tb_UnitName.Enabled = false;
 
-                        updateMessage(lb_StateInfo, "获取执法仪本机信息 成功.");
-                    }
-                    int H8SyncDevTime_iRet = -1;
-                    BODYCAMDLL_API_YZ.SyncDevTime(DevicePassword, ref H8SyncDevTime_iRet);
+            //            updateMessage(lb_StateInfo, "获取执法仪本机信息 成功.");
+            //        }
+            //        int H8SyncDevTime_iRet = -1;
+            //        BODYCAMDLL_API_YZ.SyncDevTime(DevicePassword, ref H8SyncDevTime_iRet);
 
-                    if (H8SyncDevTime_iRet == 5)
-                    {
-                        updateMessage(lb_StateInfo, "自动同步设备时间成功.（"+DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")+")");
-                    }
-                    else
-                    {
-                        updateMessage(lb_StateInfo, "自动同步设备时间失败.");
-                    }
-                    this.btn_OK.Enabled = false;
-                }
-            }
+            //        if (H8SyncDevTime_iRet == 5)
+            //        {
+            //            updateMessage(lb_StateInfo, "自动同步设备时间成功.（"+DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")+")");
+            //        }
+            //        else
+            //        {
+            //            updateMessage(lb_StateInfo, "自动同步设备时间失败.");
+            //        }
+            //        this.btn_OK.Enabled = false;
+            //    }
+            //}
 
-            bool aa = H8Battery_iRet == 1 && DevicePassword == "888888";//H8登录成功
-            aa = H6Battery_iRet == 1 || aa;//H8或H6登录成功
+            //bool aa = H8Battery_iRet == 1 && DevicePassword == "888888";//H8登录成功
+            //aa = H6Battery_iRet == 1 || aa;//H8或H6登录成功
 
-            if (!aa)
-            {
-                updateMessage(lb_StateInfo, "密码错误，登录失败.");
-            }
+            //if (!aa)
+            //{
+            //    updateMessage(lb_StateInfo, "密码错误，登录失败.");
+            //}
+
+
   
         }
 
@@ -1108,6 +1262,13 @@ namespace H6
 
             this.pg_Updata.Enabled = true;
             //this.cb_FileType.Text = "FAT32";
+
+
+            //
+            this.btn_Logon.Enabled = false;
+            this.tb_Password.Enabled = false;
+            this.btn_exit.Enabled = true;
+    
         }
 
 
@@ -1141,16 +1302,16 @@ namespace H6
                 str = "";
 
 
-                //4G
-                gb_Wireless.Visible = false;
-                //设定状态显示窗体大小
-                gb_StatusCommand.Width = 458;
-                gb_StatusCommand.Height = 475;
-                //设定状态显示窗口位置
-                gb_StatusCommand.Location = new Point(453, 11);
-                //状态命令大小
-                lb_StateInfo.Width = 440;
-                lb_StateInfo.Height = 450;
+                ////4G
+                //gb_Wireless.Visible = false;
+                ////设定状态显示窗体大小
+                //gb_StatusCommand.Width = 458;
+                //gb_StatusCommand.Height = 475;
+                ////设定状态显示窗口位置
+                //gb_StatusCommand.Location = new Point(453, 11);
+                ////状态命令大小
+                //lb_StateInfo.Width = 440;
+                //lb_StateInfo.Height = 450;
 
                 //内容清空
                 lb_WifiName.Text = "";
