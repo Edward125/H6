@@ -1361,6 +1361,8 @@ namespace H6
 
             this.pg_Updata.Enabled = false;
             this.btn_UpdataFile.Enabled = false;
+            //
+            btnReadDeviceInfo.Enabled = false;
         }
 
 
@@ -1404,6 +1406,7 @@ namespace H6
             this.tb_UserName.Enabled = false;
             this.tb_UnitID.Enabled = false;
             this.tb_UnitName.Enabled = false;
+            this.btnReadDeviceInfo.Enabled = true;
     
         }
 
@@ -1522,6 +1525,117 @@ namespace H6
              ZFYDLL_API_MC.SetWifiMode(mode, DevicePassword, ref iRet_SetWifiMode);
              updateMessage(lb_StateInfo, "无线通信参数已设定 ");
         }
+
+
+        /// <summary>
+        /// wifi以及服务器等相关信息
+        /// </summary>
+        public class WiFi_Info
+        {
+            public Byte[] WiFiSSID{get;set;}  //length 20
+            public Byte[] WiFiPassword { get; set; } //length 20
+            public WiFiModeType WiFiMode { get; set; }
+            public Byte[] ServerIP { get; set; } //length 16
+            public Byte[] ServerPort { get; set; } //length 6
+
+        }
+
+
+
+
+
+        /// <summary>
+        /// wifi mode type
+        /// </summary>
+        public enum WiFiModeType
+        {
+            AP  =0,
+            STA =1
+        }
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logindevicetype"></param>
+        /// <param name="password"></param>
+        /// <param name="wifiinfo"></param>
+        /// <returns></returns>
+        public bool GetDeviceWiFiInfo(DeviceType logindevicetype, string password, out WiFi_Info wifiinfo)
+        {
+            wifiinfo = new WiFi_Info();
+            //读取Wifi SSID
+            Byte[] WifiSSID = new Byte[20]; //新建字节数组
+            int iRet_ReadWifiSSID = -1;
+
+            //读取Wifi 密码
+            Byte[] WifiPSW = new Byte[20];
+            int iRet_ReadWifiPSW = -1;
+            //读取Wifi模式 0:AP;1:STA
+            int mode = -1;
+            int iRet_ReadWifiMode = -1;
+            //获取服务器IP地址
+            Byte[] IP = new Byte[16];
+            int iRet_ReadServerIP = -1;
+
+            //获取服务器端口
+            Byte[] Port = new Byte[6];
+            int iRet_ReadServerPort = -1;
+
+            if (logindevicetype == DeviceType.H6_G9)
+            {
+                ZFYDLL_API_MC.ReadWifiSSID(ref WifiSSID[0], password, ref iRet_ReadWifiSSID);
+                if (iRet_ReadWifiSSID == 1)
+                {
+                    wifiinfo.WiFiSSID = WifiSSID;
+                    ZFYDLL_API_MC.ReadWifiPSW(ref WifiPSW[0], password, ref iRet_ReadWifiPSW);
+                    if (iRet_ReadWifiPSW == 1)
+                    {
+                        wifiinfo.WiFiPassword = WifiPSW;
+                        ZFYDLL_API_MC.ReadWifiMode(ref mode, password, ref iRet_ReadWifiMode);
+                        if (iRet_ReadWifiMode == 1)
+                        {
+                            //Colors color = (Colors)Enum.ToObject(typeof(Colors), 2)
+                            wifiinfo.WiFiMode = (WiFiModeType)Enum.ToObject(typeof(WiFiModeType), mode);
+                            ZFYDLL_API_MC.ReadServerIP(ref IP[0], password, ref iRet_ReadServerIP);
+                            if (iRet_ReadServerIP == 1)
+                            {
+                                wifiinfo.ServerIP = IP;
+                                ZFYDLL_API_MC.ReadServerPort(ref Port[0], DevicePassword, ref iRet_ReadServerPort);
+                                if (iRet_ReadServerPort == 1)
+                                {
+                                    wifiinfo.ServerPort = Port;
+                                    return true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // SetListText("获取WiFi模式失败");
+                            updateMessage(lb_StateInfo, "获取WiFi模式失败");
+                            return false;
+                        }
+
+                    }
+                    else
+                    {
+                        //SetListText("读取WiFi Password失败.");
+                        updateMessage(lb_StateInfo, "读取WiFi Password失败.");
+                        return false;
+                    }
+                }
+                else
+                {
+                    //SetListText("读取WiFi SSID失败.");
+                    updateMessage(lb_StateInfo, "读取WiFi SSID失败.");
+                    return false;
+                }
+            }
+
+            return false;
+        }
+
 
         private void btn_4G_Click(object sender, EventArgs e)
         {
