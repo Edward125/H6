@@ -91,6 +91,30 @@ namespace H6
         }
 
 
+        public enum WiFiModeType
+        {
+            AP,
+            STA  
+        }
+
+        /// <summary>
+        ///设备WiFi & server & port ect
+        /// </summary>
+        public class WiFiInfo
+        {
+           public  WiFiModeType WiFiMode { set; get; }
+            public  string WiFiSSID { set; get; }
+            public  string WiFiPassword { set; get; }
+            public  string ServerIP { set; get; }
+            public  string ServerPort { set; get; }
+            public string APN { set; get; }
+            public string PIN { set; get; }
+            
+        }
+
+
+
+
 
         public frmMain()
         {
@@ -567,13 +591,18 @@ namespace H6
                 if (H8Init_Device_iRet == 1)
                     LoginDevice = DeviceType.H8;
 
-                if (H6Init_Device_iRet == 1 || H8Init_Device_iRet ==1)
+                if (H6Init_Device_iRet == 1 || H8Init_Device_iRet == 1)
                 {
- 
+
                     updateMessage(lb_StateInfo, "初始化设备成功.");
                     this.btn_Logon.Enabled = true;
                     this.btn_CheckDev.Enabled = false;
                     this.tb_Password.Enabled = true;
+                    this.tb_Password.Focus();
+                }
+                else
+                {
+                    updateMessage(lb_StateInfo, "未发现可登陆的设备,请重新连接设备重试.");
                 }
 
             }
@@ -708,6 +737,12 @@ namespace H6
         private void LogIn()
         {
             DevicePassword = tb_Password.Text;
+            if (string.IsNullOrEmpty(DevicePassword))
+            {
+                updateMessage(lb_StateInfo, "密码不能为空,请重新输入.");
+                return;
+            }
+
             int Battery_iRet = -1;
             int BatteryLevel = -1;
             switch (LoginDevice)
@@ -730,7 +765,7 @@ namespace H6
             {
                 if (DevicePassword != "000000")
                 {
-                    updateMessage(lb_StateInfo, "密码错误，登录失败.");
+                    updateMessage(lb_StateInfo, "密码错误,登录失败.");
                     return;
                 }
             }
@@ -739,7 +774,7 @@ namespace H6
             {
                 if (DevicePassword != "888888")
                 {
-                    updateMessage(lb_StateInfo, "密码错误，登录失败.");
+                    updateMessage(lb_StateInfo, "密码错误,登录失败.");
                     return;
                 }
             }
@@ -777,19 +812,122 @@ namespace H6
             else
                 updateMessage(lb_StateInfo, "自动设备时间失败.");
 
+            /////////////////////////////////////////////////////
+            //读取执法仪wifi等信息
+            List<string> WiFiList = wifi.EnumerateAvailableNetwork(lb_StateInfo);
+            WiFiInfo DeviceWiFiInfo = new WiFiInfo();
+            if (ReadDeviceWiFiInfo (LoginDevice,DevicePassword,out DeviceWiFiInfo ))
+            {
+                if (WiFiList.Count > 0)
+                {
+                    foreach (string item in WiFiList)
+                    {
+                        comboWifiName.Items.Add(item);
+                    }
+                }
+
+                if (string.IsNullOrEmpty(DeviceWiFiInfo.WiFiSSID) && comboWifiName.Items.Count > 0)
+                    comboWifiName.SelectedIndex = 0;
+                else
+                    comboWifiName.Text = DeviceWiFiInfo.WiFiSSID;
+
+                if (DeviceWiFiInfo.WiFiMode == WiFiModeType.AP)
+                    Lb_WifiMode.SelectedIndex = 0;
+                if (DeviceWiFiInfo.WiFiMode == WiFiModeType.STA)
+                    Lb_WifiMode.SelectedIndex = 1;
+                lb_WifiPassWord.Text = DeviceWiFiInfo.WiFiPassword;
+                tb_ServerIP.Text  = DeviceWiFiInfo.ServerIP;
+                tb_ServerPort.Text = DeviceWiFiInfo.ServerPort;
+            }
+
+
+
             this.btn_OK.Enabled = false;
+            this.btnReadWireless.Enabled = true;
+            this.btnRefreshWifi.Enabled = true;
+            this.btn_Wireles_Edit.Enabled = true;
             return;
 
         }
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="devicetype"></param>
+        /// <param name="password"></param>
+        /// <param name="wifiinfo"></param>
+        /// <returns></returns>
+        private bool ReadDeviceWiFiInfo(DeviceType devicetype, string password, out WiFiInfo wifiinfo)
+        {
+            wifiinfo = new WiFiInfo();
+
+            if (devicetype == DeviceType.H6_G9)
+            {
+                try
+                {
+                   // List<string> WiFiList =  wifi.EnumerateAvailableNetwork(lb_StateInfo);
+                    //读取Wifi SSID
+                    Byte[] WifiSSID = new Byte[20]; //新建字节数组
+                    int iRet_ReadWifiSSID = -1;
+                    ZFYDLL_API_MC.ReadWifiSSID(ref WifiSSID[0], password, ref iRet_ReadWifiSSID);
+                    wifiinfo.WiFiSSID = System.Text.Encoding.Default.GetString(WifiSSID, 0, WifiSSID.Length);    //将字节数组转换为字符串
+
+                    //读取Wifi 密码
+                    Byte[] WiFiPassword = new Byte[20];
+                    int iRet_ReadWifiPSW = -1;
+                    ZFYDLL_API_MC.ReadWifiPSW(ref WiFiPassword[0], DevicePassword, ref iRet_ReadWifiPSW);
+                    wifiinfo.WiFiPassword = System.Text.Encoding.Default.GetString(WiFiPassword, 0, WiFiPassword.Length);    //将字节数组转换为字符串
+
+                    //读取WiFi Mode
+                    int mode = -1;
+                    int iRet_ReadWifiMode = -1;
+                    ZFYDLL_API_MC.ReadWifiMode(ref mode, DevicePassword, ref iRet_ReadWifiMode);
+                    wifiinfo.WiFiMode = (WiFiModeType)Enum.ToObject(typeof(WiFiModeType), mode);
+
+                    //读取ServerIP
+                    //获取服务器IP地址
+                    Byte[] IP = new Byte[16];
+                    int iRet_ReadServerIP = -1;
+                    ZFYDLL_API_MC.ReadServerIP(ref IP[0], DevicePassword, ref iRet_ReadServerIP);
+                    wifiinfo.ServerIP = System.Text.Encoding.Default.GetString(IP, 0, IP.Length);    //将字节数组转换为字符串
+
+                    //获取服务器端口
+                    Byte[] Port = new Byte[6];
+                    int iRet_ReadServerPort = -1;
+                    ZFYDLL_API_MC.ReadServerPort(ref Port[0], DevicePassword, ref iRet_ReadServerPort);
+                    wifiinfo.ServerPort = System.Text.Encoding.Default.GetString(Port, 0, Port.Length);    //将字节数组转换为字符串
+                    updateMessage(lb_StateInfo, "获取执法仪无线信息成功.");
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    updateMessage(lb_StateInfo, "获取执法仪无线信息失败," + ex.Message);
+                    return false;
+                }
+
+            }
+
+
+
+            if (devicetype == DeviceType.H8)
+            {
+
+
+
+            }
+
+
+            return false;
+        }
+
 
         private void btn_Logon_Click(object sender, EventArgs e)
         {
 
 
             LogIn();
-
-
-
 
 
             ////H6
@@ -1361,8 +1499,6 @@ namespace H6
 
             this.pg_Updata.Enabled = false;
             this.btn_UpdataFile.Enabled = false;
-            //
-            btnReadDeviceInfo.Enabled = false;
         }
 
 
@@ -1407,6 +1543,16 @@ namespace H6
             this.tb_UnitID.Enabled = false;
             this.tb_UnitName.Enabled = false;
             this.btnReadDeviceInfo.Enabled = true;
+
+            //
+            //不可编辑状态
+            lb_WifiName.Enabled = false;
+            lb_WifiPassWord.Enabled = false;
+            Lb_WifiMode.Enabled = false;
+            tb_ServerIP.Enabled = false;
+            tb_ServerPort.Enabled = false;
+            tb_4GAPN.Enabled = false;
+            tb_4GPIN.Enabled = false;
     
         }
 
@@ -1431,6 +1577,9 @@ namespace H6
                 //this.cb_FileType.Text = "";
                 //this.tb_NewPassword.Text = "";
                 this.tb_FilePath.Text = "";
+                btn_Wireles_Edit.Enabled = false;
+                btnRefreshWifi.Enabled = false;
+                btnReadWireless.Enabled = false;
 
                 H6Init_Device_iRet = -1; //H6 初始化返回值
                 H8Init_Device_iRet = -1; //H8 初始化返回值
@@ -1440,6 +1589,9 @@ namespace H6
                 DestinFolder = string.Empty;
                 str = "";
 
+                btnReadDeviceInfo.Enabled = false;
+                Lb_WifiMode.SelectedIndex = -1;
+                comboWifiName.SelectedIndex = -1;
 
                 ////4G
                 //gb_Wireless.Visible = false;
@@ -1458,7 +1610,8 @@ namespace H6
                 Lb_WifiMode.Text = "";
                 tb_ServerIP.Text = "";
                 tb_ServerPort.Text = "";
-                btn_Wireless.Text = "";
+            
+
 
         }
 
@@ -1475,166 +1628,153 @@ namespace H6
             }
         }
 
-        private void btn_Wireless_Click(object sender, EventArgs e)
+
+
+        private bool SetDeviceWiFiInfo(DeviceType devicetype, string password, WiFiInfo devicewifiinfo)
         {
+
+
+
             //不可编辑状态
             lb_WifiName.Enabled = false;
             lb_WifiPassWord.Enabled = false;
             Lb_WifiMode.Enabled = false;
             tb_ServerIP.Enabled = false;
             tb_ServerPort.Enabled = false;
-
             this.btn_Wireless.Enabled = false;
+            btn_Wireles_Edit.Text = "编辑";
 
 
-             DevicePassword = tb_Password.Text;
-             byte[] IP = new byte[50];
-             int iRet_ReadServerIP = -1;
-             IP = Encoding.Default.GetBytes(this.tb_ServerIP.Text.PadRight(50, '\0').ToArray());
-             ZFYDLL_API_MC.SetServerIP(IP, DevicePassword, ref iRet_ReadServerIP);
-             
-             byte[] Port = new byte[50];
-             int iRet_SetServerPort =-1;
-             Port = Encoding.Default.GetBytes(this.tb_ServerPort.Text.PadRight(50, '\0').ToArray());
-             ZFYDLL_API_MC.SetServerPort(Port, DevicePassword, ref iRet_SetServerPort);
-
-             byte[] WifiSSID = new byte[50];
-             int iRet_SetWifiSSID = -1;
-            // WifiSSID = Encoding.Default.GetBytes(this.lb_WifiName.Text.PadRight(50, '\0').ToArray());
-             WifiSSID = Encoding.Default.GetBytes(this.comboWifiName.Text.PadRight(50, '\0').ToArray());
-             ZFYDLL_API_MC.SetWifiSSID(WifiSSID, DevicePassword, ref iRet_SetWifiSSID);
-
-             byte[] WifiPSW = new byte[50];
-             int iRet_SetWifiPSW = -1;
-             WifiPSW = Encoding.Default.GetBytes(this.lb_WifiPassWord.Text.PadRight(50, '\0').ToArray());
-             ZFYDLL_API_MC.SetWifiPSW(WifiPSW, DevicePassword, ref iRet_SetWifiPSW);
-
-
-             //设定WiFi模式,0;AP；1;STA
-             string WiFiMode = this.Lb_WifiMode.Text;
-             int iRet_SetWifiMode = -1;
-             int mode = -1;
-             if (WiFiMode.Contains("AP"))
-             {
-                 mode = 0;
-             }
-             else if (WiFiMode.Contains("STA"))
-             {
-                 mode = 1;
-             }
-             ZFYDLL_API_MC.SetWifiMode(mode, DevicePassword, ref iRet_SetWifiMode);
-             updateMessage(lb_StateInfo, "无线通信参数已设定 ");
-        }
-
-
-        /// <summary>
-        /// wifi以及服务器等相关信息
-        /// </summary>
-        public class WiFi_Info
-        {
-            public Byte[] WiFiSSID{get;set;}  //length 20
-            public Byte[] WiFiPassword { get; set; } //length 20
-            public WiFiModeType WiFiMode { get; set; }
-            public Byte[] ServerIP { get; set; } //length 16
-            public Byte[] ServerPort { get; set; } //length 6
-
-        }
-
-
-
-
-
-        /// <summary>
-        /// wifi mode type
-        /// </summary>
-        public enum WiFiModeType
-        {
-            AP  =0,
-            STA =1
-        }
-
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="logindevicetype"></param>
-        /// <param name="password"></param>
-        /// <param name="wifiinfo"></param>
-        /// <returns></returns>
-        public bool GetDeviceWiFiInfo(DeviceType logindevicetype, string password, out WiFi_Info wifiinfo)
-        {
-            wifiinfo = new WiFi_Info();
-            //读取Wifi SSID
-            Byte[] WifiSSID = new Byte[20]; //新建字节数组
-            int iRet_ReadWifiSSID = -1;
-
-            //读取Wifi 密码
-            Byte[] WifiPSW = new Byte[20];
-            int iRet_ReadWifiPSW = -1;
-            //读取Wifi模式 0:AP;1:STA
-            int mode = -1;
-            int iRet_ReadWifiMode = -1;
-            //获取服务器IP地址
-            Byte[] IP = new Byte[16];
-            int iRet_ReadServerIP = -1;
-
-            //获取服务器端口
-            Byte[] Port = new Byte[6];
-            int iRet_ReadServerPort = -1;
-
-            if (logindevicetype == DeviceType.H6_G9)
+            if (devicetype == DeviceType.H6_G9)
             {
-                ZFYDLL_API_MC.ReadWifiSSID(ref WifiSSID[0], password, ref iRet_ReadWifiSSID);
-                if (iRet_ReadWifiSSID == 1)
+                try
                 {
-                    wifiinfo.WiFiSSID = WifiSSID;
-                    ZFYDLL_API_MC.ReadWifiPSW(ref WifiPSW[0], password, ref iRet_ReadWifiPSW);
-                    if (iRet_ReadWifiPSW == 1)
-                    {
-                        wifiinfo.WiFiPassword = WifiPSW;
-                        ZFYDLL_API_MC.ReadWifiMode(ref mode, password, ref iRet_ReadWifiMode);
-                        if (iRet_ReadWifiMode == 1)
-                        {
-                            //Colors color = (Colors)Enum.ToObject(typeof(Colors), 2)
-                            wifiinfo.WiFiMode = (WiFiModeType)Enum.ToObject(typeof(WiFiModeType), mode);
-                            ZFYDLL_API_MC.ReadServerIP(ref IP[0], password, ref iRet_ReadServerIP);
-                            if (iRet_ReadServerIP == 1)
-                            {
-                                wifiinfo.ServerIP = IP;
-                                ZFYDLL_API_MC.ReadServerPort(ref Port[0], DevicePassword, ref iRet_ReadServerPort);
-                                if (iRet_ReadServerPort == 1)
-                                {
-                                    wifiinfo.ServerPort = Port;
-                                    return true;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            // SetListText("获取WiFi模式失败");
-                            updateMessage(lb_StateInfo, "获取WiFi模式失败");
-                            return false;
-                        }
+                    byte[] IP = new byte[50];
+                    int iRet_ReadServerIP = -1;
+                    //IP = Encoding.Default.GetBytes(this.tb_ServerIP.Text.PadRight(50, '\0').ToArray());
+                    IP = Encoding.Default.GetBytes(devicewifiinfo.ServerIP.PadRight(50, '\0').ToArray());
+                    ZFYDLL_API_MC.SetServerIP(IP, DevicePassword, ref iRet_ReadServerIP);
 
-                    }
-                    else
-                    {
-                        //SetListText("读取WiFi Password失败.");
-                        updateMessage(lb_StateInfo, "读取WiFi Password失败.");
-                        return false;
-                    }
+                    byte[] Port = new byte[50];
+                    int iRet_SetServerPort = -1;
+                    Port = Encoding.Default.GetBytes( devicewifiinfo.ServerPort.PadRight(50, '\0').ToArray());
+                    ZFYDLL_API_MC.SetServerPort(Port, DevicePassword, ref iRet_SetServerPort);
+
+                    byte[] WifiSSID = new byte[50];
+                    int iRet_SetWifiSSID = -1;
+                    // WifiSSID = Encoding.Default.GetBytes(this.lb_WifiName.Text.PadRight(50, '\0').ToArray());
+                    WifiSSID = Encoding.Default.GetBytes(devicewifiinfo.WiFiSSID.PadRight(50, '\0').ToArray());
+                    ZFYDLL_API_MC.SetWifiSSID(WifiSSID, DevicePassword, ref iRet_SetWifiSSID);
+
+                    byte[] WifiPSW = new byte[50];
+                    int iRet_SetWifiPSW = -1;
+                    WifiPSW = Encoding.Default.GetBytes( devicewifiinfo.WiFiPassword.PadRight(50, '\0').ToArray());
+                    ZFYDLL_API_MC.SetWifiPSW(WifiPSW, DevicePassword, ref iRet_SetWifiPSW);
+
+                    //设定WiFi模式,0;AP；1;STA
+                    int iRet_SetWifiMode = -1;
+                    int mode = -1;
+                    mode = (int)devicewifiinfo.WiFiMode;
+                    ZFYDLL_API_MC.SetWifiMode(mode, DevicePassword, ref iRet_SetWifiMode);
+
+                return true;
                 }
-                else
+                catch (Exception ex)
                 {
-                    //SetListText("读取WiFi SSID失败.");
-                    updateMessage(lb_StateInfo, "读取WiFi SSID失败.");
+                    updateMessage(lb_StateInfo, "设置无线信息失败," + ex.Message);
                     return false;
                 }
+ 
+
             }
+
+
+
+            if (devicetype == DeviceType.H8)
+            {
+
+
+
+            }
+
+
+
+
+
+
 
             return false;
         }
+
+
+
+        private void btn_Wireless_Click(object sender, EventArgs e)
+        {
+            ////不可编辑状态
+            //lb_WifiName.Enabled = false;
+            //lb_WifiPassWord.Enabled = false;
+            //Lb_WifiMode.Enabled = false;
+            //tb_ServerIP.Enabled = false;
+            //tb_ServerPort.Enabled = false;
+            //this.btn_Wireless.Enabled = false;
+
+
+            // DevicePassword = tb_Password.Text;
+            // byte[] IP = new byte[50];
+            // int iRet_ReadServerIP = -1;
+            // IP = Encoding.Default.GetBytes(this.tb_ServerIP.Text.PadRight(50, '\0').ToArray());
+            // ZFYDLL_API_MC.SetServerIP(IP, DevicePassword, ref iRet_ReadServerIP);
+             
+            // byte[] Port = new byte[50];
+            // int iRet_SetServerPort =-1;
+            // Port = Encoding.Default.GetBytes(this.tb_ServerPort.Text.PadRight(50, '\0').ToArray());
+            // ZFYDLL_API_MC.SetServerPort(Port, DevicePassword, ref iRet_SetServerPort);
+
+            // byte[] WifiSSID = new byte[50];
+            // int iRet_SetWifiSSID = -1;
+            //// WifiSSID = Encoding.Default.GetBytes(this.lb_WifiName.Text.PadRight(50, '\0').ToArray());
+            // WifiSSID = Encoding.Default.GetBytes(this.comboWifiName.Text.PadRight(50, '\0').ToArray());
+            // ZFYDLL_API_MC.SetWifiSSID(WifiSSID, DevicePassword, ref iRet_SetWifiSSID);
+
+            // byte[] WifiPSW = new byte[50];
+            // int iRet_SetWifiPSW = -1;
+            // WifiPSW = Encoding.Default.GetBytes(this.lb_WifiPassWord.Text.PadRight(50, '\0').ToArray());
+            // ZFYDLL_API_MC.SetWifiPSW(WifiPSW, DevicePassword, ref iRet_SetWifiPSW);
+
+
+            // //设定WiFi模式,0;AP；1;STA
+            // string WiFiMode = this.Lb_WifiMode.Text;
+            // int iRet_SetWifiMode = -1;
+            // int mode = -1;
+            // if (WiFiMode.Contains("AP"))
+            // {
+            //     mode = 0;
+            // }
+            // else if (WiFiMode.Contains("STA"))
+            // {
+            //     mode = 1;
+            // }
+            // ZFYDLL_API_MC.SetWifiMode(mode, DevicePassword, ref iRet_SetWifiMode);
+            // updateMessage(lb_StateInfo, "无线通信参数已设定 ");
+
+
+            WiFiInfo DeviceWiFiInfo = new WiFiInfo();
+            DeviceWiFiInfo.WiFiMode = (WiFiModeType)Lb_WifiMode.SelectedIndex;
+            DeviceWiFiInfo.WiFiSSID = comboWifiName.Text.Trim();
+            DeviceWiFiInfo.WiFiPassword = lb_WifiPassWord.Text.Trim();
+            DeviceWiFiInfo.ServerIP = tb_ServerIP.Text.Trim();
+            DeviceWiFiInfo.ServerPort = tb_ServerPort.Text.Trim(); 
+            if (SetDeviceWiFiInfo(LoginDevice,DevicePassword, DeviceWiFiInfo ))
+                updateMessage (lb_StateInfo,"设置无线信息成功.");
+
+        }
+
+
+
+
+
+
+
 
 
         private void btn_4G_Click(object sender, EventArgs e)
@@ -1823,6 +1963,43 @@ namespace H6
                 this.tb_UserName.Text = DI.userName; // System.Text.Encoding.Default.GetString(uuDevice.userName);
                 this.tb_UnitID.Text = DI.unitNo;  //System.Text.Encoding.Default.GetString(uuDevice.unitNo);
                 this.tb_UnitName.Text = DI.unitName; //System.Text.Encoding.Default.GetString(uuDevice.unitName);        
+            }
+        }
+
+        private void btnReadWireless_Click(object sender, EventArgs e)
+        {
+            /////////////////////////////////////////////////////
+            //读取执法仪wifi等信息
+           // List<string> WiFiList = wifi.EnumerateAvailableNetwork(lb_StateInfo);
+            WiFiInfo DeviceWiFiInfo = new WiFiInfo();
+            if (ReadDeviceWiFiInfo(LoginDevice, DevicePassword, out DeviceWiFiInfo))
+            {
+
+               comboWifiName.Text = DeviceWiFiInfo.WiFiSSID;
+
+                if (DeviceWiFiInfo.WiFiMode == WiFiModeType.AP)
+                    Lb_WifiMode.SelectedIndex = 0;
+                if (DeviceWiFiInfo.WiFiMode == WiFiModeType.STA)
+                    Lb_WifiMode.SelectedIndex = 1;
+
+                tb_ServerIP.Text = DeviceWiFiInfo.ServerIP;
+                tb_ServerPort.Text = DeviceWiFiInfo.ServerPort;
+            }
+        }
+
+        private void tb_ServerPort_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!(Char.IsNumber(e.KeyChar)) && e.KeyChar != (char)13 && e.KeyChar != (char)8)
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void tb_ServerIP_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!(Char.IsNumber(e.KeyChar)) && e.KeyChar != (char)13 && e.KeyChar != (char)8 && e.KeyChar != (char)46)
+            {
+                e.Handled = true;
             }
         }
 

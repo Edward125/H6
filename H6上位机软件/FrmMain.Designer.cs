@@ -242,6 +242,7 @@
             // 
             // btnReadDeviceInfo
             // 
+            this.btnReadDeviceInfo.Enabled = false;
             this.btnReadDeviceInfo.Location = new System.Drawing.Point(356, 88);
             this.btnReadDeviceInfo.Name = "btnReadDeviceInfo";
             this.btnReadDeviceInfo.Size = new System.Drawing.Size(59, 31);
@@ -544,15 +545,18 @@
             // 
             // btnReadWireless
             // 
+            this.btnReadWireless.Enabled = false;
             this.btnReadWireless.Location = new System.Drawing.Point(250, 141);
             this.btnReadWireless.Name = "btnReadWireless";
             this.btnReadWireless.Size = new System.Drawing.Size(68, 35);
             this.btnReadWireless.TabIndex = 24;
             this.btnReadWireless.Text = "读取";
             this.btnReadWireless.UseVisualStyleBackColor = true;
+            this.btnReadWireless.Click += new System.EventHandler(this.btnReadWireless_Click);
             // 
             // btnRefreshWifi
             // 
+            this.btnRefreshWifi.Enabled = false;
             this.btnRefreshWifi.Location = new System.Drawing.Point(92, 141);
             this.btnRefreshWifi.Name = "btnRefreshWifi";
             this.btnRefreshWifi.Size = new System.Drawing.Size(68, 35);
@@ -563,6 +567,7 @@
             // 
             // comboWifiName
             // 
+            this.comboWifiName.Enabled = false;
             this.comboWifiName.FormattingEnabled = true;
             this.comboWifiName.Location = new System.Drawing.Point(65, 47);
             this.comboWifiName.Name = "comboWifiName";
@@ -571,6 +576,7 @@
             // 
             // btn_Wireless
             // 
+            this.btn_Wireless.Enabled = false;
             this.btn_Wireless.Location = new System.Drawing.Point(166, 141);
             this.btn_Wireless.Name = "btn_Wireless";
             this.btn_Wireless.Size = new System.Drawing.Size(68, 35);
@@ -592,6 +598,7 @@
             // 
             // btn_Wireles_Edit
             // 
+            this.btn_Wireles_Edit.Enabled = false;
             this.btn_Wireles_Edit.Location = new System.Drawing.Point(18, 141);
             this.btn_Wireles_Edit.Name = "btn_Wireles_Edit";
             this.btn_Wireles_Edit.Size = new System.Drawing.Size(68, 35);
@@ -602,10 +609,12 @@
             // 
             // Lb_WifiMode
             // 
+            this.Lb_WifiMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.Lb_WifiMode.Enabled = false;
             this.Lb_WifiMode.FormattingEnabled = true;
             this.Lb_WifiMode.Items.AddRange(new object[] {
-            "AP（无线接入）",
-            "STA（无线终端）"});
+            "AP(无线接入)",
+            "STA(无线终端)"});
             this.Lb_WifiMode.Location = new System.Drawing.Point(67, 18);
             this.Lb_WifiMode.Margin = new System.Windows.Forms.Padding(2);
             this.Lb_WifiMode.Name = "Lb_WifiMode";
@@ -614,6 +623,7 @@
             // 
             // tb_4GPIN
             // 
+            this.tb_4GPIN.Enabled = false;
             this.tb_4GPIN.Location = new System.Drawing.Point(255, 50);
             this.tb_4GPIN.Margin = new System.Windows.Forms.Padding(2);
             this.tb_4GPIN.Name = "tb_4GPIN";
@@ -623,6 +633,7 @@
             // 
             // tb_ServerIP
             // 
+            this.tb_ServerIP.Enabled = false;
             this.tb_ServerIP.Location = new System.Drawing.Point(69, 113);
             this.tb_ServerIP.Margin = new System.Windows.Forms.Padding(2);
             this.tb_ServerIP.MaxLength = 15;
@@ -630,6 +641,7 @@
             this.tb_ServerIP.Size = new System.Drawing.Size(117, 21);
             this.tb_ServerIP.TabIndex = 10;
             this.tb_ServerIP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tb_ServerIP.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tb_ServerIP_KeyPress);
             // 
             // label17
             // 
@@ -644,6 +656,7 @@
             // 
             // tb_4GAPN
             // 
+            this.tb_4GAPN.Enabled = false;
             this.tb_4GAPN.Location = new System.Drawing.Point(253, 18);
             this.tb_4GAPN.Margin = new System.Windows.Forms.Padding(2);
             this.tb_4GAPN.Name = "tb_4GAPN";
@@ -653,12 +666,15 @@
             // 
             // tb_ServerPort
             // 
+            this.tb_ServerPort.Enabled = false;
             this.tb_ServerPort.Location = new System.Drawing.Point(276, 111);
             this.tb_ServerPort.Margin = new System.Windows.Forms.Padding(2);
+            this.tb_ServerPort.MaxLength = 5;
             this.tb_ServerPort.Name = "tb_ServerPort";
             this.tb_ServerPort.Size = new System.Drawing.Size(94, 21);
             this.tb_ServerPort.TabIndex = 6;
             this.tb_ServerPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tb_ServerPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tb_ServerPort_KeyPress);
             // 
             // label16
             // 
@@ -672,6 +688,7 @@
             // 
             // lb_WifiPassWord
             // 
+            this.lb_WifiPassWord.Enabled = false;
             this.lb_WifiPassWord.Location = new System.Drawing.Point(65, 76);
             this.lb_WifiPassWord.Margin = new System.Windows.Forms.Padding(2);
             this.lb_WifiPassWord.Name = "lb_WifiPassWord";
