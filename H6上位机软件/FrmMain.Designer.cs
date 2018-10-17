@@ -34,6 +34,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tb_Password = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.brnRestart = new System.Windows.Forms.Button();
             this.label21 = new System.Windows.Forms.Label();
             this.comboUserID = new System.Windows.Forms.ComboBox();
             this.btn_exit = new System.Windows.Forms.Button();
@@ -67,13 +68,16 @@
             this.gb_StatusCommand = new System.Windows.Forms.GroupBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.brnRestart = new System.Windows.Forms.Button();
             this.btn_ChangePWd = new System.Windows.Forms.Button();
             this.btn_EcjetSD = new System.Windows.Forms.Button();
             this.btn_SyncDevTime = new System.Windows.Forms.Button();
             this.btn_SetMSDC = new System.Windows.Forms.Button();
             this.btn_4G = new System.Windows.Forms.Button();
             this.txtApnUser = new System.Windows.Forms.GroupBox();
+            this.label23 = new System.Windows.Forms.Label();
+            this.txtApnPwd = new System.Windows.Forms.TextBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label22 = new System.Windows.Forms.Label();
             this.btnReadWireless = new System.Windows.Forms.Button();
             this.btnRefreshWifi = new System.Windows.Forms.Button();
             this.comboWifiName = new System.Windows.Forms.ComboBox();
@@ -81,17 +85,17 @@
             this.btn_Wireles_Edit = new System.Windows.Forms.Button();
             this.Lb_WifiMode = new System.Windows.Forms.ComboBox();
             this.tb_4GPIN = new System.Windows.Forms.TextBox();
-            this.tb_ServerIP = new System.Windows.Forms.TextBox();
-            this.label17 = new System.Windows.Forms.Label();
             this.tb_4GAPN = new System.Windows.Forms.TextBox();
-            this.tb_ServerPort = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
             this.lb_WifiPassWord = new System.Windows.Forms.TextBox();
-            this.label14 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.tb_ServerIP = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.tb_ServerPort = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
             this.lb_WifiName = new System.Windows.Forms.TextBox();
             this.lblTitle = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -103,29 +107,25 @@
             this.txtNewPwd2 = new System.Windows.Forms.TextBox();
             this.txtNewPwd1 = new System.Windows.Forms.TextBox();
             this.comboIDType = new System.Windows.Forms.ComboBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label22 = new System.Windows.Forms.Label();
-            this.txtApnPwd = new System.Windows.Forms.TextBox();
-            this.label23 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.comboServType = new System.Windows.Forms.ComboBox();
-            this.label24 = new System.Windows.Forms.Label();
-            this.chkEnable = new System.Windows.Forms.CheckBox();
-            this.txtUpdateInternal = new System.Windows.Forms.TextBox();
-            this.label25 = new System.Windows.Forms.Label();
-            this.txtChannelName = new System.Windows.Forms.TextBox();
-            this.txtServerID = new System.Windows.Forms.TextBox();
-            this.txtChannelID = new System.Windows.Forms.TextBox();
-            this.label26 = new System.Windows.Forms.Label();
-            this.txtDeviceID = new System.Windows.Forms.TextBox();
-            this.label27 = new System.Windows.Forms.Label();
-            this.txtServerPassword = new System.Windows.Forms.TextBox();
-            this.label28 = new System.Windows.Forms.Label();
-            this.label29 = new System.Windows.Forms.Label();
+            this.btnReadServer = new System.Windows.Forms.Button();
             this.label30 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
+            this.label29 = new System.Windows.Forms.Label();
+            this.btnEditServer = new System.Windows.Forms.Button();
+            this.label28 = new System.Windows.Forms.Label();
+            this.txtServerPassword = new System.Windows.Forms.TextBox();
+            this.label27 = new System.Windows.Forms.Label();
+            this.txtDeviceID = new System.Windows.Forms.TextBox();
+            this.label26 = new System.Windows.Forms.Label();
+            this.txtChannelID = new System.Windows.Forms.TextBox();
+            this.txtServerID = new System.Windows.Forms.TextBox();
+            this.txtChannelName = new System.Windows.Forms.TextBox();
+            this.label25 = new System.Windows.Forms.Label();
+            this.txtUpdateInternal = new System.Windows.Forms.TextBox();
+            this.chkEnable = new System.Windows.Forms.CheckBox();
+            this.label24 = new System.Windows.Forms.Label();
+            this.comboServType = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -196,6 +196,16 @@
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "登录信息";
+            // 
+            // brnRestart
+            // 
+            this.brnRestart.Location = new System.Drawing.Point(143, 48);
+            this.brnRestart.Name = "brnRestart";
+            this.brnRestart.Size = new System.Drawing.Size(70, 30);
+            this.brnRestart.TabIndex = 5;
+            this.brnRestart.Text = "重启软件";
+            this.brnRestart.UseVisualStyleBackColor = true;
+            this.brnRestart.Click += new System.EventHandler(this.brnRestart_Click);
             // 
             // label21
             // 
@@ -526,16 +536,6 @@
             this.groupBox6.TabIndex = 0;
             this.groupBox6.TabStop = false;
             // 
-            // brnRestart
-            // 
-            this.brnRestart.Location = new System.Drawing.Point(143, 48);
-            this.brnRestart.Name = "brnRestart";
-            this.brnRestart.Size = new System.Drawing.Size(70, 30);
-            this.brnRestart.TabIndex = 5;
-            this.brnRestart.Text = "重启软件";
-            this.brnRestart.UseVisualStyleBackColor = true;
-            this.brnRestart.Click += new System.EventHandler(this.brnRestart_Click);
-            // 
             // btn_ChangePWd
             // 
             this.btn_ChangePWd.Enabled = false;
@@ -617,6 +617,46 @@
             this.txtApnUser.TabStop = false;
             this.txtApnUser.Text = "无线通信";
             // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(202, 110);
+            this.label23.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(47, 12);
+            this.label23.TabIndex = 28;
+            this.label23.Text = "Apn密码";
+            // 
+            // txtApnPwd
+            // 
+            this.txtApnPwd.Enabled = false;
+            this.txtApnPwd.Location = new System.Drawing.Point(253, 107);
+            this.txtApnPwd.Margin = new System.Windows.Forms.Padding(2);
+            this.txtApnPwd.Name = "txtApnPwd";
+            this.txtApnPwd.Size = new System.Drawing.Size(152, 21);
+            this.txtApnPwd.TabIndex = 27;
+            this.txtApnPwd.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Enabled = false;
+            this.textBox1.Location = new System.Drawing.Point(254, 77);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(2);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(152, 21);
+            this.textBox1.TabIndex = 26;
+            this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(203, 81);
+            this.label22.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(47, 12);
+            this.label22.TabIndex = 25;
+            this.label22.Text = "ApnUser";
+            // 
             // btnReadWireless
             // 
             this.btnReadWireless.Enabled = false;
@@ -694,29 +734,6 @@
             this.tb_4GPIN.TabIndex = 11;
             this.tb_4GPIN.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // tb_ServerIP
-            // 
-            this.tb_ServerIP.Enabled = false;
-            this.tb_ServerIP.Location = new System.Drawing.Point(68, 73);
-            this.tb_ServerIP.Margin = new System.Windows.Forms.Padding(2);
-            this.tb_ServerIP.MaxLength = 15;
-            this.tb_ServerIP.Name = "tb_ServerIP";
-            this.tb_ServerIP.Size = new System.Drawing.Size(116, 21);
-            this.tb_ServerIP.TabIndex = 10;
-            this.tb_ServerIP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tb_ServerIP.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tb_ServerIP_KeyPress);
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(12, 76);
-            this.label17.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(53, 12);
-            this.label17.TabIndex = 9;
-            this.label17.Text = "服务器IP";
-            this.label17.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
             // tb_4GAPN
             // 
             this.tb_4GAPN.Enabled = false;
@@ -726,18 +743,6 @@
             this.tb_4GAPN.Size = new System.Drawing.Size(153, 21);
             this.tb_4GAPN.TabIndex = 12;
             this.tb_4GAPN.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // tb_ServerPort
-            // 
-            this.tb_ServerPort.Enabled = false;
-            this.tb_ServerPort.Location = new System.Drawing.Point(53, 100);
-            this.tb_ServerPort.Margin = new System.Windows.Forms.Padding(2);
-            this.tb_ServerPort.MaxLength = 5;
-            this.tb_ServerPort.Name = "tb_ServerPort";
-            this.tb_ServerPort.Size = new System.Drawing.Size(51, 21);
-            this.tb_ServerPort.TabIndex = 6;
-            this.tb_ServerPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.tb_ServerPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tb_ServerPort_KeyPress);
             // 
             // label16
             // 
@@ -758,17 +763,6 @@
             this.lb_WifiPassWord.Size = new System.Drawing.Size(117, 21);
             this.lb_WifiPassWord.TabIndex = 5;
             this.lb_WifiPassWord.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(14, 103);
-            this.label14.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(29, 12);
-            this.label14.TabIndex = 3;
-            this.label14.Text = "端口";
-            this.label14.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // label11
             // 
@@ -809,6 +803,52 @@
             this.label2.Size = new System.Drawing.Size(53, 12);
             this.label2.TabIndex = 0;
             this.label2.Text = "WiFi模式";
+            // 
+            // tb_ServerIP
+            // 
+            this.tb_ServerIP.Enabled = false;
+            this.tb_ServerIP.Location = new System.Drawing.Point(68, 73);
+            this.tb_ServerIP.Margin = new System.Windows.Forms.Padding(2);
+            this.tb_ServerIP.MaxLength = 15;
+            this.tb_ServerIP.Name = "tb_ServerIP";
+            this.tb_ServerIP.Size = new System.Drawing.Size(116, 21);
+            this.tb_ServerIP.TabIndex = 10;
+            this.tb_ServerIP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tb_ServerIP.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tb_ServerIP_KeyPress);
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(12, 76);
+            this.label17.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(53, 12);
+            this.label17.TabIndex = 9;
+            this.label17.Text = "服务器IP";
+            this.label17.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // tb_ServerPort
+            // 
+            this.tb_ServerPort.Enabled = false;
+            this.tb_ServerPort.Location = new System.Drawing.Point(53, 100);
+            this.tb_ServerPort.Margin = new System.Windows.Forms.Padding(2);
+            this.tb_ServerPort.MaxLength = 5;
+            this.tb_ServerPort.Name = "tb_ServerPort";
+            this.tb_ServerPort.Size = new System.Drawing.Size(51, 21);
+            this.tb_ServerPort.TabIndex = 6;
+            this.tb_ServerPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tb_ServerPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tb_ServerPort_KeyPress);
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(14, 103);
+            this.label14.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(29, 12);
+            this.label14.TabIndex = 3;
+            this.label14.Text = "端口";
+            this.label14.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lb_WifiName
             // 
@@ -929,54 +969,14 @@
             this.comboIDType.Size = new System.Drawing.Size(93, 20);
             this.comboIDType.TabIndex = 0;
             // 
-            // textBox1
-            // 
-            this.textBox1.Enabled = false;
-            this.textBox1.Location = new System.Drawing.Point(254, 77);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(2);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(152, 21);
-            this.textBox1.TabIndex = 26;
-            this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(203, 81);
-            this.label22.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(47, 12);
-            this.label22.TabIndex = 25;
-            this.label22.Text = "ApnUser";
-            // 
-            // txtApnPwd
-            // 
-            this.txtApnPwd.Enabled = false;
-            this.txtApnPwd.Location = new System.Drawing.Point(253, 107);
-            this.txtApnPwd.Margin = new System.Windows.Forms.Padding(2);
-            this.txtApnPwd.Name = "txtApnPwd";
-            this.txtApnPwd.Size = new System.Drawing.Size(152, 21);
-            this.txtApnPwd.TabIndex = 27;
-            this.txtApnPwd.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(202, 110);
-            this.label23.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(47, 12);
-            this.label23.TabIndex = 28;
-            this.label23.Text = "Apn密码";
-            // 
             // groupBox4
             // 
             this.groupBox4.BackColor = System.Drawing.Color.Transparent;
-            this.groupBox4.Controls.Add(this.button1);
+            this.groupBox4.Controls.Add(this.btnReadServer);
             this.groupBox4.Controls.Add(this.label30);
             this.groupBox4.Controls.Add(this.button2);
             this.groupBox4.Controls.Add(this.label29);
-            this.groupBox4.Controls.Add(this.button3);
+            this.groupBox4.Controls.Add(this.btnEditServer);
             this.groupBox4.Controls.Add(this.label28);
             this.groupBox4.Controls.Add(this.txtServerPassword);
             this.groupBox4.Controls.Add(this.label27);
@@ -1001,6 +1001,190 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "服务器设置";
             // 
+            // btnReadServer
+            // 
+            this.btnReadServer.Enabled = false;
+            this.btnReadServer.Location = new System.Drawing.Point(336, 119);
+            this.btnReadServer.Name = "btnReadServer";
+            this.btnReadServer.Size = new System.Drawing.Size(59, 30);
+            this.btnReadServer.TabIndex = 21;
+            this.btnReadServer.Text = "读取";
+            this.btnReadServer.UseVisualStyleBackColor = true;
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(205, 79);
+            this.label30.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(41, 12);
+            this.label30.TabIndex = 30;
+            this.label30.Text = "通道ID";
+            this.label30.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // button2
+            // 
+            this.button2.Enabled = false;
+            this.button2.Location = new System.Drawing.Point(269, 119);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(61, 30);
+            this.button2.TabIndex = 20;
+            this.button2.Text = "确定";
+            this.button2.UseVisualStyleBackColor = true;
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(200, 50);
+            this.label29.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(53, 12);
+            this.label29.TabIndex = 29;
+            this.label29.Text = "服务器ID";
+            this.label29.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // btnEditServer
+            // 
+            this.btnEditServer.Enabled = false;
+            this.btnEditServer.Location = new System.Drawing.Point(202, 119);
+            this.btnEditServer.Name = "btnEditServer";
+            this.btnEditServer.Size = new System.Drawing.Size(61, 30);
+            this.btnEditServer.TabIndex = 19;
+            this.btnEditServer.Text = "编辑";
+            this.btnEditServer.UseVisualStyleBackColor = true;
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(200, 25);
+            this.label28.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(53, 12);
+            this.label28.TabIndex = 28;
+            this.label28.Text = "通道名称";
+            this.label28.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // txtServerPassword
+            // 
+            this.txtServerPassword.Enabled = false;
+            this.txtServerPassword.Location = new System.Drawing.Point(53, 156);
+            this.txtServerPassword.Margin = new System.Windows.Forms.Padding(2);
+            this.txtServerPassword.MaxLength = 15;
+            this.txtServerPassword.Name = "txtServerPassword";
+            this.txtServerPassword.Size = new System.Drawing.Size(129, 21);
+            this.txtServerPassword.TabIndex = 27;
+            this.txtServerPassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(13, 159);
+            this.label27.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(29, 12);
+            this.label27.TabIndex = 26;
+            this.label27.Text = "密码";
+            this.label27.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // txtDeviceID
+            // 
+            this.txtDeviceID.Enabled = false;
+            this.txtDeviceID.Location = new System.Drawing.Point(53, 128);
+            this.txtDeviceID.Margin = new System.Windows.Forms.Padding(2);
+            this.txtDeviceID.MaxLength = 15;
+            this.txtDeviceID.Name = "txtDeviceID";
+            this.txtDeviceID.Size = new System.Drawing.Size(131, 21);
+            this.txtDeviceID.TabIndex = 25;
+            this.txtDeviceID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(8, 131);
+            this.label26.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(41, 12);
+            this.label26.TabIndex = 24;
+            this.label26.Text = "设备ID";
+            this.label26.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // txtChannelID
+            // 
+            this.txtChannelID.Enabled = false;
+            this.txtChannelID.Location = new System.Drawing.Point(257, 76);
+            this.txtChannelID.Margin = new System.Windows.Forms.Padding(2);
+            this.txtChannelID.MaxLength = 15;
+            this.txtChannelID.Name = "txtChannelID";
+            this.txtChannelID.Size = new System.Drawing.Size(148, 21);
+            this.txtChannelID.TabIndex = 23;
+            this.txtChannelID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // txtServerID
+            // 
+            this.txtServerID.Enabled = false;
+            this.txtServerID.Location = new System.Drawing.Point(257, 49);
+            this.txtServerID.Margin = new System.Windows.Forms.Padding(2);
+            this.txtServerID.MaxLength = 15;
+            this.txtServerID.Name = "txtServerID";
+            this.txtServerID.Size = new System.Drawing.Size(148, 21);
+            this.txtServerID.TabIndex = 22;
+            this.txtServerID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // txtChannelName
+            // 
+            this.txtChannelName.Enabled = false;
+            this.txtChannelName.Location = new System.Drawing.Point(257, 19);
+            this.txtChannelName.Margin = new System.Windows.Forms.Padding(2);
+            this.txtChannelName.MaxLength = 15;
+            this.txtChannelName.Name = "txtChannelName";
+            this.txtChannelName.Size = new System.Drawing.Size(148, 21);
+            this.txtChannelName.TabIndex = 21;
+            this.txtChannelName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(72, 52);
+            this.label25.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(71, 12);
+            this.label25.TabIndex = 20;
+            this.label25.Text = "上报间隔(s)";
+            this.label25.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // txtUpdateInternal
+            // 
+            this.txtUpdateInternal.Enabled = false;
+            this.txtUpdateInternal.Location = new System.Drawing.Point(144, 48);
+            this.txtUpdateInternal.Margin = new System.Windows.Forms.Padding(2);
+            this.txtUpdateInternal.MaxLength = 5;
+            this.txtUpdateInternal.Name = "txtUpdateInternal";
+            this.txtUpdateInternal.Size = new System.Drawing.Size(40, 21);
+            this.txtUpdateInternal.TabIndex = 19;
+            this.txtUpdateInternal.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // chkEnable
+            // 
+            this.chkEnable.AutoSize = true;
+            this.chkEnable.Enabled = false;
+            this.chkEnable.Location = new System.Drawing.Point(16, 50);
+            this.chkEnable.Name = "chkEnable";
+            this.chkEnable.Size = new System.Drawing.Size(48, 16);
+            this.chkEnable.TabIndex = 18;
+            this.chkEnable.Text = "使能";
+            this.chkEnable.UseVisualStyleBackColor = true;
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(7, 23);
+            this.label24.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(65, 12);
+            this.label24.TabIndex = 17;
+            this.label24.Text = "服务器类型";
+            this.label24.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // comboServType
             // 
             this.comboServType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -1014,190 +1198,7 @@
             this.comboServType.Name = "comboServType";
             this.comboServType.Size = new System.Drawing.Size(112, 20);
             this.comboServType.TabIndex = 0;
-            // 
-            // label24
-            // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(7, 23);
-            this.label24.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(65, 12);
-            this.label24.TabIndex = 17;
-            this.label24.Text = "服务器类型";
-            this.label24.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // chkEnable
-            // 
-            this.chkEnable.AutoSize = true;
-            this.chkEnable.Enabled = false;
-            this.chkEnable.Location = new System.Drawing.Point(16, 50);
-            this.chkEnable.Name = "chkEnable";
-            this.chkEnable.Size = new System.Drawing.Size(48, 16);
-            this.chkEnable.TabIndex = 18;
-            this.chkEnable.Text = "使能";
-            this.chkEnable.UseVisualStyleBackColor = true;
-            // 
-            // txtUpdateInternal
-            // 
-            this.txtUpdateInternal.Enabled = false;
-            this.txtUpdateInternal.Location = new System.Drawing.Point(144, 48);
-            this.txtUpdateInternal.Margin = new System.Windows.Forms.Padding(2);
-            this.txtUpdateInternal.MaxLength = 5;
-            this.txtUpdateInternal.Name = "txtUpdateInternal";
-            this.txtUpdateInternal.Size = new System.Drawing.Size(40, 21);
-            this.txtUpdateInternal.TabIndex = 19;
-            this.txtUpdateInternal.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // label25
-            // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(72, 52);
-            this.label25.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(71, 12);
-            this.label25.TabIndex = 20;
-            this.label25.Text = "上报间隔(s)";
-            this.label25.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // txtChannelName
-            // 
-            this.txtChannelName.Enabled = false;
-            this.txtChannelName.Location = new System.Drawing.Point(257, 19);
-            this.txtChannelName.Margin = new System.Windows.Forms.Padding(2);
-            this.txtChannelName.MaxLength = 15;
-            this.txtChannelName.Name = "txtChannelName";
-            this.txtChannelName.Size = new System.Drawing.Size(148, 21);
-            this.txtChannelName.TabIndex = 21;
-            this.txtChannelName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // txtServerID
-            // 
-            this.txtServerID.Enabled = false;
-            this.txtServerID.Location = new System.Drawing.Point(257, 49);
-            this.txtServerID.Margin = new System.Windows.Forms.Padding(2);
-            this.txtServerID.MaxLength = 15;
-            this.txtServerID.Name = "txtServerID";
-            this.txtServerID.Size = new System.Drawing.Size(148, 21);
-            this.txtServerID.TabIndex = 22;
-            this.txtServerID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // txtChannelID
-            // 
-            this.txtChannelID.Enabled = false;
-            this.txtChannelID.Location = new System.Drawing.Point(257, 76);
-            this.txtChannelID.Margin = new System.Windows.Forms.Padding(2);
-            this.txtChannelID.MaxLength = 15;
-            this.txtChannelID.Name = "txtChannelID";
-            this.txtChannelID.Size = new System.Drawing.Size(148, 21);
-            this.txtChannelID.TabIndex = 23;
-            this.txtChannelID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // label26
-            // 
-            this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(8, 131);
-            this.label26.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(41, 12);
-            this.label26.TabIndex = 24;
-            this.label26.Text = "设备ID";
-            this.label26.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // txtDeviceID
-            // 
-            this.txtDeviceID.Enabled = false;
-            this.txtDeviceID.Location = new System.Drawing.Point(53, 128);
-            this.txtDeviceID.Margin = new System.Windows.Forms.Padding(2);
-            this.txtDeviceID.MaxLength = 15;
-            this.txtDeviceID.Name = "txtDeviceID";
-            this.txtDeviceID.Size = new System.Drawing.Size(131, 21);
-            this.txtDeviceID.TabIndex = 25;
-            this.txtDeviceID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // label27
-            // 
-            this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(13, 159);
-            this.label27.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(29, 12);
-            this.label27.TabIndex = 26;
-            this.label27.Text = "密码";
-            this.label27.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // txtServerPassword
-            // 
-            this.txtServerPassword.Enabled = false;
-            this.txtServerPassword.Location = new System.Drawing.Point(53, 156);
-            this.txtServerPassword.Margin = new System.Windows.Forms.Padding(2);
-            this.txtServerPassword.MaxLength = 15;
-            this.txtServerPassword.Name = "txtServerPassword";
-            this.txtServerPassword.Size = new System.Drawing.Size(129, 21);
-            this.txtServerPassword.TabIndex = 27;
-            this.txtServerPassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // label28
-            // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(200, 25);
-            this.label28.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(53, 12);
-            this.label28.TabIndex = 28;
-            this.label28.Text = "通道名称";
-            this.label28.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // label29
-            // 
-            this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(200, 50);
-            this.label29.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(53, 12);
-            this.label29.TabIndex = 29;
-            this.label29.Text = "服务器ID";
-            this.label29.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // label30
-            // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(205, 79);
-            this.label30.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(41, 12);
-            this.label30.TabIndex = 30;
-            this.label30.Text = "通道ID";
-            this.label30.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // button1
-            // 
-            this.button1.Enabled = false;
-            this.button1.Location = new System.Drawing.Point(336, 119);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(59, 30);
-            this.button1.TabIndex = 21;
-            this.button1.Text = "读取";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // button2
-            // 
-            this.button2.Enabled = false;
-            this.button2.Location = new System.Drawing.Point(269, 119);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(61, 30);
-            this.button2.TabIndex = 20;
-            this.button2.Text = "确定";
-            this.button2.UseVisualStyleBackColor = true;
-            // 
-            // button3
-            // 
-            this.button3.Enabled = false;
-            this.button3.Location = new System.Drawing.Point(202, 119);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(61, 30);
-            this.button3.TabIndex = 19;
-            this.button3.Text = "编辑";
-            this.button3.UseVisualStyleBackColor = true;
+            this.comboServType.SelectedIndexChanged += new System.EventHandler(this.comboServType_SelectedIndexChanged);
             // 
             // FrmMain
             // 
@@ -1341,9 +1342,9 @@
         private System.Windows.Forms.TextBox txtChannelName;
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.TextBox txtUpdateInternal;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnReadServer;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button btnEditServer;
     }
 }
 

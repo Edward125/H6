@@ -36,6 +36,13 @@ namespace H6
         FileStream ToFileOpen;//实例化FileStream类
 
 
+        public enum ServerType
+        {
+            CMSV6 = 1,
+            GB281811,
+            NetCheckServer
+        }
+
 
         public const int WM_DEVICECHANGE = 0x219;
         public const int DBT_DEVICEARRIVAL = 0x8000;
@@ -102,7 +109,7 @@ namespace H6
         /// </summary>
         public class WiFiInfo
         {
-           public  WiFiModeType WiFiMode { set; get; }
+            public  WiFiModeType WiFiMode { set; get; }
             public  string WiFiSSID { set; get; }
             public  string WiFiPassword { set; get; }
             public  string ServerIP { set; get; }
@@ -113,14 +120,25 @@ namespace H6
 
 
 
+        /// <summary>
+        /// Only Wifi
+        /// </summary>
+        public class WiFi
+        {
+            public WiFiModeType WiFiMode { set; get; }
+            public string WiFiSSID { set; get; }
+            public string WiFiPassword { set; get; }
+
+        }
+
 
         /// <summary>
         /// APN
         /// </summary>
         public class APN
         {
-            public string APN { set; get; }
-            public string PIN { set; get; }
+            public string ApnName { set; get; }
+            public string ApnPin { set; get; }
             public string ApnUser { set; get; }
             public string ApnPwd { set; get; }
         }
@@ -764,7 +782,7 @@ namespace H6
                     break;
                 //case DeviceType.H8:
                 //    BODYCAMDLL_API_YZ.ReadDeviceBatteryDumpEnergy(ref BatteryLevel, DevicePassword, ref Battery_iRet);
-                    break;
+                   //break;
                 case DeviceType.EasyStorage:
                     if (comboUserID.SelectedIndex == 0)
                         Battery_iRet =  BODYCAMDLL_API_YZ.BC_LoginEx(BCHandle, "admin", DevicePassword);
@@ -850,10 +868,11 @@ namespace H6
                     else
                         comboWifiName.Text = DeviceWiFiInfo.WiFiSSID;
 
-                    if (DeviceWiFiInfo.WiFiMode == WiFiModeType.AP)
-                        Lb_WifiMode.SelectedIndex = 0;
-                    if (DeviceWiFiInfo.WiFiMode == WiFiModeType.STA)
-                        Lb_WifiMode.SelectedIndex = 1;
+                        if (DeviceWiFiInfo.WiFiMode == WiFiModeType.AP)
+                            Lb_WifiMode.SelectedIndex = 0;
+                        if (DeviceWiFiInfo.WiFiMode == WiFiModeType.STA)
+                            Lb_WifiMode.SelectedIndex = 1;
+
                     lb_WifiPassWord.Text = DeviceWiFiInfo.WiFiPassword;
                     tb_ServerIP.Text = DeviceWiFiInfo.ServerIP;
                     tb_ServerPort.Text = DeviceWiFiInfo.ServerPort;
@@ -1395,9 +1414,16 @@ namespace H6
 
             btn_ChangePWd.Enabled = true;
             grbChangePassword.Enabled = false;
-
-
             comboUserID.Enabled = false;
+            if (LoginDevice == DeviceType.Cammpro)
+                comboServType.SelectedIndex = 0;
+            else
+            {
+                comboServType.Enabled = true;
+                comboServType.SelectedIndex = 0;
+            }
+            btnEditServer.Enabled = true;
+            btnReadServer.Enabled = true;
         }
 
 
@@ -1957,6 +1983,22 @@ namespace H6
             return false;
         }
 
+        private void comboServType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+
+        }
+
+
+
+
+        private bool GetServerInfo(DeviceType logindevice, ServerType sertype)
+        {
+
+
+            return false;
+
+        }
 
     }
 }
