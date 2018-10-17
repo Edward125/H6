@@ -116,7 +116,7 @@
             // 
             // btn_CheckDev
             // 
-            this.btn_CheckDev.Location = new System.Drawing.Point(146, 15);
+            this.btn_CheckDev.Location = new System.Drawing.Point(142, 15);
             this.btn_CheckDev.Name = "btn_CheckDev";
             this.btn_CheckDev.Size = new System.Drawing.Size(73, 37);
             this.btn_CheckDev.TabIndex = 0;
@@ -126,7 +126,7 @@
             // 
             // btn_Logon
             // 
-            this.btn_Logon.Location = new System.Drawing.Point(223, 14);
+            this.btn_Logon.Location = new System.Drawing.Point(218, 14);
             this.btn_Logon.Name = "btn_Logon";
             this.btn_Logon.Size = new System.Drawing.Size(75, 35);
             this.btn_Logon.TabIndex = 1;
@@ -167,7 +167,7 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(26, 92);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(304, 97);
+            this.groupBox1.Size = new System.Drawing.Size(300, 97);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "登录信息";
@@ -198,7 +198,7 @@
             // 
             // btn_exit
             // 
-            this.btn_exit.Location = new System.Drawing.Point(224, 54);
+            this.btn_exit.Location = new System.Drawing.Point(218, 54);
             this.btn_exit.Name = "btn_exit";
             this.btn_exit.Size = new System.Drawing.Size(73, 37);
             this.btn_exit.TabIndex = 6;
@@ -213,9 +213,9 @@
             this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.tb_Resolution);
             this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Location = new System.Drawing.Point(336, 92);
+            this.groupBox2.Location = new System.Drawing.Point(330, 92);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(114, 97);
+            this.groupBox2.Size = new System.Drawing.Size(120, 97);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             // 
@@ -239,17 +239,17 @@
             // 
             // tb_Resolution
             // 
-            this.tb_Resolution.Location = new System.Drawing.Point(47, 56);
+            this.tb_Resolution.Location = new System.Drawing.Point(43, 56);
             this.tb_Resolution.Name = "tb_Resolution";
             this.tb_Resolution.ReadOnly = true;
-            this.tb_Resolution.Size = new System.Drawing.Size(51, 21);
+            this.tb_Resolution.Size = new System.Drawing.Size(72, 21);
             this.tb_Resolution.TabIndex = 3;
             this.tb_Resolution.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(8, 62);
+            this.label4.Location = new System.Drawing.Point(3, 62);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(41, 12);
             this.label4.TabIndex = 2;

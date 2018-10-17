@@ -77,6 +77,8 @@ namespace H6
         {
             public int Resolution_Width { get; set; }
             public int Resolution_Height {get;set;}
+            public int Bps { get; set; }
+            public int Fps {get;set;}
         }
 
         /// <summary>
@@ -579,18 +581,33 @@ namespace H6
             deviceresolution = new DeviceResolution();
             int Resolution_Width = -1;
             int Resolution_Height = -1;
+            int fps = -1;
+            int bps = -1;
             int _ReadDeviceResolution_iRet = -1;
+
 
             if (LoginDevice == DeviceType.H6_G9)
                 ZFYDLL_API_MC.ReadDeviceResolution(ref  Resolution_Width, ref  Resolution_Height , password, ref _ReadDeviceResolution_iRet);
             if (LoginDevice == DeviceType.H8)
                 BODYCAMDLL_API_YZ.ReadDeviceResolution(ref  Resolution_Width, ref  Resolution_Height, password, ref _ReadDeviceResolution_iRet);
+
+            if (LoginDevice == DeviceType.G5)
+              _ReadDeviceResolution_iRet =  BODYCAMDLL_API_YZ.BC_GetMasterVEInfo(BCHandle, DevicePassword , out Resolution_Width,out  Resolution_Height, out fps, out bps);
+
+
             if (_ReadDeviceResolution_iRet == 1)
             {
                 // this.tb_Resolution.Text = Resolution_Width.ToString() + " X " + Resolution_Height.ToString();
                 //updateMessage(lb_StateInfo, "获取视频分辨率参数成功.");
                 deviceresolution.Resolution_Width = Resolution_Width;
                 deviceresolution.Resolution_Height = Resolution_Height;
+
+                if (LoginDevice == DeviceType.G5)
+                {
+                    deviceresolution.Fps = fps;
+                    deviceresolution.Bps = bps;
+                }
+
                 return true;
             }
 
@@ -670,11 +687,27 @@ namespace H6
         {
             int SyncDevTime_iRet = -1;
             if (LoginDevice == DeviceType.H6_G9)
+            {
                 ZFYDLL_API_MC.SyncDevTime(password, ref SyncDevTime_iRet);
+                if (SyncDevTime_iRet == 5)
+                    return true;
+            }
             if (LoginDevice == DeviceType.H8)
+            {
                 BODYCAMDLL_API_YZ.SyncDevTime(password, ref SyncDevTime_iRet);
-            if (SyncDevTime_iRet == 5)
-                return true;
+                if (SyncDevTime_iRet == 5)
+                    return true;
+            }
+
+            if (LoginDevice == DeviceType.G5)
+            {
+                SyncDevTime_iRet = BODYCAMDLL_API_YZ.BC_SetDevTime(BCHandle, DevicePassword);
+                if (SyncDevTime_iRet == 1)
+                    return true;
+            }
+
+
+
             return false;
         }
 
@@ -690,6 +723,7 @@ namespace H6
             if (string.IsNullOrEmpty(DevicePassword))
             {
                 updateMessage(lb_StateInfo, "密码不能为空,请重新输入.");
+                tb_Password.Focus();
                 return;
             }
 
@@ -705,29 +739,17 @@ namespace H6
                 case DeviceType.H8:
                     BODYCAMDLL_API_YZ.ReadDeviceBatteryDumpEnergy(ref BatteryLevel, DevicePassword, ref Battery_iRet);
                     break;
+                case DeviceType.G5:
+                    if (comboUserID.SelectedIndex == 0)
+                        Battery_iRet =  BODYCAMDLL_API_YZ.BC_LoginEx(BCHandle, "admin", DevicePassword);
+                    if (comboUserID.SelectedIndex == 1)
+                        Battery_iRet = BODYCAMDLL_API_YZ.BC_LoginEx(BCHandle, "user", DevicePassword);
+                    break;
                 default:
                     break;
             }
 
-            //Delay(1000);
 
-            //if (LoginDevice == DeviceType.H6_G9)
-            //{
-            //    if (DevicePassword != "000000")
-            //    {
-            //        updateMessage(lb_StateInfo, "密码错误,登录失败.");
-            //        return;
-            //    }
-            //}
-
-            //if (LoginDevice == DeviceType.H8)
-            //{
-            //    if (DevicePassword != "888888")
-            //    {
-            //        updateMessage(lb_StateInfo, "密码错误,登录失败.");
-            //        return;
-            //    }
-            //}
 
             if (Battery_iRet != 1)
             {
@@ -739,66 +761,78 @@ namespace H6
 
 
 
+            if (LoginDevice == DeviceType.G5)
+                BODYCAMDLL_API_YZ.BC_GetBatVal(BCHandle, DevicePassword, out BatteryLevel);
+
+
             //登陆成功
             LogonInitUI();
 
-            //////////////////////////////////////////////////////////////////////////////
-            //执法仪电量
-            this.tb_Battery.Text = BatteryLevel.ToString() + " %";
-            updateMessage(lb_StateInfo, "获取电量值 成功.");
-            /////////////////////////////////////////////////////////////////////////////
-            //获取执法记录仪分辨率
-            DeviceResolution DR = new DeviceResolution();
-            if (GetDeviceResolution(LoginDevice, DevicePassword, out DR))
-            {
-                this.tb_Resolution.Text = DR.Resolution_Width.ToString() + " X " + DR.Resolution_Height.ToString();
-                updateMessage(lb_StateInfo, "获取视频分辨率参数成功.");
-            }
-            ///////////////////////////////////////////////////////////////////////////
-            //执法仪信息读取返回值
-            DeviceInfo DI = new DeviceInfo();
-            if (GetDeviceInfo(LoginDevice, DevicePassword, out DI))
-            {
-                updateMessage(lb_StateInfo, "获取执法仪本机信息成功.");
-                this.tb_DevID.Text = DI.cSerial; //System.Text.Encoding.Default.GetString(uuDevice.cSerial);
-                this.tb_UserID.Text = DI.userNo; ///System.Text.Encoding.Default.GetString(uuDevice.userNo);
-                this.tb_UserName.Text = DI.userName; // System.Text.Encoding.Default.GetString(uuDevice.userName);
-                this.tb_UnitID.Text = DI.unitNo;  //System.Text.Encoding.Default.GetString(uuDevice.unitNo);
-                this.tb_UnitName.Text = DI.unitName; //System.Text.Encoding.Default.GetString(uuDevice.unitName);        
-            }
-
+            //同步时间
             if (SyncDeviceTime(LoginDevice, DevicePassword))
                 updateMessage(lb_StateInfo, "自动同步设备时间成功.（" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ")");
             else
                 updateMessage(lb_StateInfo, "自动设备时间失败.");
 
-            /////////////////////////////////////////////////////
-            //读取执法仪wifi等信息
-            List<string> WiFiList = wifi.EnumerateAvailableNetwork(lb_StateInfo);
-            WiFiInfo DeviceWiFiInfo = new WiFiInfo();
-            if (ReadDeviceWiFiInfo (LoginDevice,DevicePassword,out DeviceWiFiInfo ))
-            {
-                if (WiFiList.Count > 0)
+
+                //////////////////////////////////////////////////////////////////////////////
+                //执法仪电量
+                this.tb_Battery.Text = BatteryLevel.ToString() + " %";
+                updateMessage(lb_StateInfo, "获取电量值成功("+ BatteryLevel.ToString() + " %).");
+                /////////////////////////////////////////////////////////////////////////////
+                //获取执法记录仪分辨率
+                DeviceResolution DR = new DeviceResolution();
+                if (GetDeviceResolution(LoginDevice, DevicePassword, out DR))
                 {
-                    foreach (string item in WiFiList)
-                    {
-                        comboWifiName.Items.Add(item);
-                    }
+                    this.tb_Resolution.Text = DR.Resolution_Width.ToString() + "*" + DR.Resolution_Height.ToString();
+                    updateMessage(lb_StateInfo, "获取视频分辨率参数成功(" + DR.Resolution_Width.ToString() + "*" + DR.Resolution_Height.ToString()+").");
+
+                    if (LoginDevice == DeviceType.G5)
+                        updateMessage(lb_StateInfo, "获取视频码流帧数参数成功(Bps=" + DR.Bps +"bit/s,Fps="+ DR.Fps +"帧/s).");
+                }
+                ///////////////////////////////////////////////////////////////////////////
+                //执法仪信息读取返回值
+                DeviceInfo DI = new DeviceInfo();
+                if (GetDeviceInfo(LoginDevice, DevicePassword, out DI))
+                {
+                    updateMessage(lb_StateInfo, "获取执法仪本机信息成功.");
+                    this.tb_DevID.Text = DI.cSerial; //System.Text.Encoding.Default.GetString(uuDevice.cSerial);
+                    this.tb_UserID.Text = DI.userNo; ///System.Text.Encoding.Default.GetString(uuDevice.userNo);
+                    this.tb_UserName.Text = DI.userName; // System.Text.Encoding.Default.GetString(uuDevice.userName);
+                    this.tb_UnitID.Text = DI.unitNo;  //System.Text.Encoding.Default.GetString(uuDevice.unitNo);
+                    this.tb_UnitName.Text = DI.unitName; //System.Text.Encoding.Default.GetString(uuDevice.unitName);        
                 }
 
-                if (string.IsNullOrEmpty(DeviceWiFiInfo.WiFiSSID) && comboWifiName.Items.Count > 0)
-                    comboWifiName.SelectedIndex = 0;
-                else
-                    comboWifiName.Text = DeviceWiFiInfo.WiFiSSID;
 
-                if (DeviceWiFiInfo.WiFiMode == WiFiModeType.AP)
-                    Lb_WifiMode.SelectedIndex = 0;
-                if (DeviceWiFiInfo.WiFiMode == WiFiModeType.STA)
-                    Lb_WifiMode.SelectedIndex = 1;
-                lb_WifiPassWord.Text = DeviceWiFiInfo.WiFiPassword;
-                tb_ServerIP.Text  = DeviceWiFiInfo.ServerIP;
-                tb_ServerPort.Text = DeviceWiFiInfo.ServerPort;
-            }
+
+                /////////////////////////////////////////////////////
+                //读取执法仪wifi等信息
+                List<string> WiFiList = wifi.EnumerateAvailableNetwork(lb_StateInfo);
+                WiFiInfo DeviceWiFiInfo = new WiFiInfo();
+                if (ReadDeviceWiFiInfo(LoginDevice, DevicePassword, out DeviceWiFiInfo))
+                {
+                    if (WiFiList.Count > 0)
+                    {
+                        foreach (string item in WiFiList)
+                        {
+                            comboWifiName.Items.Add(item);
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(DeviceWiFiInfo.WiFiSSID) && comboWifiName.Items.Count > 0)
+                        comboWifiName.SelectedIndex = 0;
+                    else
+                        comboWifiName.Text = DeviceWiFiInfo.WiFiSSID;
+
+                    if (DeviceWiFiInfo.WiFiMode == WiFiModeType.AP)
+                        Lb_WifiMode.SelectedIndex = 0;
+                    if (DeviceWiFiInfo.WiFiMode == WiFiModeType.STA)
+                        Lb_WifiMode.SelectedIndex = 1;
+                    lb_WifiPassWord.Text = DeviceWiFiInfo.WiFiPassword;
+                    tb_ServerIP.Text = DeviceWiFiInfo.ServerIP;
+                    tb_ServerPort.Text = DeviceWiFiInfo.ServerPort;
+                }
+
 
 
 
@@ -1055,37 +1089,45 @@ namespace H6
 
         private void btn_SyncDevTime_Click(object sender, EventArgs e)
         {
-            DevicePassword = tb_Password.Text;
-            int H6SyncDevTime_iRet=-1;
-            ZFYDLL_API_MC.Init_Device(IDCode, ref  H6Init_Device_iRet);
-            int H8SyncDevTime_iRet = -1;
-            BODYCAMDLL_API_YZ.Init_Device("HACH8", ref  H8Init_Device_iRet);
-            if (H6Init_Device_iRet == 1)
-            {
-                ZFYDLL_API_MC.SyncDevTime(DevicePassword, ref H6SyncDevTime_iRet);
+            //DevicePassword = tb_Password.Text;
+            //int H6SyncDevTime_iRet=-1;
+            //ZFYDLL_API_MC.Init_Device(IDCode, ref  H6Init_Device_iRet);
+            //int H8SyncDevTime_iRet = -1;
+            //BODYCAMDLL_API_YZ.Init_Device("HACH8", ref  H8Init_Device_iRet);
+            //if (H6Init_Device_iRet == 1)
+            //{
+            //    ZFYDLL_API_MC.SyncDevTime(DevicePassword, ref H6SyncDevTime_iRet);
                
-                if (H6SyncDevTime_iRet == 5)
-                {
-                    updateMessage(lb_StateInfo, "手动同步设备时间成功.（" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ")");
-                }
-                else
-                {
-                    updateMessage(lb_StateInfo, "手动同步设备时间失败.");
-                }
-            }
-            if (H8Init_Device_iRet == 1)
-            {
-                BODYCAMDLL_API_YZ.SyncDevTime(DevicePassword, ref H8SyncDevTime_iRet);
+            //    if (H6SyncDevTime_iRet == 5)
+            //    {
+            //        updateMessage(lb_StateInfo, "手动同步设备时间成功.（" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ")");
+            //    }
+            //    else
+            //    {
+            //        updateMessage(lb_StateInfo, "手动同步设备时间失败.");
+            //    }
+            //}
+            //if (H8Init_Device_iRet == 1)
+            //{
+            //    BODYCAMDLL_API_YZ.SyncDevTime(DevicePassword, ref H8SyncDevTime_iRet);
 
-                if (H8SyncDevTime_iRet == 5)
-                {
-                    updateMessage(lb_StateInfo, "手动同步设备时间成功.（" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ")");
-                }
-                else
-                {
-                    updateMessage(lb_StateInfo, "手动同步设备时间失败.");
-                }
-            }
+            //    if (H8SyncDevTime_iRet == 5)
+            //    {
+            //        updateMessage(lb_StateInfo, "手动同步设备时间成功.（" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ")");
+            //    }
+            //    else
+            //    {
+            //        updateMessage(lb_StateInfo, "手动同步设备时间失败.");
+            //    }
+            //}
+
+
+
+            //同步时间
+            if (SyncDeviceTime(LoginDevice, DevicePassword))
+                updateMessage(lb_StateInfo, "手动同步设备时间成功.（" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + ")");
+            else
+                updateMessage(lb_StateInfo, "手动设备时间失败.");
         }
 
         private void btn_ChangePassword_Click(object sender, EventArgs e)
@@ -1374,7 +1416,9 @@ namespace H6
 
             btn_ChangePWd.Enabled = true;
             grbChangePassword.Enabled = false;
-    
+
+
+            comboUserID.Enabled = false;
         }
 
 

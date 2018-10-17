@@ -324,7 +324,7 @@ namespace H6
         *************************************************/
         //BODYCAMDLL_API int  BC_SetDevTime(IN BCHandle *dev,IN char *sPwd);
          [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int BC_SetDevTime(IntPtr dev,byte sPwd);
+        public static extern int BC_SetDevTime(IntPtr dev,string  sPwd);
 
 
         /*************************************************
@@ -438,7 +438,7 @@ namespace H6
         *************************************************/
         //BODYCAMDLL_API int  BC_GetMasterVEInfo(IN BCHandle *dev,IN char *sPwd,OUT int *Width,OUT int *Height,OUT int *Fps,OUT int *Bps);
         [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int BC_GetMasterVEInfo(IntPtr dev, byte sPwd,
+        public static extern int BC_GetMasterVEInfo(IntPtr dev, string sPwd,
                                                     out int Width, out int Height, out int Fps, out int Bps);
 
         /*************************************************
@@ -465,7 +465,7 @@ namespace H6
         *************************************************/
         //BODYCAMDLL_API int  BC_GetBatVal(IN BCHandle *dev,IN char *sPwd,OUT int *Battery);
         [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int BC_GetBatVal(IntPtr dev, byte sPwd, out int Battery);
+        public static extern int BC_GetBatVal(IntPtr dev, string sPwd, out int Battery);
 
         /*************************************************
         *函数说明:  设置运营商接入点，,只有管理员用户有效
