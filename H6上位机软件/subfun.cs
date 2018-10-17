@@ -302,7 +302,7 @@ namespace H6
         *************************************************/
         //BODYCAMDLL_API int  BC_GetDevInfo(IN BCHandle *dev,IN char *sPwd,OUT DEV_INFO *info);
         [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int BC_GetDevInfo(IntPtr dev,byte sPwd,out ZFY_INFO info);
+        public static extern int BC_GetDevInfo(IntPtr dev,string sPwd,out ZFY_INFO info);
 
         /*************************************************
         *函数说明:   设置使用者信息,只有管理员用户有效
