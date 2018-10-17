@@ -16,7 +16,7 @@ using System.Net;
 
 namespace H6
 {
-    public partial class frmMain : Form
+    public partial class FrmMain : Form
     {
         USB ezUSB = new USB();
         public static string AAA = string.Empty;
@@ -109,14 +109,61 @@ namespace H6
             public  string ServerPort { set; get; }
             public string APN { set; get; }
             public string PIN { set; get; }
-            
         }
 
 
 
 
+        /// <summary>
+        /// APN
+        /// </summary>
+        public class APN
+        {
+            public string APN { set; get; }
+            public string PIN { set; get; }
+            public string ApnUser { set; get; }
+            public string ApnPwd { set; get; }
+        }
 
-        public frmMain()
+
+        /// <summary>
+        ///  CMCSV6 Server
+        /// </summary>
+        public class CMCSV6Server
+        {
+            public string ServerIP { set; get; }
+            public string ServerPort { set; get; }
+            public string UpdateInteral { set; get; }
+        }
+
+
+        /// <summary>
+        /// GB28181
+        /// </summary>
+        public class GB28181Server
+        {
+            public string ServerIP { set; get; }
+            public string ServerPort { set; get; }
+            public string DeviceID { set; get; }
+            public string DevicePassword { set; get; }
+            public string ChannelName { set; get; }
+            public string ServerID { set; get; }
+            public string ChannelID{set;get;}
+            public string GPSIP { set; get; }
+            public string GPSPort { set; get; }
+        }
+
+
+        /// <summary>
+        /// NetCheckServer
+        /// </summary>
+        public class NetCheckServer
+        {
+            public string IP { set; get; }
+            public string Port { set; get; }
+        }
+
+        public FrmMain()
         {
             InitializeComponent();
         }
@@ -144,7 +191,7 @@ namespace H6
             //updateMessage(lb_StateInfo, "无线信息" + gb_Wireless.Location.X.ToString() + "X" + gb_Wireless.Location.Y.ToString());
 
             //隐藏无线参数框
-            gb_Wireless.Visible = true;
+            txtApnUser.Visible = true;
             ////设定状态显示窗体大小
             //gb_StatusCommand.Width = 458;
             //gb_StatusCommand.Height = 475;
@@ -524,7 +571,11 @@ namespace H6
                 {
                     BCHandle = BODYCAMDLL_API_YZ.BC_InitDevEx(_IDCode);
                     IDCode = System.Text.Encoding.Default.GetString(_IDCode, 0, _IDCode.Length);
-                    if (BCHandle != IntPtr.Zero)
+
+                    //int iRet = -1;
+                    //BCHandle =  BODYCAMDLL_API_YZ.Init_Device(IDCode, ref  iRet);
+                    
+                    if (BCHandle != IntPtr.Zero  )
                     {
                         updateMessage(lb_StateInfo, "检测到设备" + IDCode + ".");
                         LoginDevice = DeviceType.EasyStorage;
@@ -618,17 +669,7 @@ namespace H6
                 ZFYDLL_API_MC.GetZFYInfo(ref uuDevice, password , ref GetZFYInfo_iRet);
                 if (GetZFYInfo_iRet == 1)
                 {
-                    //this.tb_DevID.Text = System.Text.Encoding.Default.GetString(uuDevice.cSerial);
-                    //this.tb_DevID.Enabled = false;
-                    //this.tb_UserID.Text = System.Text.Encoding.Default.GetString(uuDevice.userNo);
-                    //this.tb_UserID.Enabled = false;
-                    //this.tb_UserName.Text = System.Text.Encoding.Default.GetString(uuDevice.userName);
-                    //this.tb_UserName.Enabled = false;
-                    //this.tb_UnitID.Text = System.Text.Encoding.Default.GetString(uuDevice.unitNo);
-                    //this.tb_UnitID.Enabled = false;
-                    //this.tb_UnitName.Text = System.Text.Encoding.Default.GetString(uuDevice.unitName);
-                    //this.tb_UnitName.Enabled = false;
-                    //updateMessage(lb_StateInfo, "获取执法仪本机信息 成功.");
+
                     deviceinfo.cSerial = System.Text.Encoding.Default.GetString(uuDevice.cSerial);
                     deviceinfo.userNo = System.Text.Encoding.Default.GetString(uuDevice.userNo);
                     deviceinfo.userName = System.Text.Encoding.Default.GetString(uuDevice.userName);
@@ -918,10 +959,8 @@ namespace H6
         private void btn_Logon_Click(object sender, EventArgs e)
         {
 
-
             LogIn();
 
-  
         }
 
 
@@ -988,7 +1027,10 @@ namespace H6
                 info.userName  = Encoding.Default.GetBytes(deviceinfo.userName  .PadRight(33, '\0').ToArray());
                 info.unitNo = Encoding.Default.GetBytes(deviceinfo.unitNo.PadRight(13, '\0').ToArray());
                 info.unitName = Encoding.Default.GetBytes(deviceinfo.unitName.PadRight(33, '\0').ToArray());
-                BODYCAMDLL_API_YZ.WriteZFYInfo(ref info, password, ref WriteZFYInfo_iRet);
+                //BODYCAMDLL_API_YZ.WriteZFYInfo(ref info, password, ref WriteZFYInfo_iRet);
+                //byte[] _psw = Encoding.Default.GetBytes(password);
+                WriteZFYInfo_iRet =  BODYCAMDLL_API_YZ.BC_SetDevInfo(BCHandle, password,info);
+                
             }
             if (WriteZFYInfo_iRet == 1)
                 return true;
@@ -1609,7 +1651,7 @@ namespace H6
                 //MessageBox.Show("奇数次");
                 //执行你的事情1
                 //隐藏无线参数框
-                gb_Wireless.Visible = true;
+                txtApnUser.Visible = true;
                 //设定状态显示窗体大小
                 gb_StatusCommand.Width = 458;
                 gb_StatusCommand.Height = 293;
@@ -1692,7 +1734,7 @@ namespace H6
                 //执行你的事情2
                 //MessageBox.Show("偶数次");
                 //隐藏无线参数框
-                gb_Wireless.Visible = false;
+                txtApnUser.Visible = false;
                 //设定状态显示窗体大小
                 gb_StatusCommand.Width = 458;
                 gb_StatusCommand.Height = 475;

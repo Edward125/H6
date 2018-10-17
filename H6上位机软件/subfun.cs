@@ -58,8 +58,11 @@ namespace H6
        *********************************************************************************************************/
 
         ////初始化连接
+        //[DllImport("LibBodycam.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        //public static extern int Init_Device(string IDCode, ref int iRet);
+
         [DllImport("LibBodycam.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        public static extern int Init_Device(string IDCode, ref int iRet);
+        public static extern IntPtr  Init_Device(string IDCode, ref int iRet);
         //获取生产厂代码及产品型号代码
         [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr GetIDCode(ref IntPtr IDCode, ref int iRet);
@@ -313,7 +316,10 @@ namespace H6
         *************************************************/
         //BODYCAMDLL_API int  BC_SetDevInfo(IN BCHandle *dev,IN char *sPwd,IN DEV_INFO *info);
          [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-         public static extern int BC_SetDevInfo(IntPtr dev,byte sPwd, ZFY_INFO info);
+         public static extern int BC_SetDevInfo(IntPtr dev,byte  sPwd, ZFY_INFO info);
+
+         [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+         public static extern int BC_SetDevInfo(IntPtr dev, string sPwd, ZFY_INFO info);
 
         /*************************************************
         *函数说明:   同步电脑时间到设备，对所有的用户生效

@@ -318,7 +318,7 @@ namespace H6
                 interfaceList = new WLAN_INTERFACE_INFO_LIST (ppInterfaceList );
                 //Console.WriteLine("有{0}个无线网络适配器", interfaceList.dwNumberOfItems);
                 //Console.WriteLine("Enumerating Wireless Network Adapters...");
-                H6.frmMain.updateMessage (lstMsg,"有" +  interfaceList.dwNumberOfItems +"个无线网络适配器");
+                H6.FrmMain.updateMessage (lstMsg,"有" +  interfaceList.dwNumberOfItems +"个无线网络适配器");
                // H6.FrmMain.updateMessage (lstMsg,"Enumerating Wireless Network Adapters...");
                 for (int i = 0; i < interfaceList.dwNumberOfItems; i++)
                 {
@@ -330,7 +330,7 @@ namespace H6
                     WLAN_AVALABLE_NETWORK_LIST wlanAvailableNetworkList = new WLAN_AVALABLE_NETWORK_LIST(ppAvailableNetworkList);
                     WlanFreeMemory(ppAvailableNetworkList);
                     WlanCloseHandle(handle, IntPtr.Zero);
-                    H6.frmMain.updateMessage(lstMsg, "共计发现" + wlanAvailableNetworkList .dwNumberOfItems  + "个可用的WLAN SSID");
+                    H6.FrmMain.updateMessage(lstMsg, "共计发现" + wlanAvailableNetworkList .dwNumberOfItems  + "个可用的WLAN SSID");
                     for (int j = 0;j <wlanAvailableNetworkList.dwNumberOfItems ;j ++)
                     {
                         WLAN_AVAILABLE_NETWORK network = wlanAvailableNetworkList.wlanAvailableNetwork[j];
@@ -359,7 +359,7 @@ namespace H6
             }
             else
             {
-               H6.frmMain.updateMessage (lstMsg ,"本机没有发现无线网络适配器.");
+               H6.FrmMain.updateMessage (lstMsg ,"本机没有发现无线网络适配器.");
             }
         }
 
@@ -386,7 +386,7 @@ namespace H6
                 interfaceList = new WLAN_INTERFACE_INFO_LIST(ppInterfaceList);
                 //Console.WriteLine("有{0}个无线网络适配器", interfaceList.dwNumberOfItems);
                 //Console.WriteLine("Enumerating Wireless Network Adapters...");
-                H6.frmMain.updateMessage(lstMsg, "有" + interfaceList.dwNumberOfItems + "个无线网络适配器");
+                H6.FrmMain.updateMessage(lstMsg, "有" + interfaceList.dwNumberOfItems + "个无线网络适配器");
                 // H6.FrmMain.updateMessage (lstMsg,"Enumerating Wireless Network Adapters...");
                 for (int i = 0; i < interfaceList.dwNumberOfItems; i++)
                 {
@@ -398,7 +398,7 @@ namespace H6
                     WLAN_AVALABLE_NETWORK_LIST wlanAvailableNetworkList = new WLAN_AVALABLE_NETWORK_LIST(ppAvailableNetworkList);
                     WlanFreeMemory(ppAvailableNetworkList);
                     WlanCloseHandle(handle, IntPtr.Zero);
-                    H6.frmMain.updateMessage(lstMsg, "共计发现" + wlanAvailableNetworkList.dwNumberOfItems + "个可用的WLAN SSID");
+                    H6.FrmMain.updateMessage(lstMsg, "共计发现" + wlanAvailableNetworkList.dwNumberOfItems + "个可用的WLAN SSID");
                     for (int j = 0; j < wlanAvailableNetworkList.dwNumberOfItems; j++)
                     {
                         WLAN_AVAILABLE_NETWORK network = wlanAvailableNetworkList.wlanAvailableNetwork[j];
@@ -414,7 +414,7 @@ namespace H6
             }
             else
             {
-                H6.frmMain.updateMessage(lstMsg, "本机没有发现无线网络适配器.");
+                H6.FrmMain.updateMessage(lstMsg, "本机没有发现无线网络适配器.");
             }
 
             return WiFiList;

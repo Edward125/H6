@@ -1,6 +1,6 @@
 ﻿namespace H6
 {
-    partial class frmMain
+    partial class FrmMain
     {
         /// <summary>
         /// 必需的设计器变量。
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
             this.btn_CheckDev = new System.Windows.Forms.Button();
             this.btn_Logon = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -73,7 +73,7 @@
             this.btn_SyncDevTime = new System.Windows.Forms.Button();
             this.btn_SetMSDC = new System.Windows.Forms.Button();
             this.btn_4G = new System.Windows.Forms.Button();
-            this.gb_Wireless = new System.Windows.Forms.GroupBox();
+            this.txtApnUser = new System.Windows.Forms.GroupBox();
             this.btnReadWireless = new System.Windows.Forms.Button();
             this.btnRefreshWifi = new System.Windows.Forms.Button();
             this.comboWifiName = new System.Windows.Forms.ComboBox();
@@ -103,22 +103,46 @@
             this.txtNewPwd2 = new System.Windows.Forms.TextBox();
             this.txtNewPwd1 = new System.Windows.Forms.TextBox();
             this.comboIDType = new System.Windows.Forms.ComboBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label22 = new System.Windows.Forms.Label();
+            this.txtApnPwd = new System.Windows.Forms.TextBox();
+            this.label23 = new System.Windows.Forms.Label();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.comboServType = new System.Windows.Forms.ComboBox();
+            this.label24 = new System.Windows.Forms.Label();
+            this.chkEnable = new System.Windows.Forms.CheckBox();
+            this.txtUpdateInternal = new System.Windows.Forms.TextBox();
+            this.label25 = new System.Windows.Forms.Label();
+            this.txtChannelName = new System.Windows.Forms.TextBox();
+            this.txtServerID = new System.Windows.Forms.TextBox();
+            this.txtChannelID = new System.Windows.Forms.TextBox();
+            this.label26 = new System.Windows.Forms.Label();
+            this.txtDeviceID = new System.Windows.Forms.TextBox();
+            this.label27 = new System.Windows.Forms.Label();
+            this.txtServerPassword = new System.Windows.Forms.TextBox();
+            this.label28 = new System.Windows.Forms.Label();
+            this.label29 = new System.Windows.Forms.Label();
+            this.label30 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.gb_StatusCommand.SuspendLayout();
             this.groupBox6.SuspendLayout();
-            this.gb_Wireless.SuspendLayout();
+            this.txtApnUser.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.grbChangePassword.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // btn_CheckDev
             // 
             this.btn_CheckDev.Location = new System.Drawing.Point(142, 15);
             this.btn_CheckDev.Name = "btn_CheckDev";
-            this.btn_CheckDev.Size = new System.Drawing.Size(73, 37);
+            this.btn_CheckDev.Size = new System.Drawing.Size(73, 30);
             this.btn_CheckDev.TabIndex = 0;
             this.btn_CheckDev.Text = "检查设备";
             this.btn_CheckDev.UseVisualStyleBackColor = true;
@@ -128,7 +152,7 @@
             // 
             this.btn_Logon.Location = new System.Drawing.Point(218, 14);
             this.btn_Logon.Name = "btn_Logon";
-            this.btn_Logon.Size = new System.Drawing.Size(75, 35);
+            this.btn_Logon.Size = new System.Drawing.Size(75, 30);
             this.btn_Logon.TabIndex = 1;
             this.btn_Logon.Text = "登录";
             this.btn_Logon.UseVisualStyleBackColor = true;
@@ -137,7 +161,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 63);
+            this.label1.Location = new System.Drawing.Point(6, 57);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 12);
             this.label1.TabIndex = 2;
@@ -146,7 +170,7 @@
             // tb_Password
             // 
             this.tb_Password.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.tb_Password.Location = new System.Drawing.Point(66, 59);
+            this.tb_Password.Location = new System.Drawing.Point(66, 54);
             this.tb_Password.MaxLength = 6;
             this.tb_Password.Name = "tb_Password";
             this.tb_Password.PasswordChar = '*';
@@ -158,6 +182,7 @@
             // groupBox1
             // 
             this.groupBox1.BackColor = System.Drawing.Color.Transparent;
+            this.groupBox1.Controls.Add(this.brnRestart);
             this.groupBox1.Controls.Add(this.label21);
             this.groupBox1.Controls.Add(this.comboUserID);
             this.groupBox1.Controls.Add(this.btn_exit);
@@ -165,9 +190,9 @@
             this.groupBox1.Controls.Add(this.btn_Logon);
             this.groupBox1.Controls.Add(this.tb_Password);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Location = new System.Drawing.Point(26, 92);
+            this.groupBox1.Location = new System.Drawing.Point(26, 71);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(300, 97);
+            this.groupBox1.Size = new System.Drawing.Size(300, 85);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "登录信息";
@@ -198,9 +223,9 @@
             // 
             // btn_exit
             // 
-            this.btn_exit.Location = new System.Drawing.Point(218, 54);
+            this.btn_exit.Location = new System.Drawing.Point(218, 49);
             this.btn_exit.Name = "btn_exit";
-            this.btn_exit.Size = new System.Drawing.Size(73, 37);
+            this.btn_exit.Size = new System.Drawing.Size(73, 30);
             this.btn_exit.TabIndex = 6;
             this.btn_exit.Text = "退出";
             this.btn_exit.UseVisualStyleBackColor = true;
@@ -213,9 +238,9 @@
             this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.tb_Resolution);
             this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Location = new System.Drawing.Point(330, 92);
+            this.groupBox2.Location = new System.Drawing.Point(332, 71);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(120, 97);
+            this.groupBox2.Size = new System.Drawing.Size(120, 85);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             // 
@@ -239,7 +264,7 @@
             // 
             // tb_Resolution
             // 
-            this.tb_Resolution.Location = new System.Drawing.Point(43, 56);
+            this.tb_Resolution.Location = new System.Drawing.Point(43, 48);
             this.tb_Resolution.Name = "tb_Resolution";
             this.tb_Resolution.ReadOnly = true;
             this.tb_Resolution.Size = new System.Drawing.Size(72, 21);
@@ -249,7 +274,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 62);
+            this.label4.Location = new System.Drawing.Point(3, 49);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(41, 12);
             this.label4.TabIndex = 2;
@@ -271,7 +296,7 @@
             this.groupBox3.Controls.Add(this.label6);
             this.groupBox3.Controls.Add(this.tb_DevID);
             this.groupBox3.Controls.Add(this.label5);
-            this.groupBox3.Location = new System.Drawing.Point(27, 195);
+            this.groupBox3.Location = new System.Drawing.Point(27, 158);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(423, 115);
             this.groupBox3.TabIndex = 7;
@@ -405,7 +430,7 @@
             this.lb_StateInfo.ItemHeight = 12;
             this.lb_StateInfo.Location = new System.Drawing.Point(6, 21);
             this.lb_StateInfo.Name = "lb_StateInfo";
-            this.lb_StateInfo.Size = new System.Drawing.Size(443, 568);
+            this.lb_StateInfo.Size = new System.Drawing.Size(443, 724);
             this.lb_StateInfo.TabIndex = 9;
             // 
             // groupBox5
@@ -417,7 +442,7 @@
             this.groupBox5.Controls.Add(this.tb_FilePath);
             this.groupBox5.Controls.Add(this.label13);
             this.groupBox5.Controls.Add(this.label12);
-            this.groupBox5.Location = new System.Drawing.Point(24, 609);
+            this.groupBox5.Location = new System.Drawing.Point(26, 772);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(423, 85);
             this.groupBox5.TabIndex = 10;
@@ -481,9 +506,9 @@
             // 
             this.gb_StatusCommand.BackColor = System.Drawing.Color.Transparent;
             this.gb_StatusCommand.Controls.Add(this.lb_StateInfo);
-            this.gb_StatusCommand.Location = new System.Drawing.Point(456, 92);
+            this.gb_StatusCommand.Location = new System.Drawing.Point(458, 71);
             this.gb_StatusCommand.Name = "gb_StatusCommand";
-            this.gb_StatusCommand.Size = new System.Drawing.Size(458, 602);
+            this.gb_StatusCommand.Size = new System.Drawing.Size(458, 786);
             this.gb_StatusCommand.TabIndex = 11;
             this.gb_StatusCommand.TabStop = false;
             this.gb_StatusCommand.Text = "状态信息";
@@ -491,12 +516,11 @@
             // groupBox6
             // 
             this.groupBox6.BackColor = System.Drawing.Color.Transparent;
-            this.groupBox6.Controls.Add(this.brnRestart);
             this.groupBox6.Controls.Add(this.btn_ChangePWd);
             this.groupBox6.Controls.Add(this.btn_EcjetSD);
             this.groupBox6.Controls.Add(this.btn_SyncDevTime);
             this.groupBox6.Controls.Add(this.btn_SetMSDC);
-            this.groupBox6.Location = new System.Drawing.Point(24, 482);
+            this.groupBox6.Location = new System.Drawing.Point(26, 645);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(423, 50);
             this.groupBox6.TabIndex = 0;
@@ -504,9 +528,9 @@
             // 
             // brnRestart
             // 
-            this.brnRestart.Location = new System.Drawing.Point(346, 13);
+            this.brnRestart.Location = new System.Drawing.Point(143, 48);
             this.brnRestart.Name = "brnRestart";
-            this.brnRestart.Size = new System.Drawing.Size(61, 30);
+            this.brnRestart.Size = new System.Drawing.Size(70, 30);
             this.brnRestart.TabIndex = 5;
             this.brnRestart.Text = "重启软件";
             this.brnRestart.UseVisualStyleBackColor = true;
@@ -515,7 +539,7 @@
             // btn_ChangePWd
             // 
             this.btn_ChangePWd.Enabled = false;
-            this.btn_ChangePWd.Location = new System.Drawing.Point(264, 13);
+            this.btn_ChangePWd.Location = new System.Drawing.Point(354, 13);
             this.btn_ChangePWd.Name = "btn_ChangePWd";
             this.btn_ChangePWd.Size = new System.Drawing.Size(61, 30);
             this.btn_ChangePWd.TabIndex = 4;
@@ -525,7 +549,7 @@
             // 
             // btn_EcjetSD
             // 
-            this.btn_EcjetSD.Location = new System.Drawing.Point(182, 13);
+            this.btn_EcjetSD.Location = new System.Drawing.Point(242, 13);
             this.btn_EcjetSD.Name = "btn_EcjetSD";
             this.btn_EcjetSD.Size = new System.Drawing.Size(61, 30);
             this.btn_EcjetSD.TabIndex = 2;
@@ -545,7 +569,7 @@
             // 
             // btn_SetMSDC
             // 
-            this.btn_SetMSDC.Location = new System.Drawing.Point(100, 13);
+            this.btn_SetMSDC.Location = new System.Drawing.Point(130, 13);
             this.btn_SetMSDC.Name = "btn_SetMSDC";
             this.btn_SetMSDC.Size = new System.Drawing.Size(61, 30);
             this.btn_SetMSDC.TabIndex = 1;
@@ -555,7 +579,7 @@
             // 
             // btn_4G
             // 
-            this.btn_4G.Location = new System.Drawing.Point(1028, 459);
+            this.btn_4G.Location = new System.Drawing.Point(1246, 376);
             this.btn_4G.Name = "btn_4G";
             this.btn_4G.Size = new System.Drawing.Size(61, 35);
             this.btn_4G.TabIndex = 3;
@@ -563,40 +587,40 @@
             this.btn_4G.UseVisualStyleBackColor = true;
             this.btn_4G.Click += new System.EventHandler(this.btn_4G_Click);
             // 
-            // gb_Wireless
+            // txtApnUser
             // 
-            this.gb_Wireless.BackColor = System.Drawing.Color.Transparent;
-            this.gb_Wireless.Controls.Add(this.btnReadWireless);
-            this.gb_Wireless.Controls.Add(this.btnRefreshWifi);
-            this.gb_Wireless.Controls.Add(this.comboWifiName);
-            this.gb_Wireless.Controls.Add(this.btn_Wireless);
-            this.gb_Wireless.Controls.Add(this.btn_Wireles_Edit);
-            this.gb_Wireless.Controls.Add(this.Lb_WifiMode);
-            this.gb_Wireless.Controls.Add(this.tb_4GPIN);
-            this.gb_Wireless.Controls.Add(this.tb_ServerIP);
-            this.gb_Wireless.Controls.Add(this.label17);
-            this.gb_Wireless.Controls.Add(this.tb_4GAPN);
-            this.gb_Wireless.Controls.Add(this.tb_ServerPort);
-            this.gb_Wireless.Controls.Add(this.label16);
-            this.gb_Wireless.Controls.Add(this.lb_WifiPassWord);
-            this.gb_Wireless.Controls.Add(this.label14);
-            this.gb_Wireless.Controls.Add(this.label11);
-            this.gb_Wireless.Controls.Add(this.label10);
-            this.gb_Wireless.Controls.Add(this.label15);
-            this.gb_Wireless.Controls.Add(this.label2);
-            this.gb_Wireless.Location = new System.Drawing.Point(24, 313);
-            this.gb_Wireless.Margin = new System.Windows.Forms.Padding(2);
-            this.gb_Wireless.Name = "gb_Wireless";
-            this.gb_Wireless.Padding = new System.Windows.Forms.Padding(2);
-            this.gb_Wireless.Size = new System.Drawing.Size(423, 172);
-            this.gb_Wireless.TabIndex = 12;
-            this.gb_Wireless.TabStop = false;
-            this.gb_Wireless.Text = "无线通信";
+            this.txtApnUser.BackColor = System.Drawing.Color.Transparent;
+            this.txtApnUser.Controls.Add(this.label23);
+            this.txtApnUser.Controls.Add(this.txtApnPwd);
+            this.txtApnUser.Controls.Add(this.textBox1);
+            this.txtApnUser.Controls.Add(this.label22);
+            this.txtApnUser.Controls.Add(this.btnReadWireless);
+            this.txtApnUser.Controls.Add(this.btnRefreshWifi);
+            this.txtApnUser.Controls.Add(this.comboWifiName);
+            this.txtApnUser.Controls.Add(this.btn_Wireless);
+            this.txtApnUser.Controls.Add(this.btn_Wireles_Edit);
+            this.txtApnUser.Controls.Add(this.Lb_WifiMode);
+            this.txtApnUser.Controls.Add(this.tb_4GPIN);
+            this.txtApnUser.Controls.Add(this.tb_4GAPN);
+            this.txtApnUser.Controls.Add(this.label16);
+            this.txtApnUser.Controls.Add(this.lb_WifiPassWord);
+            this.txtApnUser.Controls.Add(this.label11);
+            this.txtApnUser.Controls.Add(this.label10);
+            this.txtApnUser.Controls.Add(this.label15);
+            this.txtApnUser.Controls.Add(this.label2);
+            this.txtApnUser.Location = new System.Drawing.Point(24, 274);
+            this.txtApnUser.Margin = new System.Windows.Forms.Padding(2);
+            this.txtApnUser.Name = "txtApnUser";
+            this.txtApnUser.Padding = new System.Windows.Forms.Padding(2);
+            this.txtApnUser.Size = new System.Drawing.Size(421, 175);
+            this.txtApnUser.TabIndex = 12;
+            this.txtApnUser.TabStop = false;
+            this.txtApnUser.Text = "无线通信";
             // 
             // btnReadWireless
             // 
             this.btnReadWireless.Enabled = false;
-            this.btnReadWireless.Location = new System.Drawing.Point(302, 134);
+            this.btnReadWireless.Location = new System.Drawing.Point(302, 132);
             this.btnReadWireless.Name = "btnReadWireless";
             this.btnReadWireless.Size = new System.Drawing.Size(68, 30);
             this.btnReadWireless.TabIndex = 24;
@@ -607,7 +631,7 @@
             // btnRefreshWifi
             // 
             this.btnRefreshWifi.Enabled = false;
-            this.btnRefreshWifi.Location = new System.Drawing.Point(116, 135);
+            this.btnRefreshWifi.Location = new System.Drawing.Point(116, 133);
             this.btnRefreshWifi.Name = "btnRefreshWifi";
             this.btnRefreshWifi.Size = new System.Drawing.Size(68, 30);
             this.btnRefreshWifi.TabIndex = 23;
@@ -627,7 +651,7 @@
             // btn_Wireless
             // 
             this.btn_Wireless.Enabled = false;
-            this.btn_Wireless.Location = new System.Drawing.Point(210, 135);
+            this.btn_Wireless.Location = new System.Drawing.Point(210, 133);
             this.btn_Wireless.Name = "btn_Wireless";
             this.btn_Wireless.Size = new System.Drawing.Size(68, 30);
             this.btn_Wireless.TabIndex = 22;
@@ -638,7 +662,7 @@
             // btn_Wireles_Edit
             // 
             this.btn_Wireles_Edit.Enabled = false;
-            this.btn_Wireles_Edit.Location = new System.Drawing.Point(18, 134);
+            this.btn_Wireles_Edit.Location = new System.Drawing.Point(18, 132);
             this.btn_Wireles_Edit.Name = "btn_Wireles_Edit";
             this.btn_Wireles_Edit.Size = new System.Drawing.Size(68, 30);
             this.btn_Wireles_Edit.TabIndex = 18;
@@ -663,21 +687,21 @@
             // tb_4GPIN
             // 
             this.tb_4GPIN.Enabled = false;
-            this.tb_4GPIN.Location = new System.Drawing.Point(254, 50);
+            this.tb_4GPIN.Location = new System.Drawing.Point(254, 46);
             this.tb_4GPIN.Margin = new System.Windows.Forms.Padding(2);
             this.tb_4GPIN.Name = "tb_4GPIN";
-            this.tb_4GPIN.Size = new System.Drawing.Size(115, 21);
+            this.tb_4GPIN.Size = new System.Drawing.Size(152, 21);
             this.tb_4GPIN.TabIndex = 11;
             this.tb_4GPIN.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // tb_ServerIP
             // 
             this.tb_ServerIP.Enabled = false;
-            this.tb_ServerIP.Location = new System.Drawing.Point(65, 105);
+            this.tb_ServerIP.Location = new System.Drawing.Point(68, 73);
             this.tb_ServerIP.Margin = new System.Windows.Forms.Padding(2);
             this.tb_ServerIP.MaxLength = 15;
             this.tb_ServerIP.Name = "tb_ServerIP";
-            this.tb_ServerIP.Size = new System.Drawing.Size(117, 21);
+            this.tb_ServerIP.Size = new System.Drawing.Size(116, 21);
             this.tb_ServerIP.TabIndex = 10;
             this.tb_ServerIP.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tb_ServerIP.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tb_ServerIP_KeyPress);
@@ -685,7 +709,7 @@
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(5, 107);
+            this.label17.Location = new System.Drawing.Point(12, 76);
             this.label17.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(53, 12);
@@ -699,18 +723,18 @@
             this.tb_4GAPN.Location = new System.Drawing.Point(253, 18);
             this.tb_4GAPN.Margin = new System.Windows.Forms.Padding(2);
             this.tb_4GAPN.Name = "tb_4GAPN";
-            this.tb_4GAPN.Size = new System.Drawing.Size(117, 21);
+            this.tb_4GAPN.Size = new System.Drawing.Size(153, 21);
             this.tb_4GAPN.TabIndex = 12;
             this.tb_4GAPN.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // tb_ServerPort
             // 
             this.tb_ServerPort.Enabled = false;
-            this.tb_ServerPort.Location = new System.Drawing.Point(276, 104);
+            this.tb_ServerPort.Location = new System.Drawing.Point(53, 100);
             this.tb_ServerPort.Margin = new System.Windows.Forms.Padding(2);
             this.tb_ServerPort.MaxLength = 5;
             this.tb_ServerPort.Name = "tb_ServerPort";
-            this.tb_ServerPort.Size = new System.Drawing.Size(94, 21);
+            this.tb_ServerPort.Size = new System.Drawing.Size(51, 21);
             this.tb_ServerPort.TabIndex = 6;
             this.tb_ServerPort.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.tb_ServerPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tb_ServerPort_KeyPress);
@@ -718,7 +742,7 @@
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(208, 54);
+            this.label16.Location = new System.Drawing.Point(208, 50);
             this.label16.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(41, 12);
@@ -738,12 +762,12 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(204, 108);
+            this.label14.Location = new System.Drawing.Point(14, 103);
             this.label14.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(65, 12);
+            this.label14.Size = new System.Drawing.Size(29, 12);
             this.label14.TabIndex = 3;
-            this.label14.Text = "服务器端口";
+            this.label14.Text = "端口";
             this.label14.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // label11
@@ -788,7 +812,7 @@
             // 
             // lb_WifiName
             // 
-            this.lb_WifiName.Location = new System.Drawing.Point(1007, 168);
+            this.lb_WifiName.Location = new System.Drawing.Point(1178, 174);
             this.lb_WifiName.Margin = new System.Windows.Forms.Padding(2);
             this.lb_WifiName.Name = "lb_WifiName";
             this.lb_WifiName.Size = new System.Drawing.Size(117, 21);
@@ -810,10 +834,10 @@
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(198, 9);
+            this.pictureBox1.Image = global::H6.Properties.Resources.s1;
+            this.pictureBox1.Location = new System.Drawing.Point(194, 9);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(75, 75);
+            this.pictureBox1.Size = new System.Drawing.Size(79, 61);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 14;
             this.pictureBox1.TabStop = false;
@@ -829,9 +853,9 @@
             this.grbChangePassword.Controls.Add(this.txtNewPwd1);
             this.grbChangePassword.Controls.Add(this.comboIDType);
             this.grbChangePassword.Enabled = false;
-            this.grbChangePassword.Location = new System.Drawing.Point(24, 537);
+            this.grbChangePassword.Location = new System.Drawing.Point(27, 701);
             this.grbChangePassword.Name = "grbChangePassword";
-            this.grbChangePassword.Size = new System.Drawing.Size(425, 74);
+            this.grbChangePassword.Size = new System.Drawing.Size(425, 65);
             this.grbChangePassword.TabIndex = 15;
             this.grbChangePassword.TabStop = false;
             this.grbChangePassword.Text = "密码修改";
@@ -839,7 +863,7 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(168, 50);
+            this.label20.Location = new System.Drawing.Point(168, 42);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(53, 12);
             this.label20.TabIndex = 9;
@@ -848,7 +872,7 @@
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(172, 23);
+            this.label19.Location = new System.Drawing.Point(172, 15);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(41, 12);
             this.label19.TabIndex = 8;
@@ -857,7 +881,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(8, 34);
+            this.label18.Location = new System.Drawing.Point(8, 30);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(35, 12);
             this.label18.TabIndex = 7;
@@ -865,7 +889,7 @@
             // 
             // btnChangePwdOK
             // 
-            this.btnChangePwdOK.Location = new System.Drawing.Point(345, 25);
+            this.btnChangePwdOK.Location = new System.Drawing.Point(345, 20);
             this.btnChangePwdOK.Name = "btnChangePwdOK";
             this.btnChangePwdOK.Size = new System.Drawing.Size(61, 30);
             this.btnChangePwdOK.TabIndex = 6;
@@ -875,7 +899,7 @@
             // 
             // txtNewPwd2
             // 
-            this.txtNewPwd2.Location = new System.Drawing.Point(225, 47);
+            this.txtNewPwd2.Location = new System.Drawing.Point(225, 39);
             this.txtNewPwd2.MaxLength = 6;
             this.txtNewPwd2.Name = "txtNewPwd2";
             this.txtNewPwd2.PasswordChar = '*';
@@ -885,7 +909,7 @@
             // 
             // txtNewPwd1
             // 
-            this.txtNewPwd1.Location = new System.Drawing.Point(225, 20);
+            this.txtNewPwd1.Location = new System.Drawing.Point(225, 12);
             this.txtNewPwd1.MaxLength = 6;
             this.txtNewPwd1.Name = "txtNewPwd1";
             this.txtNewPwd1.PasswordChar = '*';
@@ -900,22 +924,293 @@
             this.comboIDType.Items.AddRange(new object[] {
             "管理员",
             "普通用户"});
-            this.comboIDType.Location = new System.Drawing.Point(50, 31);
+            this.comboIDType.Location = new System.Drawing.Point(50, 27);
             this.comboIDType.Name = "comboIDType";
             this.comboIDType.Size = new System.Drawing.Size(93, 20);
             this.comboIDType.TabIndex = 0;
             // 
-            // frmMain
+            // textBox1
+            // 
+            this.textBox1.Enabled = false;
+            this.textBox1.Location = new System.Drawing.Point(254, 77);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(2);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(152, 21);
+            this.textBox1.TabIndex = 26;
+            this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(203, 81);
+            this.label22.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(47, 12);
+            this.label22.TabIndex = 25;
+            this.label22.Text = "ApnUser";
+            // 
+            // txtApnPwd
+            // 
+            this.txtApnPwd.Enabled = false;
+            this.txtApnPwd.Location = new System.Drawing.Point(253, 107);
+            this.txtApnPwd.Margin = new System.Windows.Forms.Padding(2);
+            this.txtApnPwd.Name = "txtApnPwd";
+            this.txtApnPwd.Size = new System.Drawing.Size(152, 21);
+            this.txtApnPwd.TabIndex = 27;
+            this.txtApnPwd.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(202, 110);
+            this.label23.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(47, 12);
+            this.label23.TabIndex = 28;
+            this.label23.Text = "Apn密码";
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.BackColor = System.Drawing.Color.Transparent;
+            this.groupBox4.Controls.Add(this.button1);
+            this.groupBox4.Controls.Add(this.label30);
+            this.groupBox4.Controls.Add(this.button2);
+            this.groupBox4.Controls.Add(this.label29);
+            this.groupBox4.Controls.Add(this.button3);
+            this.groupBox4.Controls.Add(this.label28);
+            this.groupBox4.Controls.Add(this.txtServerPassword);
+            this.groupBox4.Controls.Add(this.label27);
+            this.groupBox4.Controls.Add(this.txtDeviceID);
+            this.groupBox4.Controls.Add(this.label26);
+            this.groupBox4.Controls.Add(this.txtChannelID);
+            this.groupBox4.Controls.Add(this.txtServerID);
+            this.groupBox4.Controls.Add(this.txtChannelName);
+            this.groupBox4.Controls.Add(this.label25);
+            this.groupBox4.Controls.Add(this.txtUpdateInternal);
+            this.groupBox4.Controls.Add(this.chkEnable);
+            this.groupBox4.Controls.Add(this.label24);
+            this.groupBox4.Controls.Add(this.comboServType);
+            this.groupBox4.Controls.Add(this.label17);
+            this.groupBox4.Controls.Add(this.tb_ServerIP);
+            this.groupBox4.Controls.Add(this.label14);
+            this.groupBox4.Controls.Add(this.tb_ServerPort);
+            this.groupBox4.Location = new System.Drawing.Point(24, 455);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(423, 190);
+            this.groupBox4.TabIndex = 16;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "服务器设置";
+            // 
+            // comboServType
+            // 
+            this.comboServType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboServType.Enabled = false;
+            this.comboServType.FormattingEnabled = true;
+            this.comboServType.Items.AddRange(new object[] {
+            "CMSV6",
+            "GB28181",
+            "NetCheckServer"});
+            this.comboServType.Location = new System.Drawing.Point(72, 20);
+            this.comboServType.Name = "comboServType";
+            this.comboServType.Size = new System.Drawing.Size(112, 20);
+            this.comboServType.TabIndex = 0;
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(7, 23);
+            this.label24.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(65, 12);
+            this.label24.TabIndex = 17;
+            this.label24.Text = "服务器类型";
+            this.label24.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // chkEnable
+            // 
+            this.chkEnable.AutoSize = true;
+            this.chkEnable.Enabled = false;
+            this.chkEnable.Location = new System.Drawing.Point(16, 50);
+            this.chkEnable.Name = "chkEnable";
+            this.chkEnable.Size = new System.Drawing.Size(48, 16);
+            this.chkEnable.TabIndex = 18;
+            this.chkEnable.Text = "使能";
+            this.chkEnable.UseVisualStyleBackColor = true;
+            // 
+            // txtUpdateInternal
+            // 
+            this.txtUpdateInternal.Enabled = false;
+            this.txtUpdateInternal.Location = new System.Drawing.Point(144, 48);
+            this.txtUpdateInternal.Margin = new System.Windows.Forms.Padding(2);
+            this.txtUpdateInternal.MaxLength = 5;
+            this.txtUpdateInternal.Name = "txtUpdateInternal";
+            this.txtUpdateInternal.Size = new System.Drawing.Size(40, 21);
+            this.txtUpdateInternal.TabIndex = 19;
+            this.txtUpdateInternal.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(72, 52);
+            this.label25.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(71, 12);
+            this.label25.TabIndex = 20;
+            this.label25.Text = "上报间隔(s)";
+            this.label25.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // txtChannelName
+            // 
+            this.txtChannelName.Enabled = false;
+            this.txtChannelName.Location = new System.Drawing.Point(257, 19);
+            this.txtChannelName.Margin = new System.Windows.Forms.Padding(2);
+            this.txtChannelName.MaxLength = 15;
+            this.txtChannelName.Name = "txtChannelName";
+            this.txtChannelName.Size = new System.Drawing.Size(148, 21);
+            this.txtChannelName.TabIndex = 21;
+            this.txtChannelName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // txtServerID
+            // 
+            this.txtServerID.Enabled = false;
+            this.txtServerID.Location = new System.Drawing.Point(257, 49);
+            this.txtServerID.Margin = new System.Windows.Forms.Padding(2);
+            this.txtServerID.MaxLength = 15;
+            this.txtServerID.Name = "txtServerID";
+            this.txtServerID.Size = new System.Drawing.Size(148, 21);
+            this.txtServerID.TabIndex = 22;
+            this.txtServerID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // txtChannelID
+            // 
+            this.txtChannelID.Enabled = false;
+            this.txtChannelID.Location = new System.Drawing.Point(257, 76);
+            this.txtChannelID.Margin = new System.Windows.Forms.Padding(2);
+            this.txtChannelID.MaxLength = 15;
+            this.txtChannelID.Name = "txtChannelID";
+            this.txtChannelID.Size = new System.Drawing.Size(148, 21);
+            this.txtChannelID.TabIndex = 23;
+            this.txtChannelID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(8, 131);
+            this.label26.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(41, 12);
+            this.label26.TabIndex = 24;
+            this.label26.Text = "设备ID";
+            this.label26.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // txtDeviceID
+            // 
+            this.txtDeviceID.Enabled = false;
+            this.txtDeviceID.Location = new System.Drawing.Point(53, 128);
+            this.txtDeviceID.Margin = new System.Windows.Forms.Padding(2);
+            this.txtDeviceID.MaxLength = 15;
+            this.txtDeviceID.Name = "txtDeviceID";
+            this.txtDeviceID.Size = new System.Drawing.Size(131, 21);
+            this.txtDeviceID.TabIndex = 25;
+            this.txtDeviceID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(13, 159);
+            this.label27.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(29, 12);
+            this.label27.TabIndex = 26;
+            this.label27.Text = "密码";
+            this.label27.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // txtServerPassword
+            // 
+            this.txtServerPassword.Enabled = false;
+            this.txtServerPassword.Location = new System.Drawing.Point(53, 156);
+            this.txtServerPassword.Margin = new System.Windows.Forms.Padding(2);
+            this.txtServerPassword.MaxLength = 15;
+            this.txtServerPassword.Name = "txtServerPassword";
+            this.txtServerPassword.Size = new System.Drawing.Size(129, 21);
+            this.txtServerPassword.TabIndex = 27;
+            this.txtServerPassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(200, 25);
+            this.label28.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(53, 12);
+            this.label28.TabIndex = 28;
+            this.label28.Text = "通道名称";
+            this.label28.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(200, 50);
+            this.label29.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(53, 12);
+            this.label29.TabIndex = 29;
+            this.label29.Text = "服务器ID";
+            this.label29.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(205, 79);
+            this.label30.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(41, 12);
+            this.label30.TabIndex = 30;
+            this.label30.Text = "通道ID";
+            this.label30.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // button1
+            // 
+            this.button1.Enabled = false;
+            this.button1.Location = new System.Drawing.Point(336, 119);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(59, 30);
+            this.button1.TabIndex = 21;
+            this.button1.Text = "读取";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // button2
+            // 
+            this.button2.Enabled = false;
+            this.button2.Location = new System.Drawing.Point(269, 119);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(61, 30);
+            this.button2.TabIndex = 20;
+            this.button2.Text = "确定";
+            this.button2.UseVisualStyleBackColor = true;
+            // 
+            // button3
+            // 
+            this.button3.Enabled = false;
+            this.button3.Location = new System.Drawing.Point(202, 119);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(61, 30);
+            this.button3.TabIndex = 19;
+            this.button3.Text = "编辑";
+            this.button3.UseVisualStyleBackColor = true;
+            // 
+            // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::H6.Properties.Resources.b;
-            this.ClientSize = new System.Drawing.Size(935, 715);
+            this.ClientSize = new System.Drawing.Size(928, 862);
+            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.grbChangePassword);
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.btn_4G);
             this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.gb_Wireless);
+            this.Controls.Add(this.txtApnUser);
             this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.gb_StatusCommand);
             this.Controls.Add(this.groupBox5);
@@ -924,7 +1219,7 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "frmMain";
+            this.Name = "FrmMain";
             this.Text = "HAC H6 Tool";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -938,11 +1233,13 @@
             this.groupBox5.PerformLayout();
             this.gb_StatusCommand.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
-            this.gb_Wireless.ResumeLayout(false);
-            this.gb_Wireless.PerformLayout();
+            this.txtApnUser.ResumeLayout(false);
+            this.txtApnUser.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.grbChangePassword.ResumeLayout(false);
             this.grbChangePassword.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -989,7 +1286,7 @@
         private System.Windows.Forms.Button btn_SetMSDC;
         private System.Windows.Forms.Button btn_EcjetSD;
         private System.Windows.Forms.Button btn_4G;
-        private System.Windows.Forms.GroupBox gb_Wireless;
+        private System.Windows.Forms.GroupBox txtApnUser;
         private System.Windows.Forms.ComboBox Lb_WifiMode;
         private System.Windows.Forms.TextBox tb_4GAPN;
         private System.Windows.Forms.TextBox tb_4GPIN;
@@ -1024,6 +1321,29 @@
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.ComboBox comboUserID;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.TextBox txtApnPwd;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.CheckBox chkEnable;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.ComboBox comboServType;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.TextBox txtServerPassword;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.TextBox txtDeviceID;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.TextBox txtChannelID;
+        private System.Windows.Forms.TextBox txtServerID;
+        private System.Windows.Forms.TextBox txtChannelName;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.TextBox txtUpdateInternal;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
     }
 }
 
