@@ -901,8 +901,6 @@ namespace H6
             }
 
 
-            MessageBox.Show(apn.ApnUser);
-
             this.btn_OK.Enabled = false;
             this.btnReadWireless.Enabled = true;
             this.btnRefreshWifi.Enabled = true;
@@ -1178,11 +1176,23 @@ namespace H6
         {
             int iRet_SetMSDC = -1;
             if (logindevice == DeviceType.EasyStorage)
-                BODYCAMDLL_API_YZ.SetMSDC(password, ref iRet_SetMSDC);
+            {
+                //BODYCAMDLL_API_YZ.SetMSDC(password, ref iRet_SetMSDC);
+                iRet_SetMSDC = BODYCAMDLL_API_YZ.BC_EnterDiskMode(BCHandle, password);
+                if (iRet_SetMSDC == 1)
+                    return true;
+                else
+                    return false;
+            }
             if (logindevice == DeviceType.Cammpro )
+            {
                 ZFYDLL_API_MC.SetMSDC(password, ref iRet_SetMSDC);
-            if (iRet_SetMSDC == 7)
-                return true;
+                if (iRet_SetMSDC == 7)
+                    return true;
+                else
+                    return false;
+            }
+               
             return false;
         }
 
@@ -1808,23 +1818,14 @@ namespace H6
 
         private void btn_Wireles_Edit_Click(object sender, EventArgs e)
         {
-            txtApnUser.Enabled = true;
-
+     
            
 
             if (this.btn_Wireles_Edit.Text == "编辑")
             {
-                lb_WifiName.Enabled = true;
-                lb_WifiPassWord.Enabled = true;
-                Lb_WifiMode.Enabled = true;
-                tb_ServerIP.Enabled = true;
-                tb_ServerPort.Enabled = true;
+                EditWireless(LoginDevice);
                 this.btn_Wireles_Edit.Text = "取消";
-                comboWifiName.Enabled = true;
-                btnRefreshWifi.Enabled = true;
-                tb_4GAPN.Enabled = true;
-                tb_4GPIN.Enabled = true;
-                btn_Wireless.Enabled = true;
+              
             }
             else if (this.btn_Wireles_Edit.Text == "取消")
             {
@@ -1839,11 +1840,54 @@ namespace H6
                 btnRefreshWifi.Enabled = true;
                 tb_4GAPN.Enabled = false;
                 tb_4GPIN.Enabled = false;
+                txtApnPwd.Enabled = false;
+                txtApnUser.Enabled = false;
 
             }
 
 
 
+
+        }
+
+
+        private void EditWireless(DeviceType logintype)
+        {
+
+            switch (logintype)
+            {
+                case DeviceType.NA:
+                    break;
+                case DeviceType.EasyStorage:
+                    comboWifiName.Enabled = true;
+                    btnRefreshWifi.Enabled = true;
+                    tb_4GAPN.Enabled = true;
+                    tb_4GPIN.Enabled = false;
+                    btn_Wireless.Enabled = true;
+                    lb_WifiName.Enabled = true;
+                    lb_WifiPassWord.Enabled = true;
+                    Lb_WifiMode.Enabled = false;
+                    tb_ServerIP.Enabled = true;
+                    tb_ServerPort.Enabled = true;
+                    txtApnUser.Enabled = true;
+                    txtApnPwd.Enabled = true;
+                    break;
+                case DeviceType.Cammpro:
+                    comboWifiName.Enabled = true;
+                    btnRefreshWifi.Enabled = true;
+                    tb_4GAPN.Enabled = true;
+                    tb_4GPIN.Enabled = true;
+                    btn_Wireless.Enabled = true;
+                    lb_WifiName.Enabled = true;
+                    lb_WifiPassWord.Enabled = true;
+                    Lb_WifiMode.Enabled = true;
+                    tb_ServerIP.Enabled = true;
+                    tb_ServerPort.Enabled = true;
+           
+                    break;
+                default:
+                    break;
+            }
 
         }
 
@@ -1888,6 +1932,14 @@ namespace H6
                 UpdateWiFiInfo(LoginDevice, _wifi);
             }
 
+
+            
+            APN apn = new APN();
+            if (GetApnInfo(LoginDevice, DevicePassword, out apn))
+            {
+                updateMessage(lb_StateInfo, "获取执法仪APN信息成功");
+                UpdateApnInfo(LoginDevice, apn);
+            }
            // /////////////////////////////////////////////////////
            // //读取执法仪wifi等信息
            //// List<string> WiFiList = wifi.EnumerateAvailableNetwork(lb_StateInfo);

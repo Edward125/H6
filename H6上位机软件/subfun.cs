@@ -384,7 +384,7 @@ namespace H6
         *************************************************/
         //BODYCAMDLL_API int  BC_EnterDiskMode(IN BCHandle *dev,IN char *sPwd);
         [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int BC_EnterDiskMode(IntPtr dev,byte sPwd);
+        public static extern int BC_EnterDiskMode(IntPtr dev,string  sPwd);
 
         /*************************************************
         *函数说明:  设置设备是否始终为U盘模式,只有管理员用户有效
