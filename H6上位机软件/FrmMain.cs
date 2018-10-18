@@ -213,7 +213,7 @@ namespace H6
             //updateMessage(lb_StateInfo, "无线信息" + gb_Wireless.Location.X.ToString() + "X" + gb_Wireless.Location.Y.ToString());
 
             //隐藏无线参数框
-            txtApnUser.Visible = true;
+            grbWifiInfo.Visible = true;
             ////设定状态显示窗体大小
             //gb_StatusCommand.Width = 458;
             //gb_StatusCommand.Height = 475;
@@ -853,37 +853,55 @@ namespace H6
 
 
 
-                /////////////////////////////////////////////////////
-                //读取执法仪wifi等信息
-                List<string> WiFiList = wifi.EnumerateAvailableNetwork(lb_StateInfo);
-                WiFiInfo DeviceWiFiInfo = new WiFiInfo();
-                if (ReadDeviceWiFiInfo(LoginDevice, DevicePassword, out DeviceWiFiInfo))
-                {
-                    if (WiFiList.Count > 0)
-                    {
-                        foreach (string item in WiFiList)
-                        {
-                            comboWifiName.Items.Add(item);
-                        }
-                    }
+                ///////////////////////////////////////////////////////
+                ////读取执法仪wifi等信息
+                //List<string> WiFiList = wifi.EnumerateAvailableNetwork(lb_StateInfo);
+                //WiFiInfo DeviceWiFiInfo = new WiFiInfo();
+                //if (ReadDeviceWiFiInfo(LoginDevice, DevicePassword, out DeviceWiFiInfo))
+                //{
+                //    if (WiFiList.Count > 0)
+                //    {
+                //        foreach (string item in WiFiList)
+                //        {
+                //            comboWifiName.Items.Add(item);
+                //        }
+                //    }
 
-                    if (string.IsNullOrEmpty(DeviceWiFiInfo.WiFiSSID) && comboWifiName.Items.Count > 0)
-                        comboWifiName.SelectedIndex = 0;
-                    else
-                        comboWifiName.Text = DeviceWiFiInfo.WiFiSSID;
+                //    if (string.IsNullOrEmpty(DeviceWiFiInfo.WiFiSSID) && comboWifiName.Items.Count > 0)
+                //        comboWifiName.SelectedIndex = 0;
+                //    else
+                //        comboWifiName.Text = DeviceWiFiInfo.WiFiSSID;
 
-                        if (DeviceWiFiInfo.WiFiMode == WiFiModeType.AP)
-                            Lb_WifiMode.SelectedIndex = 0;
-                        if (DeviceWiFiInfo.WiFiMode == WiFiModeType.STA)
-                            Lb_WifiMode.SelectedIndex = 1;
+                //        if (DeviceWiFiInfo.WiFiMode == WiFiModeType.AP)
+                //            Lb_WifiMode.SelectedIndex = 0;
+                //        if (DeviceWiFiInfo.WiFiMode == WiFiModeType.STA)
+                //            Lb_WifiMode.SelectedIndex = 1;
 
-                    lb_WifiPassWord.Text = DeviceWiFiInfo.WiFiPassword;
-                    tb_ServerIP.Text = DeviceWiFiInfo.ServerIP;
-                    tb_ServerPort.Text = DeviceWiFiInfo.ServerPort;
-                }
+                //    lb_WifiPassWord.Text = DeviceWiFiInfo.WiFiPassword;
+                //    tb_ServerIP.Text = DeviceWiFiInfo.ServerIP;
+                //    tb_ServerPort.Text = DeviceWiFiInfo.ServerPort;
+                //}
 
 
 
+            //读取WiFi信息
+            WiFi _wifi = new WiFi ();
+            if (GetWiFiInfo (LoginDevice,DevicePassword ,out _wifi ))
+            {
+                updateMessage(lb_StateInfo, "获取执法仪WiFi信息成功");
+                UpdateWiFiInfo(LoginDevice, _wifi);
+            }
+
+
+            APN apn = new APN ();
+            if (GetApnInfo(LoginDevice, DevicePassword, out apn))
+            {
+                updateMessage(lb_StateInfo, "获取执法仪APN信息成功");
+                UpdateApnInfo(LoginDevice, apn);
+            }
+
+
+            MessageBox.Show(apn.ApnUser);
 
             this.btn_OK.Enabled = false;
             this.btnReadWireless.Enabled = true;
@@ -1681,7 +1699,7 @@ namespace H6
                 //MessageBox.Show("奇数次");
                 //执行你的事情1
                 //隐藏无线参数框
-                txtApnUser.Visible = true;
+                grbWifiInfo.Visible = true;
                 //设定状态显示窗体大小
                 gb_StatusCommand.Width = 458;
                 gb_StatusCommand.Height = 293;
@@ -1764,7 +1782,7 @@ namespace H6
                 //执行你的事情2
                 //MessageBox.Show("偶数次");
                 //隐藏无线参数框
-                txtApnUser.Visible = false;
+                grbWifiInfo.Visible = false;
                 //设定状态显示窗体大小
                 gb_StatusCommand.Width = 458;
                 gb_StatusCommand.Height = 475;
@@ -1790,6 +1808,10 @@ namespace H6
 
         private void btn_Wireles_Edit_Click(object sender, EventArgs e)
         {
+            txtApnUser.Enabled = true;
+
+           
+
             if (this.btn_Wireles_Edit.Text == "编辑")
             {
                 lb_WifiName.Enabled = true;
@@ -1817,6 +1839,7 @@ namespace H6
                 btnRefreshWifi.Enabled = true;
                 tb_4GAPN.Enabled = false;
                 tb_4GPIN.Enabled = false;
+
             }
 
 
@@ -1855,25 +1878,61 @@ namespace H6
 
         private void btnReadWireless_Click(object sender, EventArgs e)
         {
-            /////////////////////////////////////////////////////
-            //读取执法仪wifi等信息
-           // List<string> WiFiList = wifi.EnumerateAvailableNetwork(lb_StateInfo);
-            WiFiInfo DeviceWiFiInfo = new WiFiInfo();
-            if (ReadDeviceWiFiInfo(LoginDevice, DevicePassword, out DeviceWiFiInfo))
+
+
+            //读取WiFi信息
+            WiFi _wifi = new WiFi();
+            if (GetWiFiInfo(LoginDevice, DevicePassword, out _wifi))
             {
-
-               comboWifiName.Text = DeviceWiFiInfo.WiFiSSID;
-
-                if (DeviceWiFiInfo.WiFiMode == WiFiModeType.AP)
-                    Lb_WifiMode.SelectedIndex = 0;
-                if (DeviceWiFiInfo.WiFiMode == WiFiModeType.STA)
-                    Lb_WifiMode.SelectedIndex = 1;
-
-                tb_ServerIP.Text = DeviceWiFiInfo.ServerIP;
-                tb_ServerPort.Text = DeviceWiFiInfo.ServerPort;
-                tb_4GAPN.Text = DeviceWiFiInfo.APN;
-                tb_4GPIN.Text = DeviceWiFiInfo.PIN;
+                updateMessage(lb_StateInfo, "获取执法仪WiFi信息成功");
+                UpdateWiFiInfo(LoginDevice, _wifi);
             }
+
+           // /////////////////////////////////////////////////////
+           // //读取执法仪wifi等信息
+           //// List<string> WiFiList = wifi.EnumerateAvailableNetwork(lb_StateInfo);
+           // WiFiInfo DeviceWiFiInfo = new WiFiInfo();
+           // if (ReadDeviceWiFiInfo(LoginDevice, DevicePassword, out DeviceWiFiInfo))
+           // {
+
+           //    comboWifiName.Text = DeviceWiFiInfo.WiFiSSID;
+
+           //     if (DeviceWiFiInfo.WiFiMode == WiFiModeType.AP)
+           //         Lb_WifiMode.SelectedIndex = 0;
+           //     if (DeviceWiFiInfo.WiFiMode == WiFiModeType.STA)
+           //         Lb_WifiMode.SelectedIndex = 1;
+
+           //     tb_ServerIP.Text = DeviceWiFiInfo.ServerIP;
+           //     tb_ServerPort.Text = DeviceWiFiInfo.ServerPort;
+           //     tb_4GAPN.Text = DeviceWiFiInfo.APN;
+           //     tb_4GPIN.Text = DeviceWiFiInfo.PIN;
+
+
+
+
+            //}
+
+
+            ////byte[] ssid = new byte[32];
+           byte[] ssids = new byte[640];
+
+            //BODYCAMDLL_API_YZ.BC_GetSelAp(BCHandle, DevicePassword, out ssid[0]);
+
+           // BC_GetSelAp(IN BCHandle *dev,IN char *sPwd,OUT char *Ssid);
+
+        // BC_GetApList(IN BCHandle *dev,IN char *sPwd,OUT char *Ssids)
+          // MessageBox.Show(BODYCAMDLL_API_YZ.BC_GetApList(BCHandle, DevicePassword, out ssids[0]).ToString());
+            //comboWifiName.Text = System.Text.Encoding.Default.GetString(ssid, 0, ssid.Length);
+            //tb_4GAPN.Text = System.Text.Encoding.Default.GetString(ssids, 0, ssids.Length);
+
+
+
+           //MessageBox.Show(BODYCAMDLL_API_YZ.BC_SetSelAp(BCHandle, DevicePassword, System.Text.Encoding.Default.GetBytes("1").ToArray()[0]).ToString());
+
+
+
+
+
         }
 
         private void tb_ServerPort_KeyPress(object sender, KeyPressEventArgs e)
@@ -2067,6 +2126,174 @@ namespace H6
         }
 
 
+
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logindevice"></param>
+        /// <param name="password"></param>
+        /// <param name="?"></param>
+        /// <returns></returns>
+        private bool GetWiFiInfo(DeviceType logindevice,string password,out WiFi wifi)
+        {
+            wifi = new WiFi();
+            if (logindevice == DeviceType.EasyStorage)
+            {
+                //BC_GetSelAp(IN BCHandle *dev,IN char *sPwd,OUT char *Ssid);
+                //byte[] ssid = new byte[32];
+                byte[] ssid = new byte[32];
+                int result = -1;
+                result =  BODYCAMDLL_API_YZ.BC_GetSelAp(BCHandle, password ,out ssid[0]);
+
+             //   string s = BODYCAMDLL_API_YZ.BC_GetErrStr(BCHandle);
+                if (result == 0)
+                {
+                    wifi.WiFiSSID = System.Text.Encoding.Default.GetString(ssid, 0, ssid.Length);
+                    return true;
+                }
+                else
+                    return false;
+
+            }
+
+            if (logindevice == DeviceType.Cammpro)
+            {
+                Byte[] WifiSSID = new Byte[20]; 
+                int iRet_ReadWifiSSID = -1;
+                ZFYDLL_API_MC.ReadWifiSSID(ref WifiSSID[0], password, ref iRet_ReadWifiSSID);
+                wifi.WiFiSSID = System.Text.Encoding.Default.GetString(WifiSSID, 0, WifiSSID.Length);   
+  
+                Byte[] WiFiPassword = new Byte[20];
+                int iRet_ReadWifiPSW = -1;
+                ZFYDLL_API_MC.ReadWifiPSW(ref WiFiPassword[0], DevicePassword, ref iRet_ReadWifiPSW);
+               wifi.WiFiPassword = System.Text.Encoding.Default.GetString(WiFiPassword, 0, WiFiPassword.Length);  
+
+                int mode = -1;
+                int iRet_ReadWifiMode = -1;
+                ZFYDLL_API_MC.ReadWifiMode(ref mode, DevicePassword, ref iRet_ReadWifiMode);
+                wifi.WiFiMode = (WiFiModeType)Enum.ToObject(typeof(WiFiModeType), mode);
+
+                if (iRet_ReadWifiSSID == 1 && iRet_ReadWifiPSW == 1 && iRet_ReadWifiMode == 1)
+                    return true;
+                else
+                    return false;
+
+            }
+
+            return false ;
+        }
+
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logindevice"></param>
+        /// <param name="_wifi"></param>
+        private void UpdateWiFiInfo(DeviceType logindevice, WiFi _wifi)
+        {
+            List<string> WiFiList = wifi.EnumerateAvailableNetwork(lb_StateInfo);
+           // WiFiInfo DeviceWiFiInfo = new WiFiInfo();
+            if (WiFiList.Count > 0)
+            {
+                foreach (string item in WiFiList)
+                {
+                    comboWifiName.Items.Add(item);
+                }
+            }
+
+            if (string.IsNullOrEmpty(_wifi.WiFiSSID) && comboWifiName.Items.Count > 0)
+                comboWifiName.SelectedIndex = 0;
+            else
+                comboWifiName.Text = _wifi.WiFiSSID;
+
+            if (logindevice == DeviceType.Cammpro)
+            {
+                if (_wifi.WiFiMode == WiFiModeType.AP)
+                    Lb_WifiMode.SelectedIndex = 0;
+                if (_wifi.WiFiMode == WiFiModeType.STA)
+                    Lb_WifiMode.SelectedIndex = 1;
+                lb_WifiPassWord.Text = _wifi.WiFiPassword;
+            }
+
+            if (logindevice == DeviceType.EasyStorage)
+                Lb_WifiMode.SelectedIndex = 1;
+
+
+        }
+
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logindevice"></param>
+        /// <param name="password"></param>
+        /// <param name="apn"></param>
+        /// <returns></returns>
+        private bool GetApnInfo(DeviceType logindevice, string password, out APN apn)
+        {
+
+            apn = new APN();
+
+            if (logindevice == DeviceType.EasyStorage)
+            {
+                byte[] _apn = new byte[64];
+                byte[] _vpnName = new byte[64];
+                byte[] _vpnpwd = new byte[64];
+                int result = -1;
+               result =  BODYCAMDLL_API_YZ.BC_GetVpn(BCHandle, password, out _apn[0], out _vpnName[0], out _vpnpwd[0]);
+               if (result == 1)
+               {
+                   apn.ApnName = System.Text.Encoding.Default.GetString(_apn, 0, _apn.Length).Trim();
+                   apn.ApnUser = System.Text.Encoding.Default.GetString(_vpnName, 0, _vpnName.Length).Trim();
+                   apn.ApnPwd = System.Text.Encoding.Default.GetString(_vpnpwd, 0, _vpnpwd.Length).Trim();
+                   return true;
+               }
+           
+            }
+
+            if (logindevice == DeviceType.Cammpro)
+            {
+                byte[] PIN = new byte[32];
+                int iRet_ReadPIN = -1;
+                ZFYDLL_API_MC.Read4GPIN(ref PIN[0], password, ref iRet_ReadPIN);
+                apn.ApnPin  = System.Text.Encoding.Default.GetString(PIN, 0, PIN.Length);
+
+                byte[] APN = new byte[32];
+                int iRet_ReadAPN = -1;
+                ZFYDLL_API_MC.Read4GAPN(ref APN[0], password, ref iRet_ReadAPN);
+                apn.ApnName = System.Text.Encoding.Default.GetString(APN, 0, APN.Length);
+                return true;
+
+            }
+
+            return false;
+        }
+
+
+
+
+
+        private void UpdateApnInfo(DeviceType logindevice, APN apn)
+        {
+            tb_4GAPN.Text = apn.ApnName;
+            if (logindevice == DeviceType.EasyStorage)
+            {
+               txtApnUser.Text = apn.ApnUser;
+                txtApnPwd.Text = apn.ApnPwd;
+            }
+            if (logindevice == DeviceType.Cammpro)
+            {
+                tb_4GPIN.Text = apn.ApnPin;
+            }
+
+        }
 
         /// <summary>
         /// 

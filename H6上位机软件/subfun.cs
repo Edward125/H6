@@ -483,7 +483,7 @@ namespace H6
         *************************************************/
         //BODYCAMDLL_API int  BC_SetApn(IN BCHandle *dev,IN char *sPwd,IN char *Apn);
         [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int BC_SetApn(IntPtr dev, byte sPwd, byte Apn);
+        public static extern int BC_SetApn(IntPtr dev, string sPwd, byte Apn);
 
         /*************************************************
         *函数说明:  获取运营商接入点，对所有的用户生效
@@ -494,7 +494,7 @@ namespace H6
         *************************************************/
         //BODYCAMDLL_API int  BC_GetApn(IN BCHandle *dev,IN char *sPwd,OUT char *Apn);
         [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int BC_GetApn(IntPtr dev, byte sPwd, out byte Apn);
+        public static extern int BC_GetApn(IntPtr dev, string sPwd, out byte Apn);
 
         /*************************************************
         *函数说明:  设置运营商接入点及用户名和密码 ，只有管理员用户有效
@@ -507,8 +507,8 @@ namespace H6
         *返回值     :    成功:BC_SUCCESS,  失败:BC_FAILED
         *************************************************/
         //BODYCAMDLL_API int  BC_SetVpn(IN BCHandle *dev,IN char *sPwd,IN char *Apn,IN char *VpnName,IN char *VpnPwd);
-        [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int BC_GetVpn(IntPtr dev, byte sPwd, byte Apn, byte VpnName, byte VpnPwd);
+        //[DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        //public static extern int BC_GetVpn(IntPtr dev, string sPwd, byte Apn, byte VpnName, byte VpnPwd);
 
         /*************************************************
         *函数说明:  获取运营商接入点及用户名和密码 ，对所有的用户生效
@@ -521,7 +521,7 @@ namespace H6
         *************************************************/
         //BODYCAMDLL_API int  BC_GetVpn(IN BCHandle *dev,IN char *sPwd,OUT char *Apn,OUT char *VpnName,OUT char *VpnPwd);
         [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int BC_GetVpn(IntPtr dev, byte sPwd, out byte Apn, out byte VpnName, out byte VpnPwd);
+        public static extern int BC_GetVpn(IntPtr dev, string sPwd, out byte Apn, out byte VpnName, out byte VpnPwd);
 
 
         /*************************************************
@@ -676,7 +676,7 @@ namespace H6
         *************************************************/
         //BODYCAMDLL_API int  BC_SetSelAp(IN BCHandle *dev,IN char *sPwd,IN char *Ssid);
         [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int BC_SetSelAp(IntPtr dev, byte sPwd, byte Ssid);
+        public static extern int BC_SetSelAp(IntPtr dev, string sPwd, byte Ssid);
 
 
         /*************************************************
@@ -688,7 +688,7 @@ namespace H6
         *************************************************/
         //BODYCAMDLL_API int  BC_GetSelAp(IN BCHandle *dev,IN char *sPwd,OUT char *Ssid);
         [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int BC_GetSel(IntPtr dev, byte sPwd, byte Ssid);
+        public static extern int BC_GetSelAp(IntPtr dev, string sPwd,out  byte Ssid);
 
         /*************************************************
         *函数说明:  获取所有的存在的AP热点 列表，对所有的用户生效
@@ -699,7 +699,7 @@ namespace H6
         *************************************************/
         //BODYCAMDLL_API int  BC_GetApList(IN BCHandle *dev,IN char *sPwd,OUT char *Ssids);
         [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int BC_GetApList(IntPtr dev, byte Spwd, byte Ssid);
+        public static extern int BC_GetApList(IntPtr dev, string Spwd, out byte Ssid);
 
         //
         /*************************************************

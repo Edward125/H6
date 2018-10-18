@@ -73,10 +73,10 @@
             this.btn_SyncDevTime = new System.Windows.Forms.Button();
             this.btn_SetMSDC = new System.Windows.Forms.Button();
             this.btn_4G = new System.Windows.Forms.Button();
-            this.txtApnUser = new System.Windows.Forms.GroupBox();
+            this.grbWifiInfo = new System.Windows.Forms.GroupBox();
             this.label23 = new System.Windows.Forms.Label();
             this.txtApnPwd = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.txtApnUser = new System.Windows.Forms.TextBox();
             this.label22 = new System.Windows.Forms.Label();
             this.btnReadWireless = new System.Windows.Forms.Button();
             this.btnRefreshWifi = new System.Windows.Forms.Button();
@@ -132,7 +132,7 @@
             this.groupBox5.SuspendLayout();
             this.gb_StatusCommand.SuspendLayout();
             this.groupBox6.SuspendLayout();
-            this.txtApnUser.SuspendLayout();
+            this.grbWifiInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.grbChangePassword.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -587,35 +587,35 @@
             this.btn_4G.UseVisualStyleBackColor = true;
             this.btn_4G.Click += new System.EventHandler(this.btn_4G_Click);
             // 
-            // txtApnUser
+            // grbWifiInfo
             // 
-            this.txtApnUser.BackColor = System.Drawing.Color.Transparent;
-            this.txtApnUser.Controls.Add(this.label23);
-            this.txtApnUser.Controls.Add(this.txtApnPwd);
-            this.txtApnUser.Controls.Add(this.textBox1);
-            this.txtApnUser.Controls.Add(this.label22);
-            this.txtApnUser.Controls.Add(this.btnReadWireless);
-            this.txtApnUser.Controls.Add(this.btnRefreshWifi);
-            this.txtApnUser.Controls.Add(this.comboWifiName);
-            this.txtApnUser.Controls.Add(this.btn_Wireless);
-            this.txtApnUser.Controls.Add(this.btn_Wireles_Edit);
-            this.txtApnUser.Controls.Add(this.Lb_WifiMode);
-            this.txtApnUser.Controls.Add(this.tb_4GPIN);
-            this.txtApnUser.Controls.Add(this.tb_4GAPN);
-            this.txtApnUser.Controls.Add(this.label16);
-            this.txtApnUser.Controls.Add(this.lb_WifiPassWord);
-            this.txtApnUser.Controls.Add(this.label11);
-            this.txtApnUser.Controls.Add(this.label10);
-            this.txtApnUser.Controls.Add(this.label15);
-            this.txtApnUser.Controls.Add(this.label2);
-            this.txtApnUser.Location = new System.Drawing.Point(24, 274);
-            this.txtApnUser.Margin = new System.Windows.Forms.Padding(2);
-            this.txtApnUser.Name = "txtApnUser";
-            this.txtApnUser.Padding = new System.Windows.Forms.Padding(2);
-            this.txtApnUser.Size = new System.Drawing.Size(421, 175);
-            this.txtApnUser.TabIndex = 12;
-            this.txtApnUser.TabStop = false;
-            this.txtApnUser.Text = "无线通信";
+            this.grbWifiInfo.BackColor = System.Drawing.Color.Transparent;
+            this.grbWifiInfo.Controls.Add(this.label23);
+            this.grbWifiInfo.Controls.Add(this.txtApnPwd);
+            this.grbWifiInfo.Controls.Add(this.txtApnUser);
+            this.grbWifiInfo.Controls.Add(this.label22);
+            this.grbWifiInfo.Controls.Add(this.btnReadWireless);
+            this.grbWifiInfo.Controls.Add(this.btnRefreshWifi);
+            this.grbWifiInfo.Controls.Add(this.comboWifiName);
+            this.grbWifiInfo.Controls.Add(this.btn_Wireless);
+            this.grbWifiInfo.Controls.Add(this.btn_Wireles_Edit);
+            this.grbWifiInfo.Controls.Add(this.Lb_WifiMode);
+            this.grbWifiInfo.Controls.Add(this.tb_4GPIN);
+            this.grbWifiInfo.Controls.Add(this.tb_4GAPN);
+            this.grbWifiInfo.Controls.Add(this.label16);
+            this.grbWifiInfo.Controls.Add(this.lb_WifiPassWord);
+            this.grbWifiInfo.Controls.Add(this.label11);
+            this.grbWifiInfo.Controls.Add(this.label10);
+            this.grbWifiInfo.Controls.Add(this.label15);
+            this.grbWifiInfo.Controls.Add(this.label2);
+            this.grbWifiInfo.Location = new System.Drawing.Point(24, 274);
+            this.grbWifiInfo.Margin = new System.Windows.Forms.Padding(2);
+            this.grbWifiInfo.Name = "grbWifiInfo";
+            this.grbWifiInfo.Padding = new System.Windows.Forms.Padding(2);
+            this.grbWifiInfo.Size = new System.Drawing.Size(421, 175);
+            this.grbWifiInfo.TabIndex = 12;
+            this.grbWifiInfo.TabStop = false;
+            this.grbWifiInfo.Text = "无线通信";
             // 
             // label23
             // 
@@ -637,15 +637,15 @@
             this.txtApnPwd.TabIndex = 27;
             this.txtApnPwd.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // textBox1
+            // txtApnUser
             // 
-            this.textBox1.Enabled = false;
-            this.textBox1.Location = new System.Drawing.Point(254, 77);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(2);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(152, 21);
-            this.textBox1.TabIndex = 26;
-            this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtApnUser.Enabled = false;
+            this.txtApnUser.Location = new System.Drawing.Point(254, 77);
+            this.txtApnUser.Margin = new System.Windows.Forms.Padding(2);
+            this.txtApnUser.Name = "txtApnUser";
+            this.txtApnUser.Size = new System.Drawing.Size(152, 21);
+            this.txtApnUser.TabIndex = 26;
+            this.txtApnUser.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label22
             // 
@@ -1212,7 +1212,7 @@
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.btn_4G);
             this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.txtApnUser);
+            this.Controls.Add(this.grbWifiInfo);
             this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.gb_StatusCommand);
             this.Controls.Add(this.groupBox5);
@@ -1235,8 +1235,8 @@
             this.groupBox5.PerformLayout();
             this.gb_StatusCommand.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
-            this.txtApnUser.ResumeLayout(false);
-            this.txtApnUser.PerformLayout();
+            this.grbWifiInfo.ResumeLayout(false);
+            this.grbWifiInfo.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.grbChangePassword.ResumeLayout(false);
             this.grbChangePassword.PerformLayout();
@@ -1288,7 +1288,7 @@
         private System.Windows.Forms.Button btn_SetMSDC;
         private System.Windows.Forms.Button btn_EcjetSD;
         private System.Windows.Forms.Button btn_4G;
-        private System.Windows.Forms.GroupBox txtApnUser;
+        private System.Windows.Forms.GroupBox grbWifiInfo;
         private System.Windows.Forms.ComboBox Lb_WifiMode;
         private System.Windows.Forms.TextBox tb_4GAPN;
         private System.Windows.Forms.TextBox tb_4GPIN;
@@ -1323,7 +1323,7 @@
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.ComboBox comboUserID;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox txtApnUser;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.TextBox txtApnPwd;
