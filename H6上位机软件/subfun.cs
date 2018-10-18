@@ -919,7 +919,7 @@ namespace H6
         *************************************************/
         //BODYCAMDLL_API int  BC_GetCmsv6Cfg(IN BCHandle *dev,IN char *sPwd,OUT int *bEnable,OUT char *ServIP,OUT char * ServPort,OUT char *DevNo,OUT int *ReportTime);
         [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int BC_GetCmsv6Cfg(IntPtr dev,byte sPwd,out int bEnable,out byte ServIP,out byte ServPort,
+        public static extern int BC_GetCmsv6Cfg(IntPtr dev,string sPwd,out int bEnable,out byte ServIP,out byte ServPort,
             out byte DevNo,out int ReportTime);
 
 

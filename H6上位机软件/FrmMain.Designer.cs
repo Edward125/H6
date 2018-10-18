@@ -110,7 +110,7 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.btnReadServer = new System.Windows.Forms.Button();
             this.label30 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
+            this.btnWriteServer = new System.Windows.Forms.Button();
             this.label29 = new System.Windows.Forms.Label();
             this.btnEditServer = new System.Windows.Forms.Button();
             this.label28 = new System.Windows.Forms.Label();
@@ -974,7 +974,7 @@
             this.groupBox4.BackColor = System.Drawing.Color.Transparent;
             this.groupBox4.Controls.Add(this.btnReadServer);
             this.groupBox4.Controls.Add(this.label30);
-            this.groupBox4.Controls.Add(this.button2);
+            this.groupBox4.Controls.Add(this.btnWriteServer);
             this.groupBox4.Controls.Add(this.label29);
             this.groupBox4.Controls.Add(this.btnEditServer);
             this.groupBox4.Controls.Add(this.label28);
@@ -1022,15 +1022,15 @@
             this.label30.Text = "通道ID";
             this.label30.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // button2
+            // btnWriteServer
             // 
-            this.button2.Enabled = false;
-            this.button2.Location = new System.Drawing.Point(269, 119);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(61, 30);
-            this.button2.TabIndex = 20;
-            this.button2.Text = "确定";
-            this.button2.UseVisualStyleBackColor = true;
+            this.btnWriteServer.Enabled = false;
+            this.btnWriteServer.Location = new System.Drawing.Point(269, 119);
+            this.btnWriteServer.Name = "btnWriteServer";
+            this.btnWriteServer.Size = new System.Drawing.Size(61, 30);
+            this.btnWriteServer.TabIndex = 20;
+            this.btnWriteServer.Text = "确定";
+            this.btnWriteServer.UseVisualStyleBackColor = true;
             // 
             // label29
             // 
@@ -1052,6 +1052,7 @@
             this.btnEditServer.TabIndex = 19;
             this.btnEditServer.Text = "编辑";
             this.btnEditServer.UseVisualStyleBackColor = true;
+            this.btnEditServer.Click += new System.EventHandler(this.btnEditServer_Click);
             // 
             // label28
             // 
@@ -1343,7 +1344,7 @@
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.TextBox txtUpdateInternal;
         private System.Windows.Forms.Button btnReadServer;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button btnWriteServer;
         private System.Windows.Forms.Button btnEditServer;
     }
 }

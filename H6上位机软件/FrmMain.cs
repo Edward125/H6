@@ -38,7 +38,7 @@ namespace H6
 
         public enum ServerType
         {
-            CMSV6 = 1,
+            CMSV6 = 0,
             GB281811,
             NetCheckServer
         }
@@ -151,7 +151,9 @@ namespace H6
         {
             public string ServerIP { set; get; }
             public string ServerPort { set; get; }
-            public string UpdateInteral { set; get; }
+            public int ReportTime { set; get; }
+            public string DevNo{set;get;}
+            public int Enable { set; get; }
         }
 
 
@@ -1986,19 +1988,247 @@ namespace H6
         private void comboServType_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+            chkEnable.Enabled = false;
+            txtUpdateInternal.Enabled = false;
+            tb_ServerIP.Enabled = false;
+            tb_ServerPort.Enabled = false;
+            txtDeviceID.Enabled = false;
+            txtServerPassword.Enabled = false;
+            txtServerID.Enabled = false;
+            txtChannelID.Enabled = false;
+            txtChannelName.Enabled = false;
+
+            ServerType _ST =  (ServerType)Enum.ToObject (typeof(ServerType),comboServType.SelectedIndex );
+            GetServerInfo(LoginDevice, _ST, DevicePassword);
 
         }
 
 
 
 
-        private bool GetServerInfo(DeviceType logindevice, ServerType sertype)
+  /// <summary>
+  /// 
+  /// </summary>
+  /// <param name="logindevice"></param>
+  /// <param name="sertype"></param>
+  /// <param name="password"></param>
+  /// <returns></returns>
+        private bool GetServerInfo(DeviceType logindevice, ServerType sertype,string password)
         {
+
+
+            switch (sertype)
+            {
+                case ServerType.CMSV6:
+                    CMCSV6Server cs6 = new CMCSV6Server();
+                    if (GetCMSV6(logindevice, password, out cs6))
+                    {
+                        updateMessage(lb_StateInfo, "获取服务器信息成功.");
+                        UpdateCMSV6Info(cs6, logindevice);
+                    }
+                    
+                    break;
+                case ServerType.GB281811:
+                    break;
+                case ServerType.NetCheckServer:
+                    break;
+                default:
+                    break;
+            }
+
 
 
             return false;
 
         }
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logindevice"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        private bool GetCMSV6(DeviceType logindevice, string password,out CMCSV6Server cs6)
+        {
+            cs6 = new CMCSV6Server();   
+            if (logindevice == DeviceType.Cammpro)
+            {
+                //获取服务器IP地址
+                Byte[] IP = new Byte[16];
+                int iRet_ReadServerIP = -1;
+                ZFYDLL_API_MC.ReadServerIP(ref IP[0], DevicePassword, ref iRet_ReadServerIP);
+                cs6.ServerIP  = System.Text.Encoding.Default.GetString(IP, 0, IP.Length);    //将字节数组转换为字符串
+                
+                //获取服务器端口
+                Byte[] Port = new Byte[6];
+                int iRet_ReadServerPort = -1;
+                ZFYDLL_API_MC.ReadServerPort(ref Port[0], DevicePassword, ref iRet_ReadServerPort);
+                cs6.ServerPort  = System.Text.Encoding.Default.GetString(Port, 0, Port.Length);    //将字节数组转换为字符串
+
+                if (iRet_ReadServerIP == 1 && iRet_ReadServerPort == 1)
+                    return true;
+                else
+                    return false;
+
+              
+
+            }
+
+            if (logindevice == DeviceType.EasyStorage)
+            {
+                //获取服务器IP地址
+                Byte[] IP = new Byte[16];
+                //获取服务器端口
+                Byte[] Port = new Byte[6];
+                int enbale = -1;
+                byte[] DevNo = new byte[8];
+                int reporttime = -1;
+                int result = -1;
+               result = BODYCAMDLL_API_YZ.BC_GetCmsv6Cfg(BCHandle, password, out enbale, out IP[0], out Port[0], out DevNo[0], out  reporttime);
+                cs6.DevNo = System.Text.Encoding.Default.GetString(DevNo , 0, DevNo.Length);
+                cs6.Enable = enbale;
+                cs6.ReportTime = reporttime;
+                cs6.ServerIP = System.Text.Encoding.Default.GetString(IP, 0, IP.Length);    //将字节数组转换为字符串
+                cs6.ServerPort = System.Text.Encoding.Default.GetString(Port, 0, Port.Length);    //将字节数组转换为字符串
+
+                if (result == 1)
+                    return true;
+                else
+                    return false;
+                   
+
+            }
+            return false;
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cs6"></param>
+        /// <param name="logindevice"></param>
+        private void UpdateCMSV6Info(CMCSV6Server cs6,DeviceType logindevice)
+        {
+            tb_ServerIP.Text = cs6.ServerIP;
+            tb_ServerPort.Text = cs6.ServerPort;
+            if (logindevice == DeviceType.EasyStorage )
+            {
+                txtUpdateInternal.Text = cs6.ReportTime.ToString();
+                if (cs6.Enable == 1)
+                    chkEnable.Checked = true;
+                if (cs6.Enable == 0)
+                    chkEnable.Enabled = false;
+
+            }
+        }
+
+        private void btnEditServer_Click(object sender, EventArgs e)
+        {
+            if (this.btnEditServer.Text == "编辑")
+            {
+                this.btnEditServer.Enabled = true;
+                this.btnEditServer.Text = "取消";
+                this.btnWriteServer.Enabled = true;
+                ServerType _ST = (ServerType)Enum.ToObject(typeof(ServerType), comboServType.SelectedIndex);
+                EditServerInfo(LoginDevice, _ST);
+            }
+            else if (this.btnEditServer.Text == "取消")
+            {
+                this.btnEditServer.Text = "编辑";
+                this.btnWriteServer.Enabled = false;
+                //
+                chkEnable.Enabled = false;
+                txtUpdateInternal.Enabled = false;
+                tb_ServerIP.Enabled = false ;
+                tb_ServerPort.Enabled = false;
+                txtDeviceID.Enabled = false;
+                txtServerPassword.Enabled = false;
+                txtServerID.Enabled = false;
+                txtChannelID.Enabled = false;
+                txtChannelName.Enabled = false;
+
+            }
+
+        }
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logindevice"></param>
+        /// <param name="sertype"></param>
+        private void EditServerInfo(DeviceType logindevice, ServerType sertype)
+        {
+
+            switch (sertype)
+            {
+                case ServerType.CMSV6:
+
+                    if (logindevice == DeviceType.Cammpro)
+                    {
+                        chkEnable.Enabled = false;
+                        txtUpdateInternal.Enabled = false;
+                        tb_ServerIP.Enabled = true;
+                        tb_ServerPort.Enabled = true;
+                        txtDeviceID.Enabled = false;
+                        txtServerPassword.Enabled = false;
+                        txtServerID.Enabled = false;
+                        txtChannelID.Enabled = false;
+                        txtChannelName.Enabled = false;
+                    }
+                    if (logindevice == DeviceType.EasyStorage)
+                    {
+                        chkEnable.Enabled = true;
+                        txtUpdateInternal.Enabled = true;
+                        tb_ServerIP.Enabled = true;
+                        tb_ServerPort.Enabled = true;
+                        txtDeviceID.Enabled = false;
+                        txtServerPassword.Enabled = false;
+                        txtServerID.Enabled = false;
+                        txtChannelID.Enabled = false;
+                        txtChannelName.Enabled = false;
+                    }
+
+
+                    break;
+                case ServerType.GB281811:
+                    if (logindevice == DeviceType.EasyStorage)
+                    {
+                        chkEnable.Enabled = true;
+                        txtUpdateInternal.Enabled = false;
+                        tb_ServerIP.Enabled = true;
+                        tb_ServerPort.Enabled = true;
+                        txtDeviceID.Enabled = true;
+                        txtServerPassword.Enabled = true;
+                        txtServerID.Enabled = true;
+                        txtChannelID.Enabled = true;
+                        txtChannelName.Enabled = true;
+                    }
+                    break;
+                case ServerType.NetCheckServer:
+                    if (logindevice == DeviceType.EasyStorage)
+                    {
+                        chkEnable.Enabled = true;
+                        txtUpdateInternal.Enabled = false;
+                        tb_ServerIP.Enabled = true;
+                        tb_ServerPort.Enabled = true;
+                        txtDeviceID.Enabled = false;
+                        txtServerPassword.Enabled = false;
+                        txtServerID.Enabled = false;
+                        txtChannelID.Enabled = false;
+                        txtChannelName.Enabled = false;
+                    }
+
+                    break;
+                default:
+                    break;
+            }
+
+        }
+
 
     }
 }
