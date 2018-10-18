@@ -2060,6 +2060,10 @@ namespace H6
 
 
 
+        
+
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -2073,27 +2077,33 @@ namespace H6
             int iRet_SetPwd = -1;
             if (logtype == DeviceType.Cammpro) 
             {
+                //byte[] pwd = new byte[6];
+                //pwd = Encoding.Default.GetBytes(newpassword.PadRight(6, '\0').ToArray());
+                if (idtype.SelectedIndex == 0) //admin
+                    //ZFYDLL_API_MC.SetAdminPassWord(newpassword, oldpassword, ref iRet_SetPwd);
+                    ZFYDLL_API_MC.SetAdminPassWord(newpassword, oldpassword, ref iRet_SetPwd);
+
+
+                if (idtype.SelectedIndex == 1) //user
+                    ZFYDLL_API_MC.SetUserPassWord  (newpassword, oldpassword, ref iRet_SetPwd);
+
+                if (iRet_SetPwd == 7)
+                    return true;
+            }
+
+            if (logtype == DeviceType.EasyStorage )
+            {
                 byte[] pwd = new byte[6];
                 pwd = Encoding.Default.GetBytes(newpassword.PadRight(6, '\0').ToArray());
                 if (idtype.SelectedIndex == 0) //admin
-                {
-                    //ZFYDLL_API_MC.SetAdminPassWord(newpassword, oldpassword, ref iRet_SetPwd);
-                    ZFYDLL_API_MC.SetAdminPassWord(newpassword, oldpassword, ref iRet_SetPwd);
-                }
-
+                  iRet_SetPwd=  BODYCAMDLL_API_YZ.BC_SetDevUser(BCHandle, oldpassword, "admin", oldpassword, newpassword);
                 if (idtype.SelectedIndex == 1) //user
-                {
-                    ZFYDLL_API_MC.SetUserPassWord  (newpassword, oldpassword, ref iRet_SetPwd);
-                }
-            }
-            if (logtype == DeviceType.EasyStorage )
-            {
+                  iRet_SetPwd=  BODYCAMDLL_API_YZ.BC_SetDevUser(BCHandle, oldpassword, "user", oldpassword, newpassword);
+                if (iRet_SetPwd == 1)
+                    return true;
                
             }
 
-
-            if (iRet_SetPwd == 7)
-                return true;
 
             return false;
         }

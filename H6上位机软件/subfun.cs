@@ -536,7 +536,7 @@ namespace H6
         *************************************************/
         //BODYCAMDLL_API int  BC_SetDevUser(IN BCHandle *dev,IN char *sPwd,IN char *username,IN char *oldpwd,IN char *newpwd);
         [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int BC_SetDevUser(IntPtr dev, byte sPwd, byte username, byte oldpwd, byte newpwd);
+        public static extern int BC_SetDevUser(IntPtr dev, string sPwd, string username, string oldpwd, string newpwd);
 
         /*************************************************
         *函数说明:  获取设备登录名称，对所有的用户生效
