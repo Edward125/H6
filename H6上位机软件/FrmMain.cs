@@ -180,6 +180,7 @@ namespace H6
         /// </summary>
         public class NetCheckServer
         {
+            public int Enable { set; get; }
             public string IP { set; get; }
             public string Port { set; get; }
         }
@@ -2016,13 +2017,13 @@ namespace H6
 
 
 
-  /// <summary>
-  /// 
-  /// </summary>
-  /// <param name="logindevice"></param>
-  /// <param name="sertype"></param>
-  /// <param name="password"></param>
-  /// <returns></returns>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logindevice"></param>
+        /// <param name="sertype"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         private bool GetServerInfo(DeviceType logindevice, ServerType sertype,string password)
         {
 
@@ -2047,6 +2048,13 @@ namespace H6
 
                     break;
                 case ServerType.NetCheckServer:
+                    NetCheckServer nc = new NetCheckServer();
+                    if (GetNetCheckServer(logindevice, password, out nc))
+                    {
+                        updateMessage(lb_StateInfo, "获取NetCheckServer类型服务器信息成功.");
+                        UpdateNetCheckInfo(logindevice, nc);
+                    }
+
                     break;
                 default:
                     break;
@@ -2210,6 +2218,62 @@ namespace H6
 
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logindevice"></param>
+        /// <param name="password"></param>
+        /// <param name="nc"></param>
+        /// <returns></returns>
+        private bool GetNetCheckServer(DeviceType logindevice, string password, out NetCheckServer nc)
+        {
+            nc = new NetCheckServer();
+
+            if (logindevice == DeviceType.EasyStorage)
+            {
+                //获取服务器IP地址
+                Byte[] IP = new Byte[16];
+                //获取服务器端口
+                Byte[] Port = new Byte[6];
+                int enbale = -1;
+                int result = -1;
+
+                result = BODYCAMDLL_API_YZ.BC_GetNetCheckServCfg(BCHandle, password, out enbale, out IP[0], out Port[0]);
+                if (result == 1)
+                {
+                    nc.Enable = enbale;
+                    nc.IP = System.Text.Encoding.Default.GetString(IP, 0, IP.Length);
+                    nc.Port = System.Text.Encoding.Default.GetString(Port, 0, Port.Length);
+                    return true;
+                }
+
+                return true;
+            }
+
+
+            return false;
+        }
+
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logindevice"></param>
+        /// <param name="nc"></param>
+        private void UpdateNetCheckInfo(DeviceType logindevice, NetCheckServer nc)
+        {
+            if (logindevice == DeviceType.EasyStorage)
+            {
+                if (nc.Enable == 1)
+                    chkEnable.Checked = true;
+                if (nc.Enable == 0)
+                    chkEnable.Checked = false;
+                tb_ServerIP.Text = nc.IP;
+                tb_ServerPort.Text = nc.Port;
+            }
+        }
 
         /// <summary>
         /// 

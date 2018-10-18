@@ -1054,7 +1054,7 @@ namespace H6
         *************************************************/
         //BODYCAMDLL_API int  BC_GetNetCheckServCfg(IN BCHandle *dev,IN char *sPwd,OUT int *bEnable,OUT char *ServIP,OUT char * ServPort);
         [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int BC_GetNetCheckServCfg(IntPtr dev,byte sPwd,out int bEnable,out byte ServIP,out byte ServPort);
+        public static extern int BC_GetNetCheckServCfg(IntPtr dev,string  sPwd,out int bEnable,out byte ServIP,out byte ServPort);
 
 
 
