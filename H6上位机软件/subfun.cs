@@ -848,10 +848,11 @@ namespace H6
         *				Passwd: 设备登录服务器密码 (小于32字节)
         *返回值     :    成功:BC_SUCCESS,  失败:BC_FAILED
         *************************************************/
-        //BODYCAMDLL_API int  BC_GetGb28181Cfg(IN BCHandle *dev,IN char *sPwd,OUT int *bEnable,OUT char *ServIP,OUT char * ServPort,OUT char *DevNo,OUT char *ChnNo,OUT char *ChnName,OUT char *ServNo,OUT char *Passwd);
+        //BODYCAMDLL_API int  BC_GetGb28181Cfg(IN BCHandle *dev,IN char *sPwd,OUT int *bEnable,
+        //OUT char *ServIP,OUT char * ServPort,OUT char *DevNo,OUT char *ChnNo,OUT char *ChnName,OUT char *ServNo,OUT char *Passwd);
         [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int BC_GetGb28181Cfg(IntPtr dev,byte sPwd,out int bEnable,
-            out byte ServIP,out byte ServPort,out byte DevNo,out byte ChnNo,out byte Passwd);
+        public static extern int BC_GetGb28181Cfg(IntPtr dev,string sPwd,out int bEnable,
+            out byte ServIP,out byte ServPort,out byte DevNo,out byte ChnNo,out byte CHnName,out byte ServNo,out byte Passwd);
 
         /*************************************************
         *函数说明:  设置KH3989 GPS服务器信息,只允许KH3989的客户使用，只有管理员用户有效

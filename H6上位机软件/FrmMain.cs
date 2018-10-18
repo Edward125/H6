@@ -164,6 +164,7 @@ namespace H6
         {
             public string ServerIP { set; get; }
             public string ServerPort { set; get; }
+            public int Enable { set; get; }
             public string DeviceID { set; get; }
             public string DevicePassword { set; get; }
             public string ChannelName { set; get; }
@@ -1989,14 +1990,23 @@ namespace H6
         {
 
             chkEnable.Enabled = false;
+            chkEnable.Checked = false;
             txtUpdateInternal.Enabled = false;
+            txtUpdateInternal.Text = string.Empty;
             tb_ServerIP.Enabled = false;
+            tb_ServerIP.Text = string.Empty;
             tb_ServerPort.Enabled = false;
+            tb_ServerPort.Text = string.Empty;
             txtDeviceID.Enabled = false;
+            txtDeviceID.Text = string.Empty;
             txtServerPassword.Enabled = false;
+            txtServerPassword.Text = string.Empty;
             txtServerID.Enabled = false;
+            txtServerID.Text = string.Empty;
             txtChannelID.Enabled = false;
+            txtChannelID.Text = string.Empty;
             txtChannelName.Enabled = false;
+            txtChannelName.Text = string.Empty;
 
             ServerType _ST =  (ServerType)Enum.ToObject (typeof(ServerType),comboServType.SelectedIndex );
             GetServerInfo(LoginDevice, _ST, DevicePassword);
@@ -2023,12 +2033,18 @@ namespace H6
                     CMCSV6Server cs6 = new CMCSV6Server();
                     if (GetCMSV6(logindevice, password, out cs6))
                     {
-                        updateMessage(lb_StateInfo, "获取服务器信息成功.");
+                        updateMessage(lb_StateInfo, "获取CMSV6类型服务器信息成功.");
                         UpdateCMSV6Info(cs6, logindevice);
                     }
-                    
                     break;
                 case ServerType.GB281811:
+                    GB28181Server gb2 = new GB28181Server();
+                    if (GetGB28181(logindevice, password, out gb2))
+                    {
+                        updateMessage(lb_StateInfo, "获取GB28181类型服务器信息成功.");
+                        UpdateGB28181Info(logindevice, gb2);
+                    }
+
                     break;
                 case ServerType.NetCheckServer:
                     break;
@@ -2072,8 +2088,6 @@ namespace H6
                 else
                     return false;
 
-              
-
             }
 
             if (logindevice == DeviceType.EasyStorage)
@@ -2086,7 +2100,7 @@ namespace H6
                 byte[] DevNo = new byte[8];
                 int reporttime = -1;
                 int result = -1;
-               result = BODYCAMDLL_API_YZ.BC_GetCmsv6Cfg(BCHandle, password, out enbale, out IP[0], out Port[0], out DevNo[0], out  reporttime);
+                result = BODYCAMDLL_API_YZ.BC_GetCmsv6Cfg(BCHandle, password, out enbale, out IP[0], out Port[0], out DevNo[0], out  reporttime);
                 cs6.DevNo = System.Text.Encoding.Default.GetString(DevNo , 0, DevNo.Length);
                 cs6.Enable = enbale;
                 cs6.ReportTime = reporttime;
@@ -2124,6 +2138,84 @@ namespace H6
             }
         }
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logindevice"></param>
+        /// <param name="password"></param>
+        /// <param name="gb2"></param>
+        /// <returns></returns>
+        private bool GetGB28181(DeviceType logindevice, string password, out GB28181Server gb2)
+        {
+            gb2 = new GB28181Server();
+
+            int enable = -1;
+            int result = -1;
+            Byte[] IP = new Byte[16];
+            Byte[] Port = new Byte[6];
+            byte[] Devno = new byte[32];
+            byte[] Chnno = new byte[32];
+           // byte[] SerID = new byte[32];
+            byte[] ChnName = new byte[32];
+            byte[] SerName = new byte[32];
+            byte[] serPwd = new byte[32];
+
+            if (logindevice == DeviceType.EasyStorage)
+            {
+                result = BODYCAMDLL_API_YZ.BC_GetGb28181Cfg(BCHandle, password, out enable, out IP[0], out Port[0],
+                    out Devno[0], out Chnno[0],out ChnName[0],out SerName[0], out serPwd[0]);
+                   
+                if (result == 1)
+                {
+                    gb2.ServerIP = System.Text.Encoding.Default.GetString(IP, 0, IP.Length);
+                    gb2.ServerPort = System.Text.Encoding.Default.GetString(Port, 0, Port.Length);
+                    gb2.Enable = enable;
+                    gb2.DeviceID = System.Text.Encoding.Default.GetString(Devno, 0, Devno.Length);
+                    gb2.ChannelID = System.Text.Encoding.Default.GetString(Chnno, 0, Chnno.Length);
+                    gb2.ChannelName = System.Text.Encoding.Default.GetString(ChnName, 0, ChnName.Length);
+                    gb2.ServerID = System.Text.Encoding.Default.GetString(SerName , 0,SerName.Length );
+                    gb2.DevicePassword = System.Text.Encoding.Default.GetString(serPwd, 0, serPwd.Length);
+                    return true;
+                }
+                else
+                    return false;
+            }
+
+
+
+            return false;
+        }
+
+
+        private void UpdateGB28181Info(DeviceType logindevice, GB28181Server gb2)
+        {
+            if (logindevice == DeviceType.EasyStorage)
+            {
+                if (gb2.Enable == 1)
+                    chkEnable.Checked = true;
+                if (gb2.Enable == 0)
+                    chkEnable.Checked = false;
+
+                tb_ServerIP.Text = gb2.ServerIP;
+                tb_ServerPort.Text =gb2.ServerPort ;
+                txtDeviceID.Text =gb2.DeviceID;
+                txtChannelID .Text = gb2.ChannelID;
+                txtChannelName .Text =  gb2.ChannelName ;//= System.Text.Encoding.Default.GetString(ChnName, 0, ChnName.Length);
+                txtServerID .Text = gb2.ServerID ;//= System.Text.Encoding.Default.GetString(SerName, 0, SerName.Length);
+               txtServerPassword .Text =   gb2.DevicePassword ;//= System.Text.Encoding.Default.GetString(serPwd, 0, serPwd.Length);
+            }
+        }
+
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnEditServer_Click(object sender, EventArgs e)
         {
             if (this.btnEditServer.Text == "编辑")
