@@ -997,6 +997,13 @@ namespace H6
 
         private void btn_Logon_Click(object sender, EventArgs e)
         {
+            byte[] id = new byte[8];
+
+            BODYCAMDLL_API_YZ.BC_GetLoginID(BCHandle, out id[0]);
+            MessageBox.Show(System.Text.Encoding.Default.GetString(id, 0, id.Length));
+
+
+            return;
 
             LogIn();
 
@@ -2431,6 +2438,7 @@ namespace H6
                     chkEnable.Checked = true;
                 if (cs6.Enable == 0)
                     chkEnable.Enabled = false;
+                txtDeviceID.Text = cs6.DevNo;
 
             }
         }
@@ -2635,6 +2643,7 @@ namespace H6
                         txtServerID.Enabled = false;
                         txtChannelID.Enabled = false;
                         txtChannelName.Enabled = false;
+                       
                     }
 
 
@@ -2671,6 +2680,105 @@ namespace H6
                 default:
                     break;
             }
+
+        }
+
+        private void btnWriteServer_Click(object sender, EventArgs e)
+        {
+            ServerType _ST = new ServerType();
+            switch (_ST)
+            {
+                case ServerType.CMSV6:
+                    CMCSV6Server cs6 = new CMCSV6Server();
+                    cs6.DevNo = txtDeviceID.Text;
+                    cs6.ReportTime = Convert.ToInt16(txtUpdateInternal.Text);
+                    cs6.ServerIP = tb_ServerIP.Text;
+                    cs6.ServerPort = tb_ServerPort.Text;
+                    if (chkEnable.Checked)
+                        cs6.Enable = 1;
+                    else
+                        cs6.Enable = 0;
+                    if (SetCMSV6Info(LoginDevice, DevicePassword, cs6))
+                    {
+                        updateMessage(lb_StateInfo, "设置CMSV6类型服务器信息成功.");
+                        SetCMSV6OKLockUI(LoginDevice);
+                    }
+                    break;
+                case ServerType.GB281811:
+                    break;
+                case ServerType.NetCheckServer:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logindevice"></param>
+        /// <param name="password"></param>
+        /// <param name="cs6"></param>
+        /// <returns></returns>
+        private bool SetCMSV6Info(DeviceType logindevice,string password, CMCSV6Server cs6)
+        {
+
+            if (logindevice == DeviceType.Cammpro)
+            {
+                byte[] IP = new byte[50];
+                int iRet_ReadServerIP = -1;
+                //IP = Encoding.Default.GetBytes(this.tb_ServerIP.Text.PadRight(50, '\0').ToArray());
+                IP = Encoding.Default.GetBytes(cs6.ServerIP.PadRight(50, '\0').ToArray());
+                ZFYDLL_API_MC.SetServerIP(IP, password , ref iRet_ReadServerIP);
+
+                byte[] Port = new byte[50];
+                int iRet_SetServerPort = -1;
+                Port = Encoding.Default.GetBytes(cs6.ServerPort.PadRight(50, '\0').ToArray());
+                ZFYDLL_API_MC.SetServerPort(Port, password , ref iRet_SetServerPort);
+                if (iRet_ReadServerIP == 1 && iRet_SetServerPort == 1)
+                    return true;
+            }
+
+            if (logindevice == DeviceType.EasyStorage)
+            {
+                int result = -1;
+                byte[] IP = new byte[50];
+                IP = Encoding.Default.GetBytes(cs6.ServerIP.PadRight(50, '\0').ToArray());
+                byte[] Port = new byte[50];
+                Port = Encoding.Default.GetBytes(cs6.ServerPort.PadRight(50, '\0').ToArray());
+                byte[] DevID = new byte [32];
+                DevID = System.Text.Encoding.Default.GetBytes (cs6.DevNo.PadRight (32,'\0').ToArray());
+               result = BODYCAMDLL_API_YZ.BC_SetCmsv6Cfg(BCHandle, password, cs6.Enable, IP, Port, DevID, cs6.ReportTime);
+              if (result == 1)
+                  return true;
+            }
+
+            return false;
+        }
+
+
+
+        private void SetCMSV6OKLockUI(DeviceType logindevice)
+        {
+            
+            if (logindevice  == DeviceType.EasyStorage)
+            {
+                chkEnable.Enabled = false;
+                txtUpdateInternal.Enabled = false;
+                txtDeviceID.Enabled = false;
+            }
+
+                tb_ServerPort.Enabled = false;
+                tb_ServerIP.Enabled = false;
+                btnEditServer.Text = "编辑";
+
+        }
+
+        private void btnReadServer_Click(object sender, EventArgs e)
+        {
 
         }
 

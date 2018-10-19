@@ -904,8 +904,8 @@ namespace H6
         *************************************************/
         //BODYCAMDLL_API int  BC_SetCmsv6Cfg(IN BCHandle *dev,IN char *sPwd,IN int bEnable,IN char *ServIP,IN char * ServPort,IN char *DevNo,IN int ReportTime);
         [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int BC_SetCmsv6Cfg(IntPtr dev,byte sPwd,int bEnable,byte ServIP,byte ServPort,
-            byte DevNo,byte ReportTime);
+        public static extern int BC_SetCmsv6Cfg(IntPtr dev,string sPwd,int bEnable,byte[] ServIP,byte[] ServPort,
+            byte[] DevNo,int ReportTime);
 
         /*************************************************
         *函数说明:  获取Cmsv6服务器信息(这是设备默认使用的音视频服务器)，对所有的用户生效

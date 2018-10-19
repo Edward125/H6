@@ -1004,12 +1004,13 @@
             // btnReadServer
             // 
             this.btnReadServer.Enabled = false;
-            this.btnReadServer.Location = new System.Drawing.Point(336, 119);
+            this.btnReadServer.Location = new System.Drawing.Point(336, 138);
             this.btnReadServer.Name = "btnReadServer";
             this.btnReadServer.Size = new System.Drawing.Size(59, 30);
             this.btnReadServer.TabIndex = 21;
             this.btnReadServer.Text = "读取";
             this.btnReadServer.UseVisualStyleBackColor = true;
+            this.btnReadServer.Click += new System.EventHandler(this.btnReadServer_Click);
             // 
             // label30
             // 
@@ -1025,12 +1026,13 @@
             // btnWriteServer
             // 
             this.btnWriteServer.Enabled = false;
-            this.btnWriteServer.Location = new System.Drawing.Point(269, 119);
+            this.btnWriteServer.Location = new System.Drawing.Point(269, 138);
             this.btnWriteServer.Name = "btnWriteServer";
             this.btnWriteServer.Size = new System.Drawing.Size(61, 30);
             this.btnWriteServer.TabIndex = 20;
             this.btnWriteServer.Text = "确定";
             this.btnWriteServer.UseVisualStyleBackColor = true;
+            this.btnWriteServer.Click += new System.EventHandler(this.btnWriteServer_Click);
             // 
             // label29
             // 
@@ -1046,7 +1048,7 @@
             // btnEditServer
             // 
             this.btnEditServer.Enabled = false;
-            this.btnEditServer.Location = new System.Drawing.Point(202, 119);
+            this.btnEditServer.Location = new System.Drawing.Point(202, 138);
             this.btnEditServer.Name = "btnEditServer";
             this.btnEditServer.Size = new System.Drawing.Size(61, 30);
             this.btnEditServer.TabIndex = 19;
