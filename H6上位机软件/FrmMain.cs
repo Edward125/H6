@@ -166,7 +166,7 @@ namespace H6
             public string ServerPort { set; get; }
             public int Enable { set; get; }
             public string DeviceID { set; get; }
-            public string DevicePassword { set; get; }
+            public string ServerPassword { set; get; }
             public string ChannelName { set; get; }
             public string ServerID { set; get; }
             public string ChannelID{set;get;}
@@ -997,13 +997,13 @@ namespace H6
 
         private void btn_Logon_Click(object sender, EventArgs e)
         {
-            byte[] id = new byte[8];
+            //byte[] id = new byte[8];
 
-            BODYCAMDLL_API_YZ.BC_GetLoginID(BCHandle, out id[0]);
-            MessageBox.Show(System.Text.Encoding.Default.GetString(id, 0, id.Length));
+            //BODYCAMDLL_API_YZ.BC_GetLoginID(BCHandle, out id[0]);
+            //MessageBox.Show(System.Text.Encoding.Default.GetString(id, 0, id.Length));
 
 
-            return;
+            //return;
 
             LogIn();
 
@@ -2481,7 +2481,7 @@ namespace H6
                     gb2.ChannelID = System.Text.Encoding.Default.GetString(Chnno, 0, Chnno.Length);
                     gb2.ChannelName = System.Text.Encoding.Default.GetString(ChnName, 0, ChnName.Length);
                     gb2.ServerID = System.Text.Encoding.Default.GetString(SerName , 0,SerName.Length );
-                    gb2.DevicePassword = System.Text.Encoding.Default.GetString(serPwd, 0, serPwd.Length);
+                    gb2.ServerPassword = System.Text.Encoding.Default.GetString(serPwd, 0, serPwd.Length);
                     return true;
                 }
                 else
@@ -2509,7 +2509,7 @@ namespace H6
                 txtChannelID .Text = gb2.ChannelID;
                 txtChannelName .Text =  gb2.ChannelName ;//= System.Text.Encoding.Default.GetString(ChnName, 0, ChnName.Length);
                 txtServerID .Text = gb2.ServerID ;//= System.Text.Encoding.Default.GetString(SerName, 0, SerName.Length);
-               txtServerPassword .Text =   gb2.DevicePassword ;//= System.Text.Encoding.Default.GetString(serPwd, 0, serPwd.Length);
+               txtServerPassword .Text =   gb2.ServerPassword ;//= System.Text.Encoding.Default.GetString(serPwd, 0, serPwd.Length);
             }
         }
 
@@ -2686,12 +2686,26 @@ namespace H6
         private void btnWriteServer_Click(object sender, EventArgs e)
         {
             ServerType _ST = new ServerType();
+            _ST = (ServerType)Enum.ToObject(typeof(ServerType), comboServType.SelectedIndex);
             switch (_ST)
             {
                 case ServerType.CMSV6:
+                    if (string.IsNullOrEmpty(txtUpdateInternal.Text))
+                    {
+                        updateMessage(lb_StateInfo, "时间间隔不能为空，请重新输入.");
+                        txtUpdateInternal.Focus();
+                        return;
+                    }
                     CMCSV6Server cs6 = new CMCSV6Server();
-                    cs6.DevNo = txtDeviceID.Text;
                     cs6.ReportTime = Convert.ToInt16(txtUpdateInternal.Text);
+                    if (cs6.ReportTime < 5 || cs6.ReportTime > 360)
+                    {
+                        updateMessage(lb_StateInfo, "时间间隔参数不正确,范围为5~360,请重新输入.");
+                        txtUpdateInternal.SelectAll();
+                        txtUpdateInternal.Focus();
+                        return;
+                    }
+                    cs6.DevNo = txtDeviceID.Text;
                     cs6.ServerIP = tb_ServerIP.Text;
                     cs6.ServerPort = tb_ServerPort.Text;
                     if (chkEnable.Checked)
@@ -2705,6 +2719,29 @@ namespace H6
                     }
                     break;
                 case ServerType.GB281811:
+                    GB28181Server gb2 = new GB28181Server();
+                    if (chkEnable.Checked)
+                        gb2.Enable = 1;
+                    else
+                        gb2.Enable = 0;
+                    gb2.ServerIP = tb_ServerIP.Text.Trim();
+                    gb2.ServerPort = tb_ServerPort.Text.Trim();
+                    gb2.ServerID = txtServerID.Text.Trim();
+                    gb2.ServerPassword = txtServerPassword.Text.Trim();
+                    gb2.DeviceID = txtDeviceID.Text.Trim();
+                    gb2.ChannelID = txtChannelID.Text.Trim();
+                    gb2.ChannelName = txtChannelName.Text.Trim();
+
+
+
+
+                    if (SetGB28181Info(LoginDevice, DevicePassword, gb2))
+                    {
+                        updateMessage(lb_StateInfo, "设置GB28181类型服务器信息成功.");
+                    }
+
+
+
                     break;
                 case ServerType.NetCheckServer:
                     break;
@@ -2761,6 +2798,22 @@ namespace H6
 
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logindevice"></param>
+        /// <param name="cs6"></param>
+        /// <returns></returns>
+        private bool CheckCMSV6Param(DeviceType logindevice, ref CMCSV6Server cs6)
+        {
+
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logindevice"></param>
         private void SetCMSV6OKLockUI(DeviceType logindevice)
         {
             
@@ -2777,9 +2830,83 @@ namespace H6
 
         }
 
-        private void btnReadServer_Click(object sender, EventArgs e)
+
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logindevice"></param>
+        /// <param name="password"></param>
+        /// <param name="gb2"></param>
+        /// <returns></returns>
+        private bool SetGB28181Info(DeviceType logindevice, string password, GB28181Server gb2)
         {
 
+            if (logindevice == DeviceType.EasyStorage)
+            {
+                int result = -1;
+                byte[] ServIP = new byte[16];
+                ServIP = Encoding.Default.GetBytes(gb2.ServerIP.PadRight(16, '\0').ToArray());
+                byte[] ServPort = new byte[16];
+                ServPort = Encoding.Default.GetBytes(gb2.ServerPort.PadRight(16, '\0').ToArray());
+                byte[] DevID = new byte [32];
+                DevID = Encoding.Default.GetBytes (gb2.DeviceID.PadRight (32,'\0').ToArray ());
+                byte[] ChnNo = new byte[32];
+                ChnNo = Encoding.Default.GetBytes(gb2.ChannelID .PadRight (32,'\0').ToArray ());
+                byte[] ChnName = new byte[32];
+                ChnName = Encoding.Default.GetBytes(gb2.ChannelName.PadRight (32,'\0').ToArray ());
+                byte[] ServNo = new byte[32];
+                ServNo = Encoding.Default.GetBytes(gb2.ServerID.PadRight (32,'\0').ToArray());
+                byte[] ServPwd = new byte[32];
+                ServPwd = Encoding.Default.GetBytes(gb2.ServerPassword .PadRight (32,'\0').ToArray());
+
+                result = BODYCAMDLL_API_YZ.BC_SetGb28181Cfg(BCHandle, password, gb2.Enable, ServIP,
+                    ServPort, DevID, ChnNo, ChnName, ServNo, ServPwd);
+                if (result == 1)
+                    return true;
+            }
+
+            //cammpro 不支持
+
+            return false;
+        }
+
+
+
+
+        private void btnReadServer_Click(object sender, EventArgs e)
+        {
+            chkEnable.Enabled = false;
+            chkEnable.Checked = false;
+            txtUpdateInternal.Enabled = false;
+            txtUpdateInternal.Text = string.Empty;
+            tb_ServerIP.Enabled = false;
+            tb_ServerIP.Text = string.Empty;
+            tb_ServerPort.Enabled = false;
+            tb_ServerPort.Text = string.Empty;
+            txtDeviceID.Enabled = false;
+            txtDeviceID.Text = string.Empty;
+            txtServerPassword.Enabled = false;
+            txtServerPassword.Text = string.Empty;
+            txtServerID.Enabled = false;
+            txtServerID.Text = string.Empty;
+            txtChannelID.Enabled = false;
+            txtChannelID.Text = string.Empty;
+            txtChannelName.Enabled = false;
+            txtChannelName.Text = string.Empty;
+
+            ServerType _ST = (ServerType)Enum.ToObject(typeof(ServerType), comboServType.SelectedIndex);
+            GetServerInfo(LoginDevice, _ST, DevicePassword);
+        }
+
+        private void txtUpdateInternal_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!(Char.IsNumber(e.KeyChar)) && e.KeyChar != (char)13 && e.KeyChar != (char)8)
+            {
+                e.Handled = true;
+            }
         }
 
 

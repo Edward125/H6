@@ -1160,11 +1160,12 @@
             this.txtUpdateInternal.Enabled = false;
             this.txtUpdateInternal.Location = new System.Drawing.Point(144, 48);
             this.txtUpdateInternal.Margin = new System.Windows.Forms.Padding(2);
-            this.txtUpdateInternal.MaxLength = 5;
+            this.txtUpdateInternal.MaxLength = 3;
             this.txtUpdateInternal.Name = "txtUpdateInternal";
             this.txtUpdateInternal.Size = new System.Drawing.Size(40, 21);
             this.txtUpdateInternal.TabIndex = 19;
             this.txtUpdateInternal.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtUpdateInternal.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtUpdateInternal_KeyPress);
             // 
             // chkEnable
             // 

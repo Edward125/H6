@@ -829,10 +829,11 @@ namespace H6
         *输出参数:   无
         *返回值     :    成功:BC_SUCCESS,  失败:BC_FAILED
         *************************************************/
-        //BODYCAMDLL_API int  BC_SetGb28181Cfg(IN BCHandle *dev,IN char *sPwd,IN int bEnable,IN char *ServIP,IN char * ServPort,IN char *DevNo,IN char *ChnNo,IN char *ChnName,IN char *ServNo,IN char *Passwd);
+        //BODYCAMDLL_API int  BC_SetGb28181Cfg(IN BCHandle *dev,IN char *sPwd,IN int bEnable,
+        //IN char *ServIP,IN char * ServPort,IN char *DevNo,IN char *ChnNo,IN char *ChnName,IN char *ServNo,IN char *Passwd);
         [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int BC_SetGb28181Cfg(IntPtr dev,byte sPwd,int bEnable,
-            byte Servip,byte ServPort,byte DevNo,byte ChnNo,byte ServNo,byte Passwd);
+        public static extern int BC_SetGb28181Cfg(IntPtr dev,string sPwd,int bEnable,
+            byte[] Servip,byte[] ServPort,byte[] DevNo,byte[] ChnNo,byte[] ChnName, byte[] ServNo,byte[] Passwd);
 
 
         /*************************************************
