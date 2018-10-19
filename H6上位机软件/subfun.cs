@@ -641,7 +641,7 @@ namespace H6
         *************************************************/
         //BODYCAMDLL_API int  BC_AddAp(IN BCHandle *dev,IN char *sPwd,IN char *Ssid,IN char *passwd);
         [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int BC_AddAp(IntPtr dev, byte sPwd, byte Ssid, byte passwd);
+        public static extern int BC_AddAp(IntPtr dev, string sPwd, byte[] Ssid, byte[] passwd);
 
         /*************************************************
         *函数说明:  从设备中删除指定AP热点  ，可以先获取设备中已存在的AP热点后再删除,只有管理员用户有效
@@ -664,7 +664,7 @@ namespace H6
         *************************************************/
         //BODYCAMDLL_API int  BC_DelAllAp(IN BCHandle *dev,IN char *sPwd);
         [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int BC_DelAllAp(IntPtr dev, byte sPwd);
+        public static extern int BC_DelAllAp(IntPtr dev, string sPwd);
 
         /*************************************************
         *函数说明:  选择连接的AP热点 ，可以先获取设备中已存在的AP热点后再选择设置,只有管理员用户有效
@@ -676,7 +676,7 @@ namespace H6
         *************************************************/
         //BODYCAMDLL_API int  BC_SetSelAp(IN BCHandle *dev,IN char *sPwd,IN char *Ssid);
         [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int BC_SetSelAp(IntPtr dev, string sPwd, byte Ssid);
+        public static extern int BC_SetSelAp(IntPtr dev, string sPwd, byte[] Ssid);
 
 
         /*************************************************

@@ -1644,6 +1644,22 @@ namespace H6
 
             // Set WiFi
 
+
+            WiFi _wifi = new WiFi();
+            _wifi.WiFiMode = (WiFiModeType)Enum.ToObject(typeof(WiFiModeType), Lb_WifiMode.SelectedIndex);
+            _wifi.WiFiSSID = comboWifiName.Text;
+            _wifi.WiFiPassword = lb_WifiPassWord.Text;
+            if (SetWiFiInfo(LoginDevice, DevicePassword, _wifi))
+            {
+                updateMessage(lb_StateInfo, "设置执法仪WiFi信息成功.");
+                comboWifiName.Enabled = false;
+                Lb_WifiMode.Enabled = false;
+                lb_WifiPassWord.Enabled = false;
+            }
+           
+            
+
+
             // Set APN
             APN apn = new APN();
             apn.ApnName = tb_4GAPN.Text.Trim();
@@ -1707,7 +1723,7 @@ namespace H6
                 PIN = Encoding.Default.GetBytes(apn.ApnPin .PadRight(32, '\0').ToArray());
                 ZFYDLL_API_MC.Set4GPIN(PIN, password, ref iRet_SetPIN);
 
-                if (iRet_SetAPN == 1 && iRet_SetPIN == 1)
+                //if (iRet_SetAPN == 7 && iRet_SetPIN == 7)
                     return true;
 
             }
@@ -1715,6 +1731,75 @@ namespace H6
             return false;
         }
 
+
+
+        private bool SetWiFiInfo(DeviceType logindevice, string password, WiFi _wifi)
+        {
+
+            if (logindevice == DeviceType.EasyStorage)
+            {
+                //设置WiFi,WiFi是存储在一个wifi list中，故设置时，先删除所有wifi，在添加wifi，再设置wifi
+                int DelApResult =    BODYCAMDLL_API_YZ.BC_DelAllAp(BCHandle, password);
+                //updateMessage(lb_StateInfo, "Delete All AP:" + DelApResult);
+
+                if (DelApResult == 1)
+                {
+
+                    byte[] WifiSSID = new byte[32];
+                    WifiSSID = Encoding.Default.GetBytes(_wifi.WiFiSSID.PadRight(32, '\0').ToArray());
+                    byte[] WifiPSW = new byte[32];
+                    WifiPSW = Encoding.Default.GetBytes(_wifi.WiFiPassword.PadRight(32, '\0').ToArray());
+                    int AddApResult = BODYCAMDLL_API_YZ.BC_AddAp(BCHandle, password, WifiSSID, WifiPSW);
+                    int SetSelAP = BODYCAMDLL_API_YZ.BC_SetSelAp(BCHandle, password, WifiSSID);
+
+                    if (AddApResult == 1 & SetSelAP == 1)
+                    {
+                        return true;
+                    }
+                    else
+                        return false;
+
+                }
+                else 
+                   return false;
+
+
+               // updateMessage(lb_StateInfo, "Add AP:" + AddApResult );
+
+               
+
+                //updateMessage(lb_StateInfo, "Set AP:" +SetSelAP );
+
+                
+            }
+
+
+
+            if (logindevice == DeviceType.Cammpro)
+            {
+
+                byte[] WifiSSID = new byte[50];
+                int iRet_SetWifiSSID = -1;
+                // WifiSSID = Encoding.Default.GetBytes(this.lb_WifiName.Text.PadRight(50, '\0').ToArray());
+                WifiSSID = Encoding.Default.GetBytes(_wifi.WiFiSSID.PadRight(50, '\0').ToArray());
+                ZFYDLL_API_MC.SetWifiSSID(WifiSSID, DevicePassword, ref iRet_SetWifiSSID);
+
+                byte[] WifiPSW = new byte[50];
+                int iRet_SetWifiPSW = -1;
+                WifiPSW = Encoding.Default.GetBytes(_wifi.WiFiPassword.PadRight(50, '\0').ToArray());
+                ZFYDLL_API_MC.SetWifiPSW(WifiPSW, DevicePassword, ref iRet_SetWifiPSW);
+                //设定WiFi模式,0;AP；1;STA
+                int iRet_SetWifiMode = -1;
+                int mode = -1;
+                mode = (int)_wifi.WiFiMode;
+                ZFYDLL_API_MC.SetWifiMode(mode, DevicePassword, ref iRet_SetWifiMode);
+
+                return true;
+            }
+
+
+            return false;
+        }
 
 
 
@@ -1953,6 +2038,8 @@ namespace H6
         private void btnReadWireless_Click(object sender, EventArgs e)
         {
 
+            ClearWifiApnInfo();
+
 
             //读取WiFi信息
             WiFi _wifi = new WiFi();
@@ -2016,6 +2103,23 @@ namespace H6
 
 
         }
+
+
+        private void ClearWifiApnInfo()
+        {
+            Lb_WifiMode.SelectedIndex = -1;
+            comboWifiName.Text = "";
+            //lb_WifiName.Text = "";
+            lb_WifiPassWord.Text = "";
+            tb_4GAPN.Text = "";
+            tb_4GPIN.Text = "";
+            txtApnPwd.Text = "";
+            txtApnUser.Text = "";
+
+            
+
+        }
+
 
         private void tb_ServerPort_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -2243,6 +2347,7 @@ namespace H6
                 byte[] ssid = new byte[32];
                 int result = -1;
                 result =  BODYCAMDLL_API_YZ.BC_GetSelAp(BCHandle, password ,out ssid[0]);
+                updateMessage(lb_StateInfo, "Get sel ap:" + result);
 
              //   string s = BODYCAMDLL_API_YZ.BC_GetErrStr(BCHandle);
                 if (result == 0)
