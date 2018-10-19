@@ -2137,6 +2137,10 @@ namespace H6
             txtChannelName.Enabled = false;
             txtChannelName.Text = string.Empty;
 
+            if (btnEditServer.Text == "取消")
+                btnEditServer.Text = "编辑";
+
+
             ServerType _ST =  (ServerType)Enum.ToObject (typeof(ServerType),comboServType.SelectedIndex );
             GetServerInfo(LoginDevice, _ST, DevicePassword);
 
@@ -2690,28 +2694,11 @@ namespace H6
             switch (_ST)
             {
                 case ServerType.CMSV6:
-                    if (string.IsNullOrEmpty(txtUpdateInternal.Text))
-                    {
-                        updateMessage(lb_StateInfo, "时间间隔不能为空，请重新输入.");
-                        txtUpdateInternal.Focus();
-                        return;
-                    }
+
                     CMCSV6Server cs6 = new CMCSV6Server();
-                    cs6.ReportTime = Convert.ToInt16(txtUpdateInternal.Text);
-                    if (cs6.ReportTime < 5 || cs6.ReportTime > 360)
-                    {
-                        updateMessage(lb_StateInfo, "时间间隔参数不正确,范围为5~360,请重新输入.");
-                        txtUpdateInternal.SelectAll();
-                        txtUpdateInternal.Focus();
+                    if (!CheckCMSV6Param(ref cs6))
                         return;
-                    }
-                    cs6.DevNo = txtDeviceID.Text;
-                    cs6.ServerIP = tb_ServerIP.Text;
-                    cs6.ServerPort = tb_ServerPort.Text;
-                    if (chkEnable.Checked)
-                        cs6.Enable = 1;
-                    else
-                        cs6.Enable = 0;
+
                     if (SetCMSV6Info(LoginDevice, DevicePassword, cs6))
                     {
                         updateMessage(lb_StateInfo, "设置CMSV6类型服务器信息成功.");
@@ -2720,26 +2707,15 @@ namespace H6
                     break;
                 case ServerType.GB281811:
                     GB28181Server gb2 = new GB28181Server();
-                    if (chkEnable.Checked)
-                        gb2.Enable = 1;
-                    else
-                        gb2.Enable = 0;
-                    gb2.ServerIP = tb_ServerIP.Text.Trim();
-                    gb2.ServerPort = tb_ServerPort.Text.Trim();
-                    gb2.ServerID = txtServerID.Text.Trim();
-                    gb2.ServerPassword = txtServerPassword.Text.Trim();
-                    gb2.DeviceID = txtDeviceID.Text.Trim();
-                    gb2.ChannelID = txtChannelID.Text.Trim();
-                    gb2.ChannelName = txtChannelName.Text.Trim();
-
-
-
+                    if (!CheckGB28181InfoParam(ref gb2))
+                        return;
 
                     if (SetGB28181Info(LoginDevice, DevicePassword, gb2))
                     {
                         updateMessage(lb_StateInfo, "设置GB28181类型服务器信息成功.");
-                    }
+                        SetGB28181OKLockUI();
 
+                    }
 
 
                     break;
@@ -2797,16 +2773,48 @@ namespace H6
         }
 
 
-
         /// <summary>
         /// 
         /// </summary>
         /// <param name="logindevice"></param>
         /// <param name="cs6"></param>
         /// <returns></returns>
-        private bool CheckCMSV6Param(DeviceType logindevice, ref CMCSV6Server cs6)
+        private bool CheckCMSV6Param( ref CMCSV6Server cs6)
         {
+            if (string.IsNullOrEmpty(txtUpdateInternal.Text))
+            {
+                updateMessage(lb_StateInfo, "时间间隔不能为空，请重新输入.");
+                txtUpdateInternal.Focus();
+                return false;
+            }
+            //CMCSV6Server cs6 = new CMCSV6Server();
+            cs6.ReportTime = Convert.ToInt16(txtUpdateInternal.Text);
+            if (cs6.ReportTime < 5 || cs6.ReportTime > 360)
+            {
+                updateMessage(lb_StateInfo, "时间间隔参数不正确,范围为5~360,请重新输入.");
+                txtUpdateInternal.SelectAll();
+                txtUpdateInternal.Focus();
+                return false;
+            }
+            cs6.DevNo = txtDeviceID.Text;
+            if (string.IsNullOrEmpty (tb_ServerIP.Text.Trim ()))
+            {
+                updateMessage(lb_StateInfo, "IP地址不能为空,请重新输入.");
+                tb_ServerIP.SelectAll();
+                tb_ServerIP.Focus();
+                return false;
+            }
+             cs6.ServerIP = tb_ServerIP.Text;
 
+         
+           
+            cs6.ServerPort = tb_ServerPort.Text;
+            if (chkEnable.Checked)
+                cs6.Enable = 1;
+            else
+                cs6.Enable = 0;
+
+            return true;
         }
 
 
@@ -2828,11 +2836,80 @@ namespace H6
                 tb_ServerIP.Enabled = false;
                 btnEditServer.Text = "编辑";
 
+
         }
 
 
 
 
+
+        private bool CheckGB28181InfoParam(ref GB28181Server gb2)
+        {
+            if (chkEnable.Checked)
+                gb2.Enable = 1;
+            else
+                gb2.Enable = 0;
+            if (string.IsNullOrEmpty(tb_ServerIP.Text.Trim()))
+            {
+                updateMessage(lb_StateInfo, "IP地址不能为空,请重新输入.");
+                tb_ServerIP.Focus();
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(tb_ServerPort.Text))
+            {
+                updateMessage(lb_StateInfo, "端口信息部不能为空,请重新输入.");
+                tb_ServerPort.Focus();
+                return false;
+            }
+
+
+            if (string.IsNullOrEmpty(txtDeviceID.Text))
+            {
+                updateMessage(lb_StateInfo, "设备ID信息不能为空,请重新输入.");
+                txtDeviceID.Focus();
+                return false;
+            }
+
+
+            if (string.IsNullOrEmpty(txtServerID.Text))
+            {
+                updateMessage(lb_StateInfo, "服务器ID信息不能为空,请重新输入.");
+                txtServerID.Focus();
+                return false;
+            }
+
+
+
+            if (string.IsNullOrEmpty(txtServerPassword.Text))
+            {
+                updateMessage(lb_StateInfo, "密码不能为空,若某些平台确认不需要验证密码,请随意输入密码.");
+                txtServerPassword.Focus();
+                return false;
+
+            }
+
+
+            if (string.IsNullOrEmpty(txtChannelID.Text))
+            {
+                updateMessage(lb_StateInfo, "通道ID不能为空,请重新输入.");
+                txtChannelID.Focus();
+
+                return false;
+            }
+
+            
+
+            gb2.ServerIP = tb_ServerIP.Text.Trim();
+            gb2.ServerPort = tb_ServerPort.Text.Trim();
+            gb2.ServerID = txtServerID.Text.Trim();
+            gb2.ServerPassword = txtServerPassword.Text.Trim();
+            gb2.DeviceID = txtDeviceID.Text.Trim();
+            gb2.ChannelID = txtChannelID.Text.Trim();
+            gb2.ChannelName = txtChannelName.Text.Trim();
+
+            return true;
+        }
 
         /// <summary>
         /// 
@@ -2875,6 +2952,21 @@ namespace H6
 
 
 
+
+        private void SetGB28181OKLockUI()
+        {
+                chkEnable.Enabled = false;
+                txtUpdateInternal.Enabled = false;
+                btnEditServer.Text = "编辑";
+                tb_ServerIP.Enabled = false;
+                tb_ServerPort.Enabled = false;
+                txtServerID.Enabled = false;
+                txtServerPassword.Enabled = false;
+                txtDeviceID.Enabled = false;
+                txtChannelID.Enabled = false;
+                txtChannelName.Enabled = false;
+        }
+        
 
         private void btnReadServer_Click(object sender, EventArgs e)
         {
