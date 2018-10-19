@@ -1020,12 +1020,14 @@ namespace H6
             {
                 this.btn_Edit.Enabled = true;
                 this.btn_Edit.Text = "取消";
-                this.tb_DevID.Enabled = true;
                 this.tb_UserID.Enabled = true;
                 this.tb_UserName.Enabled = true;
                 this.tb_UnitID.Enabled = true;
                 this.tb_UnitName.Enabled = true;
                 this.btn_OK.Enabled = true;
+                if (LoginDevice == DeviceType.Cammpro)
+                    this.tb_DevID.Enabled = true;
+
             }
             else if(this.btn_Edit.Text == "取消")
             {
@@ -2021,6 +2023,7 @@ namespace H6
 
         private void btnReadDeviceInfo_Click(object sender, EventArgs e)
         {
+            ClearDeviceInfo();
             ///////////////////////////////////////////////////////////////////////////
             //执法仪信息读取返回值
             DeviceInfo DI = new DeviceInfo();
@@ -2033,6 +2036,19 @@ namespace H6
                 this.tb_UnitID.Text = DI.unitNo;  //System.Text.Encoding.Default.GetString(uuDevice.unitNo);
                 this.tb_UnitName.Text = DI.unitName; //System.Text.Encoding.Default.GetString(uuDevice.unitName);        
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void  ClearDeviceInfo()
+        {
+            tb_DevID.Text = string.Empty;
+            tb_UnitID.Text = string.Empty;
+            tb_UnitName.Text = string.Empty;
+            tb_UserID.Text = string.Empty;
+            tb_UserName.Text = string.Empty;
+            
         }
 
         private void btnReadWireless_Click(object sender, EventArgs e)
@@ -2347,10 +2363,12 @@ namespace H6
                 byte[] ssid = new byte[32];
                 int result = -1;
                 result =  BODYCAMDLL_API_YZ.BC_GetSelAp(BCHandle, password ,out ssid[0]);
+#if DEBUG
                 updateMessage(lb_StateInfo, "Get sel ap:" + result);
+#endif
 
              //   string s = BODYCAMDLL_API_YZ.BC_GetErrStr(BCHandle);
-                if (result == 0)
+                if (result == 1)
                 {
                     wifi.WiFiSSID = System.Text.Encoding.Default.GetString(ssid, 0, ssid.Length);
                     return true;

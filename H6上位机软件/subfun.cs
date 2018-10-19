@@ -315,8 +315,8 @@ namespace H6
         *返回值     :    成功:BC_SUCCESS,  失败:BC_FAILED
         *************************************************/
         //BODYCAMDLL_API int  BC_SetDevInfo(IN BCHandle *dev,IN char *sPwd,IN DEV_INFO *info);
-         [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-         public static extern int BC_SetDevInfo(IntPtr dev,byte  sPwd, ZFY_INFO info);
+         //[DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+         //public static extern int BC_SetDevInfo(IntPtr dev,byte  sPwd, ZFY_INFO info);
 
          [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
          public static extern int BC_SetDevInfo(IntPtr dev, string sPwd, ZFY_INFO info);
