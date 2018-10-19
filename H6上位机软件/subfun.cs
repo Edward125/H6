@@ -507,8 +507,8 @@ namespace H6
         *返回值     :    成功:BC_SUCCESS,  失败:BC_FAILED
         *************************************************/
         //BODYCAMDLL_API int  BC_SetVpn(IN BCHandle *dev,IN char *sPwd,IN char *Apn,IN char *VpnName,IN char *VpnPwd);
-        //[DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        //public static extern int BC_GetVpn(IntPtr dev, string sPwd, byte Apn, byte VpnName, byte VpnPwd);
+        [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int BC_SetVpn(IntPtr dev, string sPwd, byte[] Apn, byte[] VpnName, byte[] VpnPwd);
 
         /*************************************************
         *函数说明:  获取运营商接入点及用户名和密码 ，对所有的用户生效
@@ -1041,7 +1041,7 @@ namespace H6
         *************************************************/
         //BODYCAMDLL_API int  BC_SetNetCheckServCfg(IN BCHandle *dev,IN char *sPwd,IN int bEnable,IN char *ServIP,OUT char * ServPort);
         [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int BC_SetNetCheckServCfg(IntPtr dev,byte sPwd,int bEnable,byte ServIP, byte ServPort);
+        public static extern int BC_SetNetCheckServCfg(IntPtr dev,string  sPwd,int bEnable,byte[] ServIP, byte[] ServPort);
 
 
         /*************************************************

@@ -1627,70 +1627,93 @@ namespace H6
 
         private void btn_Wireless_Click(object sender, EventArgs e)
         {
-            ////不可编辑状态
-            //lb_WifiName.Enabled = false;
-            //lb_WifiPassWord.Enabled = false;
-            //Lb_WifiMode.Enabled = false;
-            //tb_ServerIP.Enabled = false;
-            //tb_ServerPort.Enabled = false;
-            //this.btn_Wireless.Enabled = false;
 
 
-            // DevicePassword = tb_Password.Text;
-            // byte[] IP = new byte[50];
-            // int iRet_ReadServerIP = -1;
-            // IP = Encoding.Default.GetBytes(this.tb_ServerIP.Text.PadRight(50, '\0').ToArray());
-            // ZFYDLL_API_MC.SetServerIP(IP, DevicePassword, ref iRet_ReadServerIP);
-             
-            // byte[] Port = new byte[50];
-            // int iRet_SetServerPort =-1;
-            // Port = Encoding.Default.GetBytes(this.tb_ServerPort.Text.PadRight(50, '\0').ToArray());
-            // ZFYDLL_API_MC.SetServerPort(Port, DevicePassword, ref iRet_SetServerPort);
-
-            // byte[] WifiSSID = new byte[50];
-            // int iRet_SetWifiSSID = -1;
-            //// WifiSSID = Encoding.Default.GetBytes(this.lb_WifiName.Text.PadRight(50, '\0').ToArray());
-            // WifiSSID = Encoding.Default.GetBytes(this.comboWifiName.Text.PadRight(50, '\0').ToArray());
-            // ZFYDLL_API_MC.SetWifiSSID(WifiSSID, DevicePassword, ref iRet_SetWifiSSID);
-
-            // byte[] WifiPSW = new byte[50];
-            // int iRet_SetWifiPSW = -1;
-            // WifiPSW = Encoding.Default.GetBytes(this.lb_WifiPassWord.Text.PadRight(50, '\0').ToArray());
-            // ZFYDLL_API_MC.SetWifiPSW(WifiPSW, DevicePassword, ref iRet_SetWifiPSW);
+            //WiFiInfo DeviceWiFiInfo = new WiFiInfo();
+            //DeviceWiFiInfo.WiFiMode = (WiFiModeType)Lb_WifiMode.SelectedIndex;
+            //DeviceWiFiInfo.WiFiSSID = comboWifiName.Text.Trim();
+            //DeviceWiFiInfo.WiFiPassword = lb_WifiPassWord.Text.Trim();
+            //DeviceWiFiInfo.ServerIP = tb_ServerIP.Text.Trim();
+            //DeviceWiFiInfo.ServerPort = tb_ServerPort.Text.Trim();
+            //DeviceWiFiInfo.APN = tb_4GAPN.Text.Trim();
+            //DeviceWiFiInfo.PIN = tb_4GPIN.Text.Trim();
+            //if (SetDeviceWiFiInfo(LoginDevice,DevicePassword, DeviceWiFiInfo ))
+            //    updateMessage (lb_StateInfo,"设置无线信息成功.");
 
 
-            // //设定WiFi模式,0;AP；1;STA
-            // string WiFiMode = this.Lb_WifiMode.Text;
-            // int iRet_SetWifiMode = -1;
-            // int mode = -1;
-            // if (WiFiMode.Contains("AP"))
-            // {
-            //     mode = 0;
-            // }
-            // else if (WiFiMode.Contains("STA"))
-            // {
-            //     mode = 1;
-            // }
-            // ZFYDLL_API_MC.SetWifiMode(mode, DevicePassword, ref iRet_SetWifiMode);
-            // updateMessage(lb_StateInfo, "无线通信参数已设定 ");
 
+            // Set WiFi
 
-            WiFiInfo DeviceWiFiInfo = new WiFiInfo();
-            DeviceWiFiInfo.WiFiMode = (WiFiModeType)Lb_WifiMode.SelectedIndex;
-            DeviceWiFiInfo.WiFiSSID = comboWifiName.Text.Trim();
-            DeviceWiFiInfo.WiFiPassword = lb_WifiPassWord.Text.Trim();
-            DeviceWiFiInfo.ServerIP = tb_ServerIP.Text.Trim();
-            DeviceWiFiInfo.ServerPort = tb_ServerPort.Text.Trim();
-            DeviceWiFiInfo.APN = tb_4GAPN.Text.Trim();
-            DeviceWiFiInfo.PIN = tb_4GPIN.Text.Trim();
-            if (SetDeviceWiFiInfo(LoginDevice,DevicePassword, DeviceWiFiInfo ))
-                updateMessage (lb_StateInfo,"设置无线信息成功.");
+            // Set APN
+            APN apn = new APN();
+            apn.ApnName = tb_4GAPN.Text.Trim();
+            apn.ApnPin = tb_4GPIN.Text.Trim();
+            apn.ApnUser = txtApnUser.Text.Trim ();
+            apn.ApnPwd = txtApnPwd.Text.Trim();
+            if (SetAPNInfo(LoginDevice, DevicePassword, apn))
+            {
+                updateMessage(lb_StateInfo, "设置执法仪APN信息成功.");
+                tb_4GAPN.Enabled = false;
+                tb_4GPIN.Enabled = false;
+                txtApnPwd.Enabled = false;
+                txtApnUser.Enabled = false;
+            }
+
+            btn_Wireles_Edit.Text = "编辑";
+            
+
 
         }
 
 
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logindevice"></param>
+        /// <param name="password"></param>
+        /// <param name="apn"></param>
+        /// <returns></returns>
+        private bool SetAPNInfo(DeviceType logindevice, string password, APN apn)
+        {
+
+            if (logindevice == DeviceType.EasyStorage)
+            {
+                int result = -1;
+                byte[] Apn = new byte[64];
+                byte[] ApnUser = new byte[64];
+                byte[] ApnPwd = new byte[64];
+                Apn = System.Text.Encoding.Default.GetBytes(apn.ApnName.PadRight(64, '\0').ToArray());
+                ApnUser = System.Text.Encoding.Default.GetBytes(apn.ApnUser.PadRight(64, '\0').ToArray());
+                ApnPwd = System.Text.Encoding.Default.GetBytes(apn.ApnPwd.PadRight(64, '\0').ToArray());
+
+                result = BODYCAMDLL_API_YZ.BC_SetVpn(BCHandle, password, Apn, ApnUser, ApnPwd);
+                if (result == 1)
+                    return true;
+   
+
+            }
+
+            if (logindevice == DeviceType.Cammpro)
+            {
+                byte[] APN = new byte[32];
+                int iRet_SetAPN = -1;
+                APN = Encoding.Default.GetBytes(apn.ApnName .PadRight(32, '\0').ToArray());
+                ZFYDLL_API_MC.Set4GAPN(APN, password, ref iRet_SetAPN);
+
+                byte[] PIN = new byte[32];
+                int iRet_SetPIN = -1;
+                PIN = Encoding.Default.GetBytes(apn.ApnPin .PadRight(32, '\0').ToArray());
+                ZFYDLL_API_MC.Set4GPIN(PIN, password, ref iRet_SetPIN);
+
+                if (iRet_SetAPN == 1 && iRet_SetPIN == 1)
+                    return true;
+
+            }
+
+            return false;
+        }
 
 
 
@@ -2714,12 +2737,18 @@ namespace H6
                     {
                         updateMessage(lb_StateInfo, "设置GB28181类型服务器信息成功.");
                         SetGB28181OKLockUI();
-
                     }
-
 
                     break;
                 case ServerType.NetCheckServer:
+                    NetCheckServer nc = new NetCheckServer();
+                    if (!CheckNetCheckInfoParam   (ref nc))
+                        return;
+                    if (SetNetCheckServerInfo(LoginDevice, DevicePassword, nc))
+                    {
+                        updateMessage(lb_StateInfo, "设置NetCheck Server类型服务器信息成功.");
+                        SetNetCheckOKLockUI();
+                    }
                     break;
                 default:
                     break;
@@ -2952,7 +2981,9 @@ namespace H6
 
 
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         private void SetGB28181OKLockUI()
         {
                 chkEnable.Enabled = false;
@@ -2966,7 +2997,73 @@ namespace H6
                 txtChannelID.Enabled = false;
                 txtChannelName.Enabled = false;
         }
-        
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logindevice"></param>
+        /// <param name="password"></param>
+        /// <param name="nc"></param>
+        /// <returns></returns>
+        private bool SetNetCheckServerInfo(DeviceType logindevice, string password, NetCheckServer nc)
+        {
+            if (logindevice == DeviceType.EasyStorage)
+            {
+                int result = -1;
+                byte[] ServIP = new byte[16];
+                ServIP = Encoding.Default.GetBytes(nc.IP .PadRight(16, '\0').ToArray());
+                byte[] ServPort = new byte[16];
+                ServPort = Encoding.Default.GetBytes(nc.Port.PadRight(16, '\0').ToArray());
+                result = BODYCAMDLL_API_YZ.BC_SetNetCheckServCfg(BCHandle, password, nc.Enable, ServIP, ServPort);
+                if (result == 1)
+                    return true;
+
+            }
+            
+            // cammpro 不支持
+
+            return false;
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void SetNetCheckOKLockUI()
+        {
+            chkEnable.Enabled = false;
+            tb_ServerIP.Enabled = false;
+            tb_ServerPort.Enabled = false;
+        }
+
+        private bool CheckNetCheckInfoParam(ref NetCheckServer nc)
+        {
+            if (chkEnable.Checked)
+                nc.Enable = 1;
+            else
+                nc.Enable = 0;
+            if (string.IsNullOrEmpty(tb_ServerIP.Text.Trim()))
+            {
+                updateMessage(lb_StateInfo, "IP地址不能为空,请重新输入.");
+                tb_ServerIP.Focus();
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(tb_ServerPort.Text))
+            {
+                updateMessage(lb_StateInfo, "端口信息部不能为空,请重新输入.");
+                tb_ServerPort.Focus();
+                return false;
+            }
+
+            nc.IP = tb_ServerIP.Text.Trim();
+            nc.Port = tb_ServerPort.Text.Trim();
+            btnEditServer.Text = "编辑";
+            return true;
+        }
+
+
 
         private void btnReadServer_Click(object sender, EventArgs e)
         {
