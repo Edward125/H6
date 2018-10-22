@@ -1631,18 +1631,6 @@ namespace H6
         {
 
 
-            //WiFiInfo DeviceWiFiInfo = new WiFiInfo();
-            //DeviceWiFiInfo.WiFiMode = (WiFiModeType)Lb_WifiMode.SelectedIndex;
-            //DeviceWiFiInfo.WiFiSSID = comboWifiName.Text.Trim();
-            //DeviceWiFiInfo.WiFiPassword = lb_WifiPassWord.Text.Trim();
-            //DeviceWiFiInfo.ServerIP = tb_ServerIP.Text.Trim();
-            //DeviceWiFiInfo.ServerPort = tb_ServerPort.Text.Trim();
-            //DeviceWiFiInfo.APN = tb_4GAPN.Text.Trim();
-            //DeviceWiFiInfo.PIN = tb_4GPIN.Text.Trim();
-            //if (SetDeviceWiFiInfo(LoginDevice,DevicePassword, DeviceWiFiInfo ))
-            //    updateMessage (lb_StateInfo,"设置无线信息成功.");
-
-
 
             // Set WiFi
 
@@ -1752,10 +1740,11 @@ namespace H6
                     byte[] WifiPSW = new byte[32];
                     WifiPSW = Encoding.Default.GetBytes(_wifi.WiFiPassword.PadRight(32, '\0').ToArray());
                     int AddApResult = BODYCAMDLL_API_YZ.BC_AddAp(BCHandle, password, WifiSSID, WifiPSW);
-                    int SetSelAP = BODYCAMDLL_API_YZ.BC_SetSelAp(BCHandle, password, WifiSSID);
+                    //int SetSelAP = BODYCAMDLL_API_YZ.BC_SetSelAp(BCHandle, password, WifiSSID);
 
-                    if (AddApResult == 1 & SetSelAP == 1)
+                    if (AddApResult == 1 )
                     {
+
                         return true;
                     }
                     else
@@ -2362,15 +2351,16 @@ namespace H6
                 //byte[] ssid = new byte[32];
                 byte[] ssid = new byte[32];
                 int result = -1;
-                result =  BODYCAMDLL_API_YZ.BC_GetSelAp(BCHandle, password ,out ssid[0]);
-#if DEBUG
-                updateMessage(lb_StateInfo, "Get sel ap:" + result);
-#endif
+                //result =  BODYCAMDLL_API_YZ.BC_GetSelAp(BCHandle, password ,out ssid[0]);
+                result = BODYCAMDLL_API_YZ.BC_GetApList(BCHandle, password, out ssid[0]);
+//#if DEBUG
+//                updateMessage(lb_StateInfo, "Get sel ap:" + result);
+//#endif
 
              //   string s = BODYCAMDLL_API_YZ.BC_GetErrStr(BCHandle);
                 if (result == 1)
                 {
-                    wifi.WiFiSSID = System.Text.Encoding.Default.GetString(ssid, 0, ssid.Length);
+                    wifi.WiFiSSID = System.Text.Encoding.Default.GetString(ssid, 0, ssid.Length).Replace (",","");
                     return true;
                 }
                 else
