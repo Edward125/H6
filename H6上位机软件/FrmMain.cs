@@ -2832,7 +2832,7 @@ namespace H6
                 case ServerType.CMSV6:
 
                     CMCSV6Server cs6 = new CMCSV6Server();
-                    if (!CheckCMSV6Param(ref cs6))
+                    if (!CheckCMSV6Param(LoginDevice, ref cs6))
                         return;
 
                     if (SetCMSV6Info(LoginDevice, DevicePassword, cs6))
@@ -2893,8 +2893,8 @@ namespace H6
                 int iRet_SetServerPort = -1;
                 Port = Encoding.Default.GetBytes(cs6.ServerPort.PadRight(50, '\0').ToArray());
                 ZFYDLL_API_MC.SetServerPort(Port, password , ref iRet_SetServerPort);
-                if (iRet_ReadServerIP == 1 && iRet_SetServerPort == 1)
-                    return true;
+                //if (iRet_ReadServerIP == 7 && iRet_SetServerPort == 7)
+                return true;
             }
 
             if (logindevice == DeviceType.EasyStorage)
@@ -2921,23 +2921,28 @@ namespace H6
         /// <param name="logindevice"></param>
         /// <param name="cs6"></param>
         /// <returns></returns>
-        private bool CheckCMSV6Param( ref CMCSV6Server cs6)
+        private bool CheckCMSV6Param( DeviceType logindevice, ref CMCSV6Server cs6)
         {
-            if (string.IsNullOrEmpty(txtUpdateInternal.Text))
+            if (logindevice == DeviceType.EasyStorage)
             {
-                updateMessage(lb_StateInfo, "时间间隔不能为空，请重新输入.");
-                txtUpdateInternal.Focus();
-                return false;
+                if (string.IsNullOrEmpty(txtUpdateInternal.Text))
+                {
+                    updateMessage(lb_StateInfo, "时间间隔不能为空，请重新输入.");
+                    txtUpdateInternal.Focus();
+                    return false;
+                }
+                //CMCSV6Server cs6 = new CMCSV6Server();
+                cs6.ReportTime = Convert.ToInt16(txtUpdateInternal.Text);
+                if (cs6.ReportTime < 5 || cs6.ReportTime > 360)
+                {
+                    updateMessage(lb_StateInfo, "时间间隔参数不正确,范围为5~360,请重新输入.");
+                    txtUpdateInternal.SelectAll();
+                    txtUpdateInternal.Focus();
+                    return false;
+                }
             }
-            //CMCSV6Server cs6 = new CMCSV6Server();
-            cs6.ReportTime = Convert.ToInt16(txtUpdateInternal.Text);
-            if (cs6.ReportTime < 5 || cs6.ReportTime > 360)
-            {
-                updateMessage(lb_StateInfo, "时间间隔参数不正确,范围为5~360,请重新输入.");
-                txtUpdateInternal.SelectAll();
-                txtUpdateInternal.Focus();
-                return false;
-            }
+
+
             cs6.DevNo = txtDeviceID.Text;
             if (string.IsNullOrEmpty (tb_ServerIP.Text.Trim ()))
             {
