@@ -997,13 +997,6 @@ namespace H6
 
         private void btn_Logon_Click(object sender, EventArgs e)
         {
-            //byte[] id = new byte[8];
-
-            //BODYCAMDLL_API_YZ.BC_GetLoginID(BCHandle, out id[0]);
-            //MessageBox.Show(System.Text.Encoding.Default.GetString(id, 0, id.Length));
-
-
-            //return;
 
             LogIn();
 
@@ -1316,8 +1309,14 @@ namespace H6
 
 
 
-             OpenFileDialog ofg = new OpenFileDialog();
-            ofg.Filter = "升级文件(*.Bin)|*.Bin";
+            OpenFileDialog ofg = new OpenFileDialog();
+
+            if (LoginDevice == DeviceType.Cammpro )
+                ofg.Filter = "升级文件(*.Bin)|*.Bin";
+            else
+                ofg.Filter = "升级文件(*.Bin)|*.Bin|光盘文件(*img)|*.img";
+
+           
             if (ofg.ShowDialog() == DialogResult.OK)//打开文件对话框
             {
                 tb_FilePath.Text = ofg.FileName;//获取源文件的路径
@@ -1453,11 +1452,15 @@ namespace H6
             tb_4GAPN.Enabled = false;
             tb_4GPIN.Enabled = false;
 
-            btn_ChangePWd.Enabled = true;
+          
             grbChangePassword.Enabled = false;
             comboUserID.Enabled = false;
             if (LoginDevice == DeviceType.Cammpro)
+            {
                 comboServType.SelectedIndex = 0;
+                btn_ChangePWd.Enabled = true;
+
+            }
             else
             {
                 comboServType.Enabled = true;
@@ -1465,6 +1468,8 @@ namespace H6
             }
             btnEditServer.Enabled = true;
             btnReadServer.Enabled = true;
+
+           // btn_FilePathChose.Enabled = true;
         }
 
 
@@ -2136,18 +2141,38 @@ namespace H6
 
         private void tb_ServerIP_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (!(Char.IsNumber(e.KeyChar)) && e.KeyChar != (char)13 && e.KeyChar != (char)8 && e.KeyChar != (char)46)
+            if (!(Char.IsLetterOrDigit (e.KeyChar)) && e.KeyChar != (char)13 && e.KeyChar != (char)8 && e.KeyChar != (char)46 )
             {
                 e.Handled = true;
             }
+
+
         }
 
         private void btn_ChangePWd_Click(object sender, EventArgs e)
         {
             //FrmChangePwd f = new FrmChangePwd();
             //f.ShowDialog();
-            grbChangePassword.Enabled = true;
-            btn_ChangePWd.Enabled = false;
+
+            if (btn_ChangePWd.Text == "修改密码")
+            {
+               
+
+
+                grbChangePassword.Enabled = true;
+                //btn_ChangePWd.Enabled = false;
+                btn_ChangePWd.Text = "放弃修改";
+            }
+            else
+            {
+
+                grbChangePassword.Enabled = false;
+                //btn_ChangePWd.Enabled = 
+                btn_ChangePWd.Text = "修改密码";
+            }
+
+
+
         }
 
         private void brnRestart_Click(object sender, EventArgs e)
