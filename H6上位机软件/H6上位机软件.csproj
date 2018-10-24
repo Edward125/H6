@@ -94,6 +94,7 @@
     <Compile Include="FrmChangePwd.Designer.cs">
       <DependentUpon>FrmChangePwd.cs</DependentUpon>
     </Compile>
+    <Compile Include="MD5Helper.cs" />
     <Compile Include="Splash.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -550,6 +550,14 @@ namespace H6
         private void btn_CheckDev_Click(object sender, EventArgs e)
         {
 
+            //updateMessage(lb_StateInfo, MD5Helper.MD5Encrypt32("111111"));
+            //return;
+
+
+            
+
+
+
             int Init_Device_iRet = -1;
             byte[] _IDCode = new byte[5];
 
@@ -1512,10 +1520,11 @@ namespace H6
           
             grbChangePassword.Enabled = false;
             comboUserID.Enabled = false;
+            btn_ChangePWd.Enabled = true;
             if (LoginDevice == DeviceType.Cammpro)
             {
                 comboServType.SelectedIndex = 0;
-                btn_ChangePWd.Enabled = true;
+                //btn_ChangePWd.Enabled = true;
 
             }
             else
@@ -2229,10 +2238,9 @@ namespace H6
 
             if (btn_ChangePWd.Text == "修改密码")
             {
-               
-
-
+              
                 grbChangePassword.Enabled = true;
+                comboIDType.SelectedIndex = 0;
                 //btn_ChangePWd.Enabled = false;
                 btn_ChangePWd.Text = "放弃修改";
             }
@@ -2241,6 +2249,7 @@ namespace H6
 
                 grbChangePassword.Enabled = false;
                 //btn_ChangePWd.Enabled = 
+                comboIDType.SelectedIndex = -1;
                 btn_ChangePWd.Text = "修改密码";
             }
 
@@ -2283,14 +2292,23 @@ namespace H6
                 return;
             }
 
-            if (SetPwd(LoginDevice, comboIDType, DevicePassword, txtNewPwd1.Text.Trim()))
+
+
+            DialogResult dr = MessageBox.Show("是否确认修改密码,修改密码后如果忘记,可能需要刷机才可以充值密码.修改点击是(Y),不修改点击否(N)?", "Exit?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dr == DialogResult.Yes)
             {
-                updateMessage(lb_StateInfo, "修改" + comboIDType.Text + "的密码成功");
-                txtNewPwd1.Text = string.Empty;
-                txtNewPwd2.Text = string.Empty;
-                grbChangePassword.Enabled = false;
-                btn_ChangePWd.Enabled = true;
+                if (SetPwd(LoginDevice, comboIDType, DevicePassword, txtNewPwd1.Text.Trim()))
+                {
+                    updateMessage(lb_StateInfo, "修改" + comboIDType.Text + "的密码成功");
+                    txtNewPwd1.Text = string.Empty;
+                    txtNewPwd2.Text = string.Empty;
+                    grbChangePassword.Enabled = false;
+                    btn_ChangePWd.Enabled = true;
+                    btn_ChangePWd.Text = "修改密码";
+                }
             }
+
+
        
 
 
@@ -2334,9 +2352,9 @@ namespace H6
                 byte[] pwd = new byte[6];
                 pwd = Encoding.Default.GetBytes(newpassword.PadRight(6, '\0').ToArray());
                 if (idtype.SelectedIndex == 0) //admin
-                  iRet_SetPwd=  BODYCAMDLL_API_YZ.BC_SetDevUser(BCHandle, oldpassword, "admin", oldpassword, newpassword);
+                   iRet_SetPwd=  BODYCAMDLL_API_YZ.BC_SetDevUser(BCHandle, oldpassword, "admin", MD5Helper.MD5Encrypt32 (oldpassword),MD5Helper.MD5Encrypt32 ( newpassword));
                 if (idtype.SelectedIndex == 1) //user
-                  iRet_SetPwd=  BODYCAMDLL_API_YZ.BC_SetDevUser(BCHandle, oldpassword, "user", oldpassword, newpassword);
+                    iRet_SetPwd = BODYCAMDLL_API_YZ.BC_SetDevUser(BCHandle, oldpassword, "user", MD5Helper.MD5Encrypt32(oldpassword), MD5Helper.MD5Encrypt32(newpassword));
                 if (iRet_SetPwd == 1)
                     return true;
                
@@ -3332,6 +3350,11 @@ namespace H6
             stream.Read(buffer, 0, Convert.ToInt32(stream.Length));
             stream.Close();
             return buffer;
+        }
+
+        private void lb_StateInfo_DoubleClick(object sender, EventArgs e)
+        {
+            Clipboard.SetText(lb_StateInfo.SelectedItem.ToString());
         }
 
     }

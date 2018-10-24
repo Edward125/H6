@@ -442,6 +442,7 @@
             this.lb_StateInfo.Name = "lb_StateInfo";
             this.lb_StateInfo.Size = new System.Drawing.Size(443, 724);
             this.lb_StateInfo.TabIndex = 9;
+            this.lb_StateInfo.DoubleClick += new System.EventHandler(this.lb_StateInfo_DoubleClick);
             // 
             // groupBox5
             // 
