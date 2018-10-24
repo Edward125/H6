@@ -34,7 +34,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tb_Password = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.brnRestart = new System.Windows.Forms.Button();
+            this.btnRestart = new System.Windows.Forms.Button();
             this.label21 = new System.Windows.Forms.Label();
             this.comboUserID = new System.Windows.Forms.ComboBox();
             this.btn_exit = new System.Windows.Forms.Button();
@@ -182,7 +182,7 @@
             // groupBox1
             // 
             this.groupBox1.BackColor = System.Drawing.Color.Transparent;
-            this.groupBox1.Controls.Add(this.brnRestart);
+            this.groupBox1.Controls.Add(this.btnRestart);
             this.groupBox1.Controls.Add(this.label21);
             this.groupBox1.Controls.Add(this.comboUserID);
             this.groupBox1.Controls.Add(this.btn_exit);
@@ -197,15 +197,15 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "登录信息";
             // 
-            // brnRestart
+            // btnRestart
             // 
-            this.brnRestart.Location = new System.Drawing.Point(143, 48);
-            this.brnRestart.Name = "brnRestart";
-            this.brnRestart.Size = new System.Drawing.Size(70, 30);
-            this.brnRestart.TabIndex = 5;
-            this.brnRestart.Text = "重启软件";
-            this.brnRestart.UseVisualStyleBackColor = true;
-            this.brnRestart.Click += new System.EventHandler(this.brnRestart_Click);
+            this.btnRestart.Location = new System.Drawing.Point(143, 48);
+            this.btnRestart.Name = "btnRestart";
+            this.btnRestart.Size = new System.Drawing.Size(70, 30);
+            this.btnRestart.TabIndex = 5;
+            this.btnRestart.Text = "重启软件";
+            this.btnRestart.UseVisualStyleBackColor = true;
+            this.btnRestart.Click += new System.EventHandler(this.brnRestart_Click);
             // 
             // label21
             // 
@@ -256,7 +256,7 @@
             // 
             // tb_Battery
             // 
-            this.tb_Battery.Location = new System.Drawing.Point(47, 15);
+            this.tb_Battery.Location = new System.Drawing.Point(50, 22);
             this.tb_Battery.Name = "tb_Battery";
             this.tb_Battery.ReadOnly = true;
             this.tb_Battery.Size = new System.Drawing.Size(51, 21);
@@ -266,7 +266,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 21);
+            this.label3.Location = new System.Drawing.Point(9, 26);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(29, 12);
             this.label3.TabIndex = 4;
@@ -274,7 +274,7 @@
             // 
             // tb_Resolution
             // 
-            this.tb_Resolution.Location = new System.Drawing.Point(43, 48);
+            this.tb_Resolution.Location = new System.Drawing.Point(43, 52);
             this.tb_Resolution.Name = "tb_Resolution";
             this.tb_Resolution.ReadOnly = true;
             this.tb_Resolution.Size = new System.Drawing.Size(72, 21);
@@ -284,7 +284,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 49);
+            this.label4.Location = new System.Drawing.Point(3, 56);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(41, 12);
             this.label4.TabIndex = 2;
@@ -1315,7 +1315,7 @@
         private System.Windows.Forms.Button btnRefreshWifi;
         private System.Windows.Forms.Button btnReadDeviceInfo;
         private System.Windows.Forms.Button btnReadWireless;
-        private System.Windows.Forms.Button brnRestart;
+        private System.Windows.Forms.Button btnRestart;
         private System.Windows.Forms.GroupBox grbChangePassword;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Button btnChangePwdOK;

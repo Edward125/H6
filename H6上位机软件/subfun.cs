@@ -14,7 +14,7 @@ namespace H6
     class BODYCAMDLL_API_YZ
     {
         //执法仪信息结构体
-        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        [StructLayout(LayoutKind.Sequential, Pack = 1,CharSet = CharSet.Ansi )]
         public struct ZFY_INFO
         {
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
@@ -28,6 +28,33 @@ namespace H6
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 33)]
             public byte[] unitName;              /*执法记录仪使用者单位名称，管理系统使用警号关联时可为空*/
         };
+
+
+
+
+        [System.Runtime.InteropServices.StructLayoutAttribute(System.Runtime.InteropServices.LayoutKind.Sequential, CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
+        public struct ZFY_INFO_N
+        {
+            /// char[8]
+            [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = 8)]
+            public string cSerial;
+
+            /// char[7]
+            [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = 7)]
+            public string userNo;
+
+            /// char[33]
+            [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = 33)]
+            public string userName;
+
+            /// char[13]
+            [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = 13)]
+            public string unitNo;
+
+            /// char[33]
+            [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.ByValTStr, SizeConst = 33)]
+            public string unitName;
+        }
 
 
 
@@ -196,6 +223,39 @@ namespace H6
          [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
          public static extern void BC_UnitDevEx(IntPtr dev);
 
+
+
+        /*************************************************
+        *函数说明:   探测设备是否存在，作为操作的第一个接口函数，从设备中获取IDCode，
+				        与BC_ProbeDev的区别是BC_ProbeDev是从DLL中获取IDCode
+        *输入参数:   无
+        *输出参数:   IDCode:  设备的识别码(5个字节)，同类型设备的IDCode相同
+        *返回值     :  成功:BC_SUCCESS,  失败:BC_FAILED
+         *************************************************/
+        //BODYCAMDLL_API int  BC_ProbeDevEx(OUT char *IDCode);
+        [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int BC_ProbeDevEx(out char IDCode);
+
+        /*************************************************
+        *函数说明:   释放设备,在探测到设备成功后使用，即BC_ProbeDevEx之后调用
+        *输入参数:   dev: 设备的操作句柄	BC_InitDevEx成功的返回值
+        *输出参数:   无
+        *返回值     :  无
+        *************************************************/
+        //BODYCAMDLL_API void  BC_UnInitDevEx(IN BCHandle *dev);
+        [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void BC_UnInitDevEx(IntPtr dev);
+
+
+
+
+
+
+
+
+
+
+
         /*=============================================================================
         多设备操作函数，通过设备的列表方式进行操作
         =============================================================================*/
@@ -307,6 +367,9 @@ namespace H6
         [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern int BC_GetDevInfo(IntPtr dev,string sPwd,out ZFY_INFO info);
 
+        [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int BC_GetDevInfo(IntPtr dev, string sPwd, out ZFY_INFO_N info);
+
         /*************************************************
         *函数说明:   设置使用者信息,只有管理员用户有效
         *输入参数:   dev: 设备的操作句柄	
@@ -319,7 +382,11 @@ namespace H6
          //public static extern int BC_SetDevInfo(IntPtr dev,byte  sPwd, ZFY_INFO info);
 
          [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-         public static extern int BC_SetDevInfo(IntPtr dev, string sPwd, ZFY_INFO info);
+         public static extern int BC_SetDevInfo(IntPtr dev, string sPwd,ref ZFY_INFO info);
+
+
+         [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+         public static extern int BC_SetDevInfo(IntPtr dev, string sPwd, ref ZFY_INFO_N info);
 
         /*************************************************
         *函数说明:   同步电脑时间到设备，对所有的用户生效
@@ -1068,7 +1135,7 @@ namespace H6
         *************************************************/
         //BODYCAMDLL_API int  BC_SetDataPthread(IN BCHandle *dev,IN char *sPwd,IN int bEnable);
         [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int BC_SetDataPthread(IntPtr dev,byte sPwd,int bEnable);
+        public static extern int BC_SetDataPthread(IntPtr dev,string sPwd,int bEnable);
 
         /*************************************************
         *函数说明:   向升级线程发送数固件数据，用来升级设备的固件，必须在BC_SetDataPthread函数调用之后调用,只有管理员用户有效
@@ -1082,7 +1149,7 @@ namespace H6
         *************************************************/
         //BODYCAMDLL_API int  BC_SendDataPack(IN BCHandle *dev,IN char *sPwd,IN int packindex,IN char *data,IN int datalen);
         [DllImport("LibBodycam.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int BC_SendDataPack(IntPtr dev,byte sPwd,int packindex,byte data,int datalen);
+        public static extern int BC_SendDataPack(IntPtr dev,string sPwd,int packindex,byte[] data,int datalen);
 
 
         /*************************************************

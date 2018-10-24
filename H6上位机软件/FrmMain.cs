@@ -206,23 +206,9 @@ namespace H6
             (System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Height - this.Height) / 2
              );
             
-            //MessageBox.Show(this.Width.ToString() + "X" + this.Height.ToString());
-
-            //groupBox7
-            //updateMessage(lb_StateInfo, "状态命令框" + gb_StatusCommand.Width.ToString()+"X"+gb_StatusCommand.Height.ToString());
-            //updateMessage(lb_StateInfo, "无线信息" + gb_Wireless.Location.X.ToString() + "X" + gb_Wireless.Location.Y.ToString());
-
+            
             //隐藏无线参数框
             grbWifiInfo.Visible = true;
-            ////设定状态显示窗体大小
-            //gb_StatusCommand.Width = 458;
-            //gb_StatusCommand.Height = 475;
-            ////设定状态显示窗口位置
-            ////gb_StatusCommand.Location = new Point(453,11);
-            //gb_StatusCommand.Location = new Point(453, 90);
-            ////状态命令大小
-            //lb_StateInfo.Width = 440;
-            //lb_StateInfo.Height = 450;
 
             //LibBodycam.log
             //删除文件
@@ -241,9 +227,8 @@ namespace H6
             ezUSB.AddUSBEventWatcher(USBEventHandler, USBEventHandler, new TimeSpan(0, 0, 3));
             InitUI();
             //
-            LoginDevice = DeviceType.NA;
-            bRestart = false;
 
+            bRestart = false;
           
         }
 
@@ -704,17 +689,23 @@ namespace H6
             }
             if (LoginDevice == DeviceType.EasyStorage )
             {
-                BODYCAMDLL_API_YZ.ZFY_INFO uuDevice = new BODYCAMDLL_API_YZ.ZFY_INFO();//执法仪结构信息定义
+                //BODYCAMDLL_API_YZ.ZFY_INFO uuDevice = new BODYCAMDLL_API_YZ.ZFY_INFO();//执法仪结构信息定义
+                BODYCAMDLL_API_YZ.ZFY_INFO_N uuDevice = new BODYCAMDLL_API_YZ.ZFY_INFO_N();
                 GetZFYInfo_iRet =  BODYCAMDLL_API_YZ.BC_GetDevInfo(BCHandle, password, out uuDevice);
                // BODYCAMDLL_API_YZ.GetZFYInfo(ref uuDevice, password, ref GetZFYInfo_iRet);
                 if (GetZFYInfo_iRet == 1)
                 {
                     //updateMessage(lb_StateInfo, "获取执法仪本机信息 成功.");
-                    deviceinfo.cSerial = System.Text.Encoding.Default.GetString(uuDevice.cSerial);
-                    deviceinfo.userNo = System.Text.Encoding.Default.GetString(uuDevice.userNo);
-                    deviceinfo.userName = System.Text.Encoding.Default.GetString(uuDevice.userName);
-                    deviceinfo.unitNo = System.Text.Encoding.Default.GetString(uuDevice.unitNo);
-                    deviceinfo.unitName = System.Text.Encoding.Default.GetString(uuDevice.unitName);
+                    //deviceinfo.cSerial = System.Text.Encoding.Default.GetString(uuDevice.cSerial);
+                    //deviceinfo.userNo = System.Text.Encoding.Default.GetString(uuDevice.userNo);
+                    //deviceinfo.userName = System.Text.Encoding.Default.GetString(uuDevice.userName);
+                    //deviceinfo.unitNo = System.Text.Encoding.Default.GetString(uuDevice.unitNo);
+                    //deviceinfo.unitName = System.Text.Encoding.Default.GetString(uuDevice.unitName);
+                    deviceinfo.cSerial = uuDevice.cSerial;
+                    deviceinfo.userNo = uuDevice.userNo;
+                    deviceinfo.userName = uuDevice.userName;
+                    deviceinfo.unitNo = uuDevice.unitNo;
+                    deviceinfo.unitName = uuDevice.unitName;
                     return true;
                 }
                 else
@@ -1063,14 +1054,21 @@ namespace H6
             if (LoginDevice == DeviceType.EasyStorage ) /// debug
             {
                 BODYCAMDLL_API_YZ.ZFY_INFO info = new BODYCAMDLL_API_YZ.ZFY_INFO();
+
                 info.cSerial = Encoding.Default.GetBytes(deviceinfo.cSerial.PadRight(8, '\0').ToArray());
                 info.userNo = Encoding.Default.GetBytes(deviceinfo.userNo.PadRight(7, '\0').ToArray());
-                info.userName  = Encoding.Default.GetBytes(deviceinfo.userName  .PadRight(33, '\0').ToArray());
+                info.userName = Encoding.Default.GetBytes(deviceinfo.userName.PadRight(33, '\0').ToArray());
                 info.unitNo = Encoding.Default.GetBytes(deviceinfo.unitNo.PadRight(13, '\0').ToArray());
                 info.unitName = Encoding.Default.GetBytes(deviceinfo.unitName.PadRight(33, '\0').ToArray());
-                //BODYCAMDLL_API_YZ.WriteZFYInfo(ref info, password, ref WriteZFYInfo_iRet);
+                BODYCAMDLL_API_YZ.WriteZFYInfo(ref info, password, ref WriteZFYInfo_iRet);
                 //byte[] _psw = Encoding.Default.GetBytes(password);
-                WriteZFYInfo_iRet =  BODYCAMDLL_API_YZ.BC_SetDevInfo(BCHandle, password,info);
+                //BODYCAMDLL_API_YZ.ZFY_INFO_N info = new BODYCAMDLL_API_YZ.ZFY_INFO_N();
+                //info.cSerial = deviceinfo.cSerial;
+                //info.userNo = deviceinfo.userNo;
+                //info.userName = deviceinfo.userName;
+                //info.unitNo = deviceinfo.unitNo;
+                //info.unitName = deviceinfo.unitName;
+                WriteZFYInfo_iRet =  BODYCAMDLL_API_YZ.BC_SetDevInfo(BCHandle, password,ref info);
                 
             }
             if (WriteZFYInfo_iRet == 1)
@@ -1090,6 +1088,9 @@ namespace H6
             this.btn_Edit.Text = "编辑";
 
             DeviceInfo di = new DeviceInfo ();
+            if (LoginDevice == DeviceType.EasyStorage)
+                this.tb_UserID.Text = this.tb_UserID.Text.PadRight(6, '0');
+
             di.cSerial = this.tb_DevID.Text;
             di.userNo = this.tb_UserID.Text;
             di.userName = this.tb_UserName.Text;
@@ -1326,6 +1327,31 @@ namespace H6
         private void btn_UpdataFile_Click(object sender, EventArgs e)
         {
 
+            if (LoginDevice == DeviceType.EasyStorage)
+            {
+                FileInfo fi = new FileInfo(tb_FilePath.Text.Trim());
+                int result = BODYCAMDLL_API_YZ.BC_SetDataPthread(BCHandle, DevicePassword, 1);
+                if (result == 1)
+                {
+                    updateMessage(lb_StateInfo, "result = " + result);
+                    updateMessage(lb_StateInfo, "size:" + fi.Length);
+                    int _result = -1;
+                    byte[] data = CreatByte(tb_FilePath.Text.Trim());
+                    _result = BODYCAMDLL_API_YZ.BC_SendDataPack(BCHandle, DevicePassword, 0, data, data.Length  );
+
+                    int ii = BODYCAMDLL_API_YZ.BC_GetErrNo (BCHandle);
+
+                    updateMessage(lb_StateInfo, "_result:" + _result);
+
+
+
+
+                }
+                return;
+            }
+
+
+
             str = tb_FilePath.Text;//记录源文件的路径
             str = "\\" + str.Substring(str.LastIndexOf('\\') + 1, str.Length - str.LastIndexOf('\\') - 1);//获取源文件的名称
             
@@ -1384,6 +1410,25 @@ namespace H6
             this.btn_SyncDevTime.Enabled = false;
             this.btn_SetMSDC.Enabled = false;
             //this.btn_UpdataFile.Enabled = false;
+
+            btn_CheckDev.Enabled = true;
+            btnRestart.Enabled = true;
+            comboUserID.Enabled = false;
+            comboUserID.SelectedIndex = -1;
+            tb_Password.Text = string.Empty;
+
+            comboServType.Enabled = false;
+            comboServType.SelectedIndex = -1;
+            btnEditServer.Enabled = false;
+            btn_Wireles_Edit.Enabled = false;
+            btnRefreshWifi.Enabled = false;
+            btnReadDeviceInfo.Enabled = false;
+            btnReadWireless.Enabled = false;
+            btnReadServer.Enabled = false;
+            tb_Battery.Text = string.Empty;
+            tb_Resolution.Text = string.Empty;
+
+
             //文本编辑框
             this.tb_Password.Enabled = false;
             this.tb_FilePath.Enabled = false;
@@ -1397,6 +1442,18 @@ namespace H6
 
             this.pg_Updata.Enabled = false;
             this.btn_UpdataFile.Enabled = false;
+
+            btn_CheckDev.Focus();
+
+
+            LoginDevice = DeviceType.NA;
+       
+
+
+            ClearDeviceInfo();
+            ClearWifiApnInfo();
+            ClearServerInfo();
+            
         }
 
 
@@ -1469,7 +1526,8 @@ namespace H6
             btnEditServer.Enabled = true;
             btnReadServer.Enabled = true;
 
-           // btn_FilePathChose.Enabled = true;
+            btn_FilePathChose.Enabled = true;
+            btn_UpdataFile.Enabled = true;
         }
 
 
@@ -1478,14 +1536,26 @@ namespace H6
         private void btn_exit_Click(object sender, EventArgs e)
         {
 
-
-            DialogResult dr = MessageBox.Show("是否确认退出软件,退出点击是(Y),不退出点击否(N)?", "Exit?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (dr == DialogResult.Yes)
+            if (LoginDevice == DeviceType.EasyStorage)
             {
-                ezUSB.RemoveUSBEventWatcher();
-                Environment.Exit(0);
-            }
+                BODYCAMDLL_API_YZ.BC_UnInitDevEx(BCHandle);
+                updateMessage(lb_StateInfo, "退出登录成功");
 
+                InitUI();
+
+                return;
+            }
+            else
+            {
+
+
+                DialogResult dr = MessageBox.Show("是否确认退出软件,退出点击是(Y),不退出点击否(N)?", "Exit?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (dr == DialogResult.Yes)
+                {
+                    ezUSB.RemoveUSBEventWatcher();
+                    Environment.Exit(0);
+                }
+            }
   
 
                 //updateMessage(lb_StateInfo, "恢复初始状态.");
@@ -1650,6 +1720,12 @@ namespace H6
                 comboWifiName.Enabled = false;
                 Lb_WifiMode.Enabled = false;
                 lb_WifiPassWord.Enabled = false;
+                comboWifiName.Enabled = false;
+                lb_WifiPassWord.Enabled = false;
+            }
+            else
+            {
+                updateMessage(lb_StateInfo, "设置执法仪WiFi信息失败.");
             }
            
             
@@ -1748,10 +1824,7 @@ namespace H6
                     //int SetSelAP = BODYCAMDLL_API_YZ.BC_SetSelAp(BCHandle, password, WifiSSID);
 
                     if (AddApResult == 1 )
-                    {
-
                         return true;
-                    }
                     else
                         return false;
 
@@ -1943,8 +2016,8 @@ namespace H6
                 lb_WifiName.Enabled = false;
                 lb_WifiPassWord.Enabled = false;
                 Lb_WifiMode.Enabled = false;
-                tb_ServerIP.Enabled = false;
-                tb_ServerPort.Enabled = false;
+               // tb_ServerIP.Enabled = false;
+                //tb_ServerPort.Enabled = false;
                 this.btn_Wireles_Edit.Text = "编辑";
                 comboWifiName.Enabled = false;
                 btn_Wireless.Enabled = false;
@@ -1978,8 +2051,8 @@ namespace H6
                     lb_WifiName.Enabled = true;
                     lb_WifiPassWord.Enabled = true;
                     Lb_WifiMode.Enabled = false;
-                    tb_ServerIP.Enabled = true;
-                    tb_ServerPort.Enabled = true;
+                   // tb_ServerIP.Enabled = true;
+                   // tb_ServerPort.Enabled = true;
                     txtApnUser.Enabled = true;
                     txtApnPwd.Enabled = true;
                     break;
@@ -1992,8 +2065,8 @@ namespace H6
                     lb_WifiName.Enabled = true;
                     lb_WifiPassWord.Enabled = true;
                     Lb_WifiMode.Enabled = true;
-                    tb_ServerIP.Enabled = true;
-                    tb_ServerPort.Enabled = true;
+                   // tb_ServerIP.Enabled = true;
+                   // tb_ServerPort.Enabled = true;
            
                     break;
                 default:
@@ -2181,6 +2254,7 @@ namespace H6
             if (dr == DialogResult.Yes)
             {
                bRestart = true;
+               ezUSB.RemoveUSBEventWatcher();
                Application.Restart();
 
             }
@@ -3210,6 +3284,18 @@ namespace H6
 
         private void btnReadServer_Click(object sender, EventArgs e)
         {
+
+            ClearServerInfo();
+
+
+
+            ServerType _ST = (ServerType)Enum.ToObject(typeof(ServerType), comboServType.SelectedIndex);
+            GetServerInfo(LoginDevice, _ST, DevicePassword);
+        }
+
+
+        private void ClearServerInfo()
+        {
             chkEnable.Enabled = false;
             chkEnable.Checked = false;
             txtUpdateInternal.Enabled = false;
@@ -3229,10 +3315,7 @@ namespace H6
             txtChannelName.Enabled = false;
             txtChannelName.Text = string.Empty;
 
-            ServerType _ST = (ServerType)Enum.ToObject(typeof(ServerType), comboServType.SelectedIndex);
-            GetServerInfo(LoginDevice, _ST, DevicePassword);
         }
-
         private void txtUpdateInternal_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!(Char.IsNumber(e.KeyChar)) && e.KeyChar != (char)13 && e.KeyChar != (char)8)
@@ -3241,6 +3324,15 @@ namespace H6
             }
         }
 
+
+        private byte[] CreatByte(string filepath)
+        {
+            FileStream stream = new FileInfo(filepath ).OpenRead();
+            byte[] buffer = new byte[stream.Length + 1];
+            stream.Read(buffer, 0, Convert.ToInt32(stream.Length));
+            stream.Close();
+            return buffer;
+        }
 
     }
 }
