@@ -22,7 +22,8 @@ namespace H6
             th.Start();
             Thread.Sleep(2000);
             th.Abort();
-            //Thread.Sleep(1000);
+            Thread.Sleep(500);
+            
             Application.Run(new FrmMain());
         }
 
