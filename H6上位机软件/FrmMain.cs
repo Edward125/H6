@@ -234,31 +234,7 @@ namespace H6
 
         private void USBEventHandler(Object sender, EventArrivedEventArgs e)
         {
-            /*
 
-            this.SetText("" + "\r\n");
-            this.SetText("*******************************************************" + "\r\n");
-            if (e.NewEvent.ClassPath.ClassName == "__InstanceCreationEvent")
-            {
-                this.SetText("USB插入时间：" + DateTime.Now + "\r\n");
-                //init();
-            }
-            else if (e.NewEvent.ClassPath.ClassName == "__InstanceDeletionEvent")
-            {
-                this.SetText("USB拔出时间：" + DateTime.Now + "\r\n");
-                //init();
-            }
-
-            foreach (USBControllerDevice Device in USB.WhoUSBControllerDevice(e))
-            {
-                this.SetText("\tAntecedent：" + Device.Antecedent + "\r\n");
-                this.SetText("\tDependent：" + Device.Dependent + "\r\n");
-                AAA += Device.Dependent + ";" + Device.Antecedent;
-                //init();
-            }
-
-
-            */
             if (e.NewEvent.ClassPath.ClassName == "__InstanceCreationEvent")
             {
                 //this.SetListText("USB设备插入时间：" + DateTime.Now + "\r\n");
@@ -550,14 +526,7 @@ namespace H6
         private void btn_CheckDev_Click(object sender, EventArgs e)
         {
 
-            //updateMessage(lb_StateInfo, MD5Helper.MD5Encrypt32("111111"));
-            //return;
-
-
-            
-
-
-
+ 
             int Init_Device_iRet = -1;
             byte[] _IDCode = new byte[5];
 
@@ -851,35 +820,6 @@ namespace H6
                 }
 
 
-
-                ///////////////////////////////////////////////////////
-                ////读取执法仪wifi等信息
-                //List<string> WiFiList = wifi.EnumerateAvailableNetwork(lb_StateInfo);
-                //WiFiInfo DeviceWiFiInfo = new WiFiInfo();
-                //if (ReadDeviceWiFiInfo(LoginDevice, DevicePassword, out DeviceWiFiInfo))
-                //{
-                //    if (WiFiList.Count > 0)
-                //    {
-                //        foreach (string item in WiFiList)
-                //        {
-                //            comboWifiName.Items.Add(item);
-                //        }
-                //    }
-
-                //    if (string.IsNullOrEmpty(DeviceWiFiInfo.WiFiSSID) && comboWifiName.Items.Count > 0)
-                //        comboWifiName.SelectedIndex = 0;
-                //    else
-                //        comboWifiName.Text = DeviceWiFiInfo.WiFiSSID;
-
-                //        if (DeviceWiFiInfo.WiFiMode == WiFiModeType.AP)
-                //            Lb_WifiMode.SelectedIndex = 0;
-                //        if (DeviceWiFiInfo.WiFiMode == WiFiModeType.STA)
-                //            Lb_WifiMode.SelectedIndex = 1;
-
-                //    lb_WifiPassWord.Text = DeviceWiFiInfo.WiFiPassword;
-                //    tb_ServerIP.Text = DeviceWiFiInfo.ServerIP;
-                //    tb_ServerPort.Text = DeviceWiFiInfo.ServerPort;
-                //}
 
 
 
@@ -1227,7 +1167,9 @@ namespace H6
                   this.btn_UpdataFile.Enabled = true;
                   this.btn_SetMSDC.Enabled = false;
                   this.btn_4G.Enabled = false;
+                  tb_FilePath.Enabled = true;
                   updateMessage(lb_StateInfo, "执法仪已进入U盘模式.");
+
             }
 
 
@@ -1317,15 +1259,14 @@ namespace H6
 */
 
 
-
             OpenFileDialog ofg = new OpenFileDialog();
-
-            if (LoginDevice == DeviceType.Cammpro )
-                ofg.Filter = "升级文件(*.Bin)|*.Bin";
-            else
-                ofg.Filter = "升级文件(*.Bin)|*.Bin|光盘文件(*img)|*.img";
-
-           
+            //if (LoginDevice == DeviceType.Cammpro)
+             ofg.Filter = "升级文件(*.Bin)|*.Bin";
+            //else
+            //{
+            //    ofg.Filter = "光盘文件(*img)|*.img|升级文件(*.Bin)|*.Bin";
+            //}
+                         
             if (ofg.ShowDialog() == DialogResult.OK)//打开文件对话框
             {
                 tb_FilePath.Text = ofg.FileName;//获取源文件的路径
@@ -1335,28 +1276,31 @@ namespace H6
         private void btn_UpdataFile_Click(object sender, EventArgs e)
         {
 
-            if (LoginDevice == DeviceType.EasyStorage)
-            {
-                FileInfo fi = new FileInfo(tb_FilePath.Text.Trim());
-                int result = BODYCAMDLL_API_YZ.BC_SetDataPthread(BCHandle, DevicePassword, 1);
-                if (result == 1)
-                {
-                    updateMessage(lb_StateInfo, "result = " + result);
-                    updateMessage(lb_StateInfo, "size:" + fi.Length);
-                    int _result = -1;
-                    byte[] data = CreatByte(tb_FilePath.Text.Trim());
-                    _result = BODYCAMDLL_API_YZ.BC_SendDataPack(BCHandle, DevicePassword, 0, data, data.Length  );
+//            if (LoginDevice == DeviceType.EasyStorage)
+//            {
+//                FileInfo fi = new FileInfo(tb_FilePath.Text.Trim());
+//                int result = BODYCAMDLL_API_YZ.BC_SetDataPthread(BCHandle, DevicePassword, 1);
+//                if (result == 1)
+//                {
 
-                    int ii = BODYCAMDLL_API_YZ.BC_GetErrNo (BCHandle);
+//#if DEBUG
+//                    updateMessage(lb_StateInfo, "result = " + result);
+//                    updateMessage(lb_StateInfo, "size:" + fi.Length);
+//#endif
+//                    int _result = -1;
+//                    byte[] data = CreatByte(tb_FilePath.Text.Trim());
+//                    _result = BODYCAMDLL_API_YZ.BC_SendDataPack(BCHandle, DevicePassword, 0, data, data.Length  );
 
-                    updateMessage(lb_StateInfo, "_result:" + _result);
+//                    int __result = BODYCAMDLL_API_YZ.BC_SetDataPthread(BCHandle, DevicePassword, 0);
 
+//#if DEBUG
+//                    updateMessage(lb_StateInfo, "_result:" + _result);
+//                    updateMessage(lb_StateInfo, "__result:" + __result);
+//#endif 
 
-
-
-                }
-                return;
-            }
+//                }
+//                return;
+//            }
 
 
 
@@ -1451,10 +1395,13 @@ namespace H6
             this.pg_Updata.Enabled = false;
             this.btn_UpdataFile.Enabled = false;
 
+            btn_ChangePWd.Enabled = false;
+
             btn_CheckDev.Focus();
 
 
             LoginDevice = DeviceType.NA;
+            tb_FilePath.Enabled = false;
        
 
 
@@ -1480,7 +1427,7 @@ namespace H6
             this.btn_SetMSDC.Enabled = true;
             //this.btn_UpdataFile.Enabled = true;
             //文本编辑框
-            this.tb_FilePath.Enabled = true;
+            this.tb_FilePath.Enabled = false;
             //this.tb_NewPassword.Enabled = true;
             //this.tb_SDCapacity.Enabled = true;
             this.tb_UnitID.Enabled = true;
@@ -1535,8 +1482,9 @@ namespace H6
             btnEditServer.Enabled = true;
             btnReadServer.Enabled = true;
 
-            btn_FilePathChose.Enabled = true;
-            btn_UpdataFile.Enabled = true;
+            //btn_FilePathChose.Enabled = true;
+            //btn_UpdataFile.Enabled = true;
+            
         }
 
 
@@ -1860,17 +1808,17 @@ namespace H6
                 int iRet_SetWifiSSID = -1;
                 // WifiSSID = Encoding.Default.GetBytes(this.lb_WifiName.Text.PadRight(50, '\0').ToArray());
                 WifiSSID = Encoding.Default.GetBytes(_wifi.WiFiSSID.PadRight(50, '\0').ToArray());
-                ZFYDLL_API_MC.SetWifiSSID(WifiSSID, DevicePassword, ref iRet_SetWifiSSID);
+                ZFYDLL_API_MC.SetWifiSSID(WifiSSID, password , ref iRet_SetWifiSSID);
 
                 byte[] WifiPSW = new byte[50];
                 int iRet_SetWifiPSW = -1;
                 WifiPSW = Encoding.Default.GetBytes(_wifi.WiFiPassword.PadRight(50, '\0').ToArray());
-                ZFYDLL_API_MC.SetWifiPSW(WifiPSW, DevicePassword, ref iRet_SetWifiPSW);
+                ZFYDLL_API_MC.SetWifiPSW(WifiPSW, password, ref iRet_SetWifiPSW);
                 //设定WiFi模式,0;AP；1;STA
                 int iRet_SetWifiMode = -1;
                 int mode = -1;
                 mode = (int)_wifi.WiFiMode;
-                ZFYDLL_API_MC.SetWifiMode(mode, DevicePassword, ref iRet_SetWifiMode);
+                ZFYDLL_API_MC.SetWifiMode(mode, password , ref iRet_SetWifiMode);
 
                 return true;
             }
@@ -2110,8 +2058,13 @@ namespace H6
                 this.tb_UserID.Text = DI.userNo; ///System.Text.Encoding.Default.GetString(uuDevice.userNo);
                 this.tb_UserName.Text = DI.userName; // System.Text.Encoding.Default.GetString(uuDevice.userName);
                 this.tb_UnitID.Text = DI.unitNo;  //System.Text.Encoding.Default.GetString(uuDevice.unitNo);
-                this.tb_UnitName.Text = DI.unitName; //System.Text.Encoding.Default.GetString(uuDevice.unitName);        
+                this.tb_UnitName.Text = DI.unitName; //System.Text.Encoding.Default.GetString(uuDevice.unitName);  
+                btn_Edit.Text = "编辑";
             }
+
+
+
+         
         }
 
         /// <summary>
@@ -3352,9 +3305,27 @@ namespace H6
             return buffer;
         }
 
+
+
         private void lb_StateInfo_DoubleClick(object sender, EventArgs e)
         {
             Clipboard.SetText(lb_StateInfo.SelectedItem.ToString());
+        }
+
+        private void tb_FilePath_DoubleClick(object sender, EventArgs e)
+        {
+            OpenFileDialog ofg = new OpenFileDialog();
+            //if (LoginDevice == DeviceType.Cammpro)
+            ofg.Filter = "升级文件(*.Bin)|*.Bin";
+            //else
+            //{
+            //    ofg.Filter = "光盘文件(*img)|*.img|升级文件(*.Bin)|*.Bin";
+            //}
+
+            if (ofg.ShowDialog() == DialogResult.OK)//打开文件对话框
+            {
+                tb_FilePath.Text = ofg.FileName;//获取源文件的路径
+            }
         }
 
     }

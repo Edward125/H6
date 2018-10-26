@@ -440,7 +440,7 @@
             this.lb_StateInfo.ItemHeight = 12;
             this.lb_StateInfo.Location = new System.Drawing.Point(6, 21);
             this.lb_StateInfo.Name = "lb_StateInfo";
-            this.lb_StateInfo.Size = new System.Drawing.Size(443, 724);
+            this.lb_StateInfo.Size = new System.Drawing.Size(443, 760);
             this.lb_StateInfo.TabIndex = 9;
             this.lb_StateInfo.DoubleClick += new System.EventHandler(this.lb_StateInfo_DoubleClick);
             // 
@@ -494,6 +494,7 @@
             this.tb_FilePath.ReadOnly = true;
             this.tb_FilePath.Size = new System.Drawing.Size(244, 21);
             this.tb_FilePath.TabIndex = 24;
+            this.tb_FilePath.DoubleClick += new System.EventHandler(this.tb_FilePath_DoubleClick);
             // 
             // label13
             // 
