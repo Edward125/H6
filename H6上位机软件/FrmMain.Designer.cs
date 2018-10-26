@@ -126,6 +126,10 @@
             this.chkEnable = new System.Windows.Forms.CheckBox();
             this.label24 = new System.Windows.Forms.Label();
             this.comboServType = new System.Windows.Forms.ComboBox();
+            this.label31 = new System.Windows.Forms.Label();
+            this.comboModelSeris = new System.Windows.Forms.ComboBox();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.btnClearInfo = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -136,6 +140,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.grbChangePassword.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            this.groupBox7.SuspendLayout();
             this.SuspendLayout();
             // 
             // btn_CheckDev
@@ -438,9 +443,9 @@
             // 
             this.lb_StateInfo.FormattingEnabled = true;
             this.lb_StateInfo.ItemHeight = 12;
-            this.lb_StateInfo.Location = new System.Drawing.Point(6, 21);
+            this.lb_StateInfo.Location = new System.Drawing.Point(6, 16);
             this.lb_StateInfo.Name = "lb_StateInfo";
-            this.lb_StateInfo.Size = new System.Drawing.Size(443, 760);
+            this.lb_StateInfo.Size = new System.Drawing.Size(446, 700);
             this.lb_StateInfo.TabIndex = 9;
             this.lb_StateInfo.DoubleClick += new System.EventHandler(this.lb_StateInfo_DoubleClick);
             // 
@@ -518,9 +523,9 @@
             // 
             this.gb_StatusCommand.BackColor = System.Drawing.Color.Transparent;
             this.gb_StatusCommand.Controls.Add(this.lb_StateInfo);
-            this.gb_StatusCommand.Location = new System.Drawing.Point(458, 71);
+            this.gb_StatusCommand.Location = new System.Drawing.Point(458, 130);
             this.gb_StatusCommand.Name = "gb_StatusCommand";
-            this.gb_StatusCommand.Size = new System.Drawing.Size(458, 786);
+            this.gb_StatusCommand.Size = new System.Drawing.Size(458, 727);
             this.gb_StatusCommand.TabIndex = 11;
             this.gb_StatusCommand.TabStop = false;
             this.gb_StatusCommand.Text = "状态信息";
@@ -1206,12 +1211,58 @@
             this.comboServType.TabIndex = 0;
             this.comboServType.SelectedIndexChanged += new System.EventHandler(this.comboServType_SelectedIndexChanged);
             // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(11, 25);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(83, 12);
+            this.label31.TabIndex = 17;
+            this.label31.Text = "支持机型系列:";
+            // 
+            // comboModelSeris
+            // 
+            this.comboModelSeris.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboModelSeris.FormattingEnabled = true;
+            this.comboModelSeris.Items.AddRange(new object[] {
+            "H6系列机型",
+            "H8系列机型",
+            "G5系列机型",
+            "G9系类机型"});
+            this.comboModelSeris.Location = new System.Drawing.Point(101, 21);
+            this.comboModelSeris.Name = "comboModelSeris";
+            this.comboModelSeris.Size = new System.Drawing.Size(119, 20);
+            this.comboModelSeris.TabIndex = 18;
+            // 
+            // groupBox7
+            // 
+            this.groupBox7.BackColor = System.Drawing.Color.Transparent;
+            this.groupBox7.Controls.Add(this.btnClearInfo);
+            this.groupBox7.Controls.Add(this.comboModelSeris);
+            this.groupBox7.Controls.Add(this.label31);
+            this.groupBox7.Location = new System.Drawing.Point(464, 71);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(452, 53);
+            this.groupBox7.TabIndex = 19;
+            this.groupBox7.TabStop = false;
+            // 
+            // btnClearInfo
+            // 
+            this.btnClearInfo.Location = new System.Drawing.Point(277, 15);
+            this.btnClearInfo.Name = "btnClearInfo";
+            this.btnClearInfo.Size = new System.Drawing.Size(120, 28);
+            this.btnClearInfo.TabIndex = 19;
+            this.btnClearInfo.Text = "清楚状态信息列表";
+            this.btnClearInfo.UseVisualStyleBackColor = true;
+            this.btnClearInfo.Click += new System.EventHandler(this.btnClearInfo_Click);
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::H6.Properties.Resources.b;
             this.ClientSize = new System.Drawing.Size(928, 862);
+            this.Controls.Add(this.groupBox7);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.grbChangePassword);
             this.Controls.Add(this.lblTitle);
@@ -1247,6 +1298,8 @@
             this.grbChangePassword.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            this.groupBox7.ResumeLayout(false);
+            this.groupBox7.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1351,6 +1404,10 @@
         private System.Windows.Forms.Button btnReadServer;
         private System.Windows.Forms.Button btnWriteServer;
         private System.Windows.Forms.Button btnEditServer;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.ComboBox comboModelSeris;
+        private System.Windows.Forms.GroupBox groupBox7;
+        private System.Windows.Forms.Button btnClearInfo;
     }
 }
 

@@ -3328,5 +3328,10 @@ namespace H6
             }
         }
 
+        private void btnClearInfo_Click(object sender, EventArgs e)
+        {
+            lb_StateInfo.Items.Clear();
+        }
+
     }
 }
