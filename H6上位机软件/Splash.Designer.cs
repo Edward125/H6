@@ -70,7 +70,7 @@
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(555, 62);
             this.lblTitle.TabIndex = 5;
-            this.lblTitle.Text = "警用执法记录仪管理软件";
+            this.lblTitle.Text = "恒安执法记录仪管理软件";
             // 
             // pictureBox1
             // 
