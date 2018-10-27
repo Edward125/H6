@@ -620,7 +620,7 @@ namespace H6
                  if (Init_Device_iRet == 1)
                  {
                      LoginDevice = DeviceType.Cammpro;
-                     updateMessage(lb_StateInfo, "初始化设备成功.");
+                     updateMessage(lb_StateInfo, "检测设备成功.");
                      this.btn_Logon.Enabled = true;
                      this.btn_CheckDev.Enabled = false;
                      this.tb_Password.Enabled = true;
@@ -3413,6 +3413,15 @@ namespace H6
         private void btnClearInfo_Click(object sender, EventArgs e)
         {
             lb_StateInfo.Items.Clear();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (lblNotice.Left >= 0  && lblNotice.Left < 670)
+                lblNotice.Left = lblNotice.Left + 10;
+            else
+                lblNotice.Left = 0;
+
         }
 
     }

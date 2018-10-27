@@ -69,7 +69,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>01.ico</ApplicationIcon>
+    <ApplicationIcon>bitbug.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EZUSB">
@@ -146,6 +146,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="01.ico" />
+    <Content Include="bitbug.ico" />
+    <Content Include="bitbug_favicon %282%29.ico" />
     <Content Include="bitbug_favicon %284%29.ico" />
     <Content Include="EZUSB.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

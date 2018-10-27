@@ -20,7 +20,7 @@ namespace H6
            // Application.Run(new FrmMain());
             Thread th = new Thread(new ThreadStart(DoSplash));
             th.Start();
-            Thread.Sleep(500);
+            Thread.Sleep(1000);
             th.Abort();
             Thread.Sleep(200);
             
