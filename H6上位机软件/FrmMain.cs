@@ -3424,5 +3424,23 @@ namespace H6
 
         }
 
+
+
+        /// <summary>
+        /// 将一个数组拆成另外一个数组
+        /// </summary>
+        /// <param name="originbyte">原始数组，被拆分的数组</param>
+        /// <param name="oringinstartindex">从原始数组第几个元素开始</param>
+        /// <param name="destbytelength">目标数组的长度</param>
+        /// <param name="destbytestartindex">目标数组开始的元素序号，默认为0</param>
+        /// <returns></returns>
+        public static byte[] SplitByteArray(byte[] originbyte, int oringinstartindex, int destbytelength, int destbytestartindex = 0)
+        {
+            byte[] result = new byte[destbytelength];
+            System.Array.Copy(originbyte, oringinstartindex, result, destbytestartindex, destbytelength);
+            return result;
+        }
+
+
     }
 }
