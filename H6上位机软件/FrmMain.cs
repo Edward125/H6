@@ -59,9 +59,7 @@ namespace H6
         public const int DBT_USERDEFINED = 0xFFFF;
 
         DeviceType LoginDevice;
-
         bool bRestart = false;
-
 
         /// <summary>
         /// 登陆的设备类型
@@ -188,10 +186,8 @@ namespace H6
         public FrmMain()
         {
             InitializeComponent();
+            ezUSB.AddUSBEventWatcher(USBEventHandler, USBEventHandler, new TimeSpan(0, 0, 3));
         }
-
-
-
 
 
         #region 窗体放大缩小
@@ -264,30 +260,58 @@ namespace H6
         private void Form1_Load(object sender, EventArgs e)
         {
 
-            //
-            ////窗体放大缩小
-            //this.Resize += new EventHandler(Form1_Resize);
-            //X = this.Width;
-            //Y = this.Height;
-            //setTag(this);
-            //Form1_Resize(new object(), new EventArgs());//x,y可在实例化时赋值,最后这句是新加的，在MDI时有用
-            //
+            load();
+
+            ////禁止Form窗口调整大小方法：
+            //this.FormBorderStyle = FormBorderStyle.FixedSingle;
+
+            ////不能使用最大化窗口： 
+            //this.MaximizeBox = false;
+
+            //this.Location = new Point(
+            //(System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Width - this.Width) / 2,
+            //(System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Height - this.Height) / 2
+            // );
+            
+            
+            ////隐藏无线参数框
+            //grbWifiInfo.Visible = true;
+
+            ////LibBodycam.log
+            ////删除文件
+            //string FileName = Application.StartupPath + "\\" + "LibBodycam.log";
+            //if (File.Exists(FileName))
+            //{
+            //    File.Delete(FileName);
+            //}
+
+            ////不能使用最小化窗口： 
+            //this.MinimizeBox = false;
+            ////私版
+            //this.Text = "恒安执法记录仪管理软件,Ver:" + Application.ProductVersion;
+            //ezUSB.AddUSBEventWatcher(USBEventHandler, USBEventHandler, new TimeSpan(0, 0, 3));
+            //InitUI();
+            //bRestart = false;
+          
+        }
 
 
+
+
+        private void load()
+        {
             //禁止Form窗口调整大小方法：
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
 
             //不能使用最大化窗口： 
             this.MaximizeBox = false;
-            //this.Width = 940;
-            //this.Height = 540;
 
             this.Location = new Point(
             (System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Width - this.Width) / 2,
             (System.Windows.Forms.Screen.PrimaryScreen.WorkingArea.Height - this.Height) / 2
              );
-            
-            
+
+
             //隐藏无线参数框
             grbWifiInfo.Visible = true;
 
@@ -303,15 +327,9 @@ namespace H6
             this.MinimizeBox = false;
             //私版
             this.Text = "恒安执法记录仪管理软件,Ver:" + Application.ProductVersion;
-           // this.Text = Application.ProductName + ",Ver:" + Application.ProductVersion; 
-            //公版
-            //this.Text = "执法仪上位机 V1.0.4";
-            ezUSB.AddUSBEventWatcher(USBEventHandler, USBEventHandler, new TimeSpan(0, 0, 3));
-            InitUI();
-            //
 
+            InitUI();
             bRestart = false;
-          
         }
 
         private void USBEventHandler(Object sender, EventArrivedEventArgs e)
@@ -608,7 +626,7 @@ namespace H6
         private void btn_CheckDev_Click(object sender, EventArgs e)
         {
 
- 
+
             int Init_Device_iRet = -1;
             byte[] _IDCode = new byte[5];
 
@@ -1576,66 +1594,12 @@ namespace H6
         {
 
             if (LoginDevice == DeviceType.EasyStorage)
-            {
+
                 BODYCAMDLL_API_YZ.BC_UnInitDevEx(BCHandle);
-                updateMessage(lb_StateInfo, "退出登录成功");
-
-                InitUI();
-
-                return;
-            }
-            else
-            {
+            updateMessage(lb_StateInfo, "退出登录成功");
+            InitUI();
 
 
-                DialogResult dr = MessageBox.Show("是否确认退出软件,退出点击是(Y),不退出点击否(N)?", "Exit?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (dr == DialogResult.Yes)
-                {
-                    ezUSB.RemoveUSBEventWatcher();
-                    Environment.Exit(0);
-                }
-            }
-  
-
-                //updateMessage(lb_StateInfo, "恢复初始状态.");
-                //InitUI();
-
-                //this.btn_CheckDev.Enabled = true;
-                //this.tb_Password.Text = "";
-                //this.tb_Resolution.Text = "";
-                //this.tb_Battery.Text = "";
-                //this.tb_DevID.Text = "";
-                //this.tb_UnitID.Text = "";
-                //this.tb_UserID.Text = "";
-                //this.tb_UnitName.Text = "";
-                //this.tb_UserName.Text = "";
-                ////this.cb_FileType.Text = "";
-                ////this.tb_NewPassword.Text = "";
-                //this.tb_FilePath.Text = "";
-                //btn_Wireles_Edit.Enabled = false;
-                //btnRefreshWifi.Enabled = false;
-                //btnReadWireless.Enabled = false;
-
-                //H6Init_Device_iRet = -1; //H6 初始化返回值
-                //H8Init_Device_iRet = -1; //H8 初始化返回值
-                //    //设置密码
-                //pg_Updata.Value = 0;//设置进度栏的当有位置为0
-                //tb_FilePath.Clear();//清空文本
-                //DestinFolder = string.Empty;
-                //str = "";
-
-                //btnReadDeviceInfo.Enabled = false;
-                //Lb_WifiMode.SelectedIndex = -1;
-                //comboWifiName.SelectedIndex = -1;
-                
-                ////内容清空
-                //lb_WifiName.Text = "";
-                //lb_WifiPassWord.Text = "";
-                //Lb_WifiMode.Text = "";
-                //tb_ServerIP.Text = "";
-                //tb_ServerPort.Text = "";
-                //DevicePassword = "";
-            
 
 
         }
