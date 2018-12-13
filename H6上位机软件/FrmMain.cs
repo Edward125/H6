@@ -35,6 +35,10 @@ namespace H6
         FileStream FormerOpen;//实例化FileStream类
         FileStream ToFileOpen;//实例化FileStream类
 
+        bool bCheckDevice = false; //
+        bool bCopyFile = false;//是否正在copy文件,复制期间，不能关闭和重启
+
+
 
         public enum ServerType
         {
@@ -557,6 +561,9 @@ namespace H6
         {
             //progressBar1.Value = 0;//设置进度栏的当前位置为0
             //progressBar1.Minimum = 0;//设置进度栏的最小值为0
+            btn_FilePathChose.Enabled = false;
+            btn_UpdataFile.Enabled = false;
+            bCopyFile = true;
             tspbar.Visible = true;
             tspbar.Value = 0;
             tspbar.Minimum = 0;
@@ -576,6 +583,7 @@ namespace H6
                 int tem_n = 1;//设置进度栏中进度块的增加个数
                 while (copied <= ((int)FormerOpen.Length - SectSize))//拷贝主体部分
                 {
+                    Application.DoEvents();
                     FileSize = FormerOpen.Read(buffer, 0, SectSize);//从0开始读，每次最大读SectSize
                     FormerOpen.Flush();//清空缓存
                     ToFileOpen.Write(buffer, 0, SectSize);//向目的文件写入字节
@@ -610,7 +618,9 @@ namespace H6
             updateMessage(lb_StateInfo, "升级文件拷贝完成.....");
             updateMessage(lb_StateInfo, "请拔掉USB数据线，静待系统自动升级.....");
             tspbar.Visible = false;
-
+            bCopyFile = false;
+            btn_UpdataFile.Enabled = true;
+            btn_FilePathChose.Enabled = true;
 
 
             /*
@@ -636,26 +646,21 @@ namespace H6
                         case WM_DEVICECHANGE:
                             break;
                         case DBT_DEVICEARRIVAL://U盘插入
-                            DriveInfo[] s = DriveInfo.GetDrives();
-                            foreach (DriveInfo drive in s)
-                            {
-                                if (drive.DriveType == DriveType.Removable)
-                                {
 
-                                    updateMessage(lb_StateInfo, "U盘已插入，盘符为:" + drive.Name.ToString());
-                                    this.btn_EcjetSD.Enabled = true;
-                                    Thread.Sleep(1000);
-                                    //DestinFolder = @"D:\";
-                                    DestinFolder = drive.Name.ToString();
-                                    ///lb_StateInfo.Items.Add(DestinFolder);
-                                    /*
-                                    if (!isCopyEnd)
+                            if (bCheckDevice)
+                            {
+                                DriveInfo[] s = DriveInfo.GetDrives();
+                                foreach (DriveInfo drive in s)
+                                {
+                                    if (drive.DriveType == DriveType.Removable)
                                     {
-                                        isCopy = true;
-                                        CopyFile(drive.Name + ConfigurationManager.AppSettings["sourcedir"].ToString());
+                                        updateMessage(lb_StateInfo, "U盘已插入，盘符为:" + drive.Name.ToString());
+                                        this.btn_EcjetSD.Enabled = true;
+                                        this.btn_UpdataFile.Enabled = true;
+                                        //Thread.Sleep(1000);
+                                        DestinFolder = drive.Name.ToString();
+                                        break;
                                     }
-                                    */
-                                    break;
                                 }
                             }
                             break;
@@ -670,7 +675,10 @@ namespace H6
                         case DBT_DEVICEQUERYREMOVEFAILED:
                             break;
                         case DBT_DEVICEREMOVECOMPLETE: //U盘卸载
-                            updateMessage(lb_StateInfo, "U盘已卸载！");
+                            if (bCheckDevice)
+                            {
+                                updateMessage(lb_StateInfo , "U盘已卸载！");
+                            }
                             break;
                         case DBT_DEVICEREMOVEPENDING:
                             break;
@@ -963,6 +971,7 @@ namespace H6
 
             //登陆成功
             LogonInitUI();
+            bCheckDevice = true;
 
             //同步时间
             if (SyncDeviceTime(LoginDevice, DevicePassword))
@@ -1344,9 +1353,10 @@ namespace H6
                   //this.tb_NewPassword.Enabled = false;
                   //this.cb_FileType.Enabled = true; 
                   this.btn_FilePathChose.Enabled = true;
-                  this.btn_UpdataFile.Enabled = true;
+                 // this.btn_UpdataFile.Enabled = true;
                   this.btn_SetMSDC.Enabled = false;
                   this.btn_4G.Enabled = false;
+
                   tb_FilePath.Enabled = true;
                   updateMessage(lb_StateInfo, "执法仪已进入U盘模式.");
 
@@ -1450,6 +1460,7 @@ namespace H6
             if (ofg.ShowDialog() == DialogResult.OK)//打开文件对话框
             {
                 tb_FilePath.Text = ofg.FileName;//获取源文件的路径
+                tb_FilePath.Select(this.tb_FilePath.TextLength, 0);//光标定位到文本最后
             }
         }
 
@@ -1486,10 +1497,13 @@ namespace H6
 
             str = tb_FilePath.Text;//记录源文件的路径
             str = "\\" + str.Substring(str.LastIndexOf('\\') + 1, str.Length - str.LastIndexOf('\\') - 1);//获取源文件的名称
+            FileInfo fi = new FileInfo(tb_FilePath.Text.Trim());
+            str = fi.Name;
             
             if (str != "")
             {
                 //MessageBox.Show(str);
+                updateMessage (lb_StateInfo ,"正在复制升级文件:" + fi.Name);
                 thdAddFile = new Thread(new ThreadStart(SetAddFile));//创建一个线程
                 thdAddFile.Start();//执行当前线程
             }
@@ -1503,23 +1517,29 @@ namespace H6
         //关闭按钮
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (bRestart)
-            {
-                //ezUSB.RemoveUSBEventWatcher();
-                //Environment.Exit(0);
-            }
+
+            if (bCopyFile)
+                e.Cancel = true;
             else
             {
-                DialogResult dr = MessageBox.Show("是否确认退出软件,退出点击是(Y),不退出点击否(N)?", "Exit?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (dr == DialogResult.Yes)
+
+                if (bRestart)
                 {
-                    ezUSB.RemoveUSBEventWatcher();
-                    Environment.Exit(0);
+                    //ezUSB.RemoveUSBEventWatcher();
+                    //Environment.Exit(0);
                 }
                 else
-                    e.Cancel = true;
+                {
+                    DialogResult dr = MessageBox.Show("是否确认退出软件,退出点击是(Y),不退出点击否(N)?", "Exit?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (dr == DialogResult.Yes)
+                    {
+                        ezUSB.RemoveUSBEventWatcher();
+                        Environment.Exit(0);
+                    }
+                    else
+                        e.Cancel = true;
+                }
             }
-            
 
       
         }
@@ -1672,16 +1692,15 @@ namespace H6
 
         private void btn_exit_Click(object sender, EventArgs e)
         {
+            if (!bCopyFile)
+            {
+                if (LoginDevice == DeviceType.EasyStorage)
 
-            if (LoginDevice == DeviceType.EasyStorage)
-
-                BODYCAMDLL_API_YZ.BC_UnInitDevEx(BCHandle);
-            updateMessage(lb_StateInfo, "退出登录成功");
-            InitUI();
-
-
-
-
+                    BODYCAMDLL_API_YZ.BC_UnInitDevEx(BCHandle);
+                updateMessage(lb_StateInfo, "退出登录成功");
+                InitUI();
+                bCheckDevice = false;
+            }
         }
 
         private void btn_EcjetSD_Click(object sender, EventArgs e)
@@ -2338,13 +2357,16 @@ namespace H6
 
         private void brnRestart_Click(object sender, EventArgs e)
         {
-            DialogResult dr = MessageBox.Show("是否确认重启软件,退出点击是(Y),不退出点击否(N)?", "Restart?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (dr == DialogResult.Yes)
+            if (!bCopyFile)
             {
-               bRestart = true;
-               ezUSB.RemoveUSBEventWatcher();
-               Application.Restart();
+                DialogResult dr = MessageBox.Show("是否确认重启软件,退出点击是(Y),不退出点击否(N)?", "Restart?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (dr == DialogResult.Yes)
+                {
+                    bRestart = true;
+                    ezUSB.RemoveUSBEventWatcher();
+                    Application.Restart();
 
+                }
             }
   
         }
