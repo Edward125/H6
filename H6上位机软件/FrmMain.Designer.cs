@@ -62,6 +62,7 @@
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.btn_UpdataFile = new System.Windows.Forms.Button();
             this.btn_FilePathChose = new System.Windows.Forms.Button();
+            this.tb_FilePath = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.gb_StatusCommand = new System.Windows.Forms.GroupBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
@@ -128,10 +129,10 @@
             this.btnClearInfo = new System.Windows.Forms.Button();
             this.lblNotice = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.tb_FilePath = new System.Windows.Forms.TextBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.tspBar = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tspBar = new System.Windows.Forms.ToolStripProgressBar();
+            this.tR3 = new System.Windows.Forms.Timer(this.components);
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -485,6 +486,15 @@
             this.btn_FilePathChose.Text = "选择";
             this.btn_FilePathChose.UseVisualStyleBackColor = true;
             this.btn_FilePathChose.Click += new System.EventHandler(this.btn_FilePathChose_Click);
+            // 
+            // tb_FilePath
+            // 
+            this.tb_FilePath.Location = new System.Drawing.Point(59, 14);
+            this.tb_FilePath.Name = "tb_FilePath";
+            this.tb_FilePath.ReadOnly = true;
+            this.tb_FilePath.Size = new System.Drawing.Size(244, 21);
+            this.tb_FilePath.TabIndex = 24;
+            this.tb_FilePath.DoubleClick += new System.EventHandler(this.tb_FilePath_DoubleClick);
             // 
             // label12
             // 
@@ -1224,15 +1234,6 @@
             this.timer1.Enabled = true;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // tb_FilePath
-            // 
-            this.tb_FilePath.Location = new System.Drawing.Point(59, 14);
-            this.tb_FilePath.Name = "tb_FilePath";
-            this.tb_FilePath.ReadOnly = true;
-            this.tb_FilePath.Size = new System.Drawing.Size(244, 21);
-            this.tb_FilePath.TabIndex = 24;
-            this.tb_FilePath.DoubleClick += new System.EventHandler(this.tb_FilePath_DoubleClick);
-            // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1244,18 +1245,23 @@
             this.statusStrip1.TabIndex = 21;
             this.statusStrip1.Text = "statusStrip1";
             // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.ForeColor = System.Drawing.Color.Blue;
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(280, 17);
+            this.toolStripStatusLabel1.Text = "该软件支持机型:H6/H8系类、G5/G9系列、R3系列";
+            // 
             // tspBar
             // 
             this.tspBar.Name = "tspBar";
             this.tspBar.Size = new System.Drawing.Size(620, 16);
             this.tspBar.Visible = false;
             // 
-            // toolStripStatusLabel1
+            // tR3
             // 
-            this.toolStripStatusLabel1.ForeColor = System.Drawing.Color.Blue;
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(229, 17);
-            this.toolStripStatusLabel1.Text = "该软件支持机型:H6/H8系类、G5/G9系列";
+            this.tR3.Interval = 10;
+            this.tR3.Tick += new System.EventHandler(this.tR3_Tick);
             // 
             // FrmMain
             // 
@@ -1413,6 +1419,7 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripProgressBar tspBar;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.Timer tR3;
     }
 }
 
