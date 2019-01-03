@@ -13,6 +13,7 @@ using System.IO;
 using System.Threading;
 using System.Runtime.InteropServices;
 using System.Net;
+using H6;
 
 namespace H6
 {
@@ -37,6 +38,9 @@ namespace H6
 
         bool bCheckDevice = false; //
         bool bCopyFile = false;//是否正在copy文件,复制期间，不能关闭和重启
+
+
+       // public DChiDV_WST.RESULT_FLAG WST_Flag;
 
 
 
@@ -72,7 +76,8 @@ namespace H6
         {
             NA,
             EasyStorage,
-            Cammpro
+            Cammpro,
+            WST
         }
 
         /// <summary>
@@ -465,7 +470,7 @@ namespace H6
             if (File.Exists(@tb_FilePath.Text))
             {
                // CopyFile(tb_FilePath.Text, ToFile, 1024, pg_Updata);//复制文件
-                CopyFile(tb_FilePath.Text, ToFile, 4096, tspBar );//复制文件
+                CopyFile(tb_FilePath.Text, ToFile, 102400, tspBar );//复制文件
             }
             else
             {
@@ -738,15 +743,12 @@ namespace H6
 
                 //Eeay Storage
                 Init_Device_iRet = BODYCAMDLL_API_YZ.BC_ProbeDevEx (out _IDCode[0]);
-
                 if (Init_Device_iRet == 1)
                 {
                     BCHandle = BODYCAMDLL_API_YZ.BC_InitDevEx(_IDCode);
                     IDCode = System.Text.Encoding.Default.GetString(_IDCode, 0, _IDCode.Length);
-
                     //int iRet = -1;
                     //BCHandle =  BODYCAMDLL_API_YZ.Init_Device(IDCode, ref  iRet);
-                    
                     if (BCHandle != IntPtr.Zero  )
                     {
                         updateMessage(lb_StateInfo, "检测到设备" + IDCode + ".");
@@ -758,6 +760,25 @@ namespace H6
                         this.comboUserID.SelectedIndex = 0;
                         comboUserID.Enabled = true;
                     }
+
+                }
+
+                //WST
+                DChiDV_WST.Init_Device("ABCDE", ref Init_Device_iRet);
+                if (Init_Device_iRet == 1)
+                {
+                    LoginDevice = DeviceType.WST;
+                    //uint  i = 0;
+                    //DChiDV_WST.GetIDCode(ref IDCode, ref i );
+                    updateMessage(lb_StateInfo, "检测到设备成功,型号:R3.");
+                    this.btn_Logon.Enabled = true;
+                    this.btn_CheckDev.Enabled = false;
+                    this.tb_Password.Enabled = true;
+                    this.tb_Password.Focus();
+                    this.comboUserID.SelectedIndex = 0;
+                    comboUserID.Enabled = true;
+
+                 
                 }
                 else
                 {
@@ -791,6 +812,7 @@ namespace H6
             int fps = -1;
             int bps = -1;
             int _ReadDeviceResolution_iRet = -1;
+            uint iRet = 0;
 
 
             if (LoginDevice == DeviceType.Cammpro)
@@ -802,7 +824,10 @@ namespace H6
               _ReadDeviceResolution_iRet =  BODYCAMDLL_API_YZ.BC_GetMasterVEInfo(BCHandle, DevicePassword , out Resolution_Width,out  Resolution_Height, out fps, out bps);
 
 
-            if (_ReadDeviceResolution_iRet == 1)
+            if (LoginDevice == DeviceType.WST )
+                DChiDV_WST.ReadDeviceResolution(ref  Resolution_Width, ref  Resolution_Height, password, ref iRet);
+
+            if (_ReadDeviceResolution_iRet == 1 || iRet == 1)
             {
                 // this.tb_Resolution.Text = Resolution_Width.ToString() + " X " + Resolution_Height.ToString();
                 //updateMessage(lb_StateInfo, "获取视频分辨率参数成功.");
@@ -835,6 +860,7 @@ namespace H6
 
             deviceinfo = new DeviceInfo();
             int GetZFYInfo_iRet = -1;
+            uint iRet = 0;
             if (LoginDevice == DeviceType.Cammpro)
             {
                 ZFYDLL_API_MC.ZFY_INFO uuDevice = new ZFYDLL_API_MC.ZFY_INFO();//执法仪结构信息定义
@@ -852,6 +878,31 @@ namespace H6
                 else
                     return false;
             }
+
+            if (LoginDevice == DeviceType.WST)
+            {
+                DChiDV_WST.ZFY_INFO uuDevice = new DChiDV_WST.ZFY_INFO ();
+                DChiDV_WST.GetZFYInfo(ref uuDevice, password, ref iRet);
+                if (iRet == 1)
+                {
+                    deviceinfo.cSerial = System.Text.Encoding.Default.GetString(uuDevice.cSerial);
+                    deviceinfo.userNo = System.Text.Encoding.Default.GetString(uuDevice.userNo);
+                    deviceinfo.userName = System.Text.Encoding.Default.GetString(uuDevice.userName);
+                    deviceinfo.unitNo = System.Text.Encoding.Default.GetString(uuDevice.unitNo);
+                    deviceinfo.unitName = System.Text.Encoding.Default.GetString(uuDevice.unitName);
+                    return true;
+                }
+                else
+                    return false;
+
+            }
+
+
+
+
+
+
+
             if (LoginDevice == DeviceType.EasyStorage )
             {
                 //BODYCAMDLL_API_YZ.ZFY_INFO uuDevice = new BODYCAMDLL_API_YZ.ZFY_INFO();//执法仪结构信息定义
@@ -890,18 +941,20 @@ namespace H6
         private bool SyncDeviceTime(DeviceType  devicetype, string password)
         {
             int SyncDevTime_iRet = -1;
+            uint iRet = 0;
             if (LoginDevice == DeviceType.Cammpro )
             {
                 ZFYDLL_API_MC.SyncDevTime(password, ref SyncDevTime_iRet);
                 if (SyncDevTime_iRet == 5)
                     return true;
             }
-            //if (LoginDevice == DeviceType.H8)
-            //{
-            //    BODYCAMDLL_API_YZ.SyncDevTime(password, ref SyncDevTime_iRet);
-            //    if (SyncDevTime_iRet == 5)
-            //        return true;
-            //}
+
+            if (LoginDevice == DeviceType.WST)
+            {
+                DChiDV_WST.SyncDevTime(password, ref iRet);
+                if (iRet  == 5)
+                    return true;
+            }
 
             if (LoginDevice == DeviceType.EasyStorage )
             {
@@ -933,6 +986,7 @@ namespace H6
 
             int Battery_iRet = -1;
             int BatteryLevel = -1;
+            uint iRet = 0;
             switch (LoginDevice)
             {
                 case DeviceType.NA:
@@ -943,6 +997,9 @@ namespace H6
                 //case DeviceType.H8:
                 //    BODYCAMDLL_API_YZ.ReadDeviceBatteryDumpEnergy(ref BatteryLevel, DevicePassword, ref Battery_iRet);
                    //break;
+                case DeviceType.WST:
+                    DChiDV_WST.ReadDeviceBatteryDumpEnergy(ref BatteryLevel, DevicePassword, ref iRet);
+                    break;
                 case DeviceType.EasyStorage:
                     if (comboUserID.SelectedIndex == 0)
                         Battery_iRet =  BODYCAMDLL_API_YZ.BC_LoginEx(BCHandle, "admin", DevicePassword);
@@ -953,17 +1010,26 @@ namespace H6
                     break;
             }
 
-
-
-            if (Battery_iRet != 1)
+            if (LoginDevice == DeviceType.WST)
             {
-                updateMessage(lb_StateInfo, "密码错误,登录失败.");
-                tb_Password.SelectAll();
-                tb_Password.Focus();
-                return;
+                if (iRet != 1)
+                {
+                    updateMessage(lb_StateInfo, "密码错误,登录失败.");
+                    tb_Password.SelectAll();
+                    tb_Password.Focus();
+                    return;
+                }
             }
-
-
+            else
+            {
+                if (Battery_iRet != 1)
+                {
+                    updateMessage(lb_StateInfo, "密码错误,登录失败.");
+                    tb_Password.SelectAll();
+                    tb_Password.Focus();
+                    return;
+                }
+            }
 
             if (LoginDevice == DeviceType.EasyStorage)
                 BODYCAMDLL_API_YZ.BC_GetBatVal(BCHandle, DevicePassword, out BatteryLevel);
@@ -1029,10 +1095,6 @@ namespace H6
             }
 
 
-            this.btn_OK.Enabled = false;
-            this.btnReadWireless.Enabled = true;
-            this.btnRefreshWifi.Enabled = true;
-            this.btn_Wireles_Edit.Enabled = true;
             return;
 
         }
@@ -1125,9 +1187,7 @@ namespace H6
 
         private void btn_Logon_Click(object sender, EventArgs e)
         {
-
             LogIn();
-
         }
 
 
@@ -1146,8 +1206,10 @@ namespace H6
                 this.tb_UnitID.Enabled = true;
                 this.tb_UnitName.Enabled = true;
                 this.btn_OK.Enabled = true;
-                if (LoginDevice == DeviceType.Cammpro)
+
+                if (LoginDevice == DeviceType.Cammpro || LoginDevice  == DeviceType.WST )
                     this.tb_DevID.Enabled = true;
+                
 
             }
             else if(this.btn_Edit.Text == "取消")
@@ -1178,6 +1240,7 @@ namespace H6
         private bool WriteDeviceInfo(DeviceType devicetype,string password, DeviceInfo deviceinfo)
         {
             int WriteZFYInfo_iRet = -1;
+            uint iRet = 0;
             if (LoginDevice == DeviceType.Cammpro) 
             {
                 ZFYDLL_API_MC.ZFY_INFO info = new ZFYDLL_API_MC.ZFY_INFO();
@@ -1188,6 +1251,22 @@ namespace H6
                 info.unitName = Encoding.Default.GetBytes(deviceinfo.unitName.PadRight(33, '\0').ToArray());
                 ZFYDLL_API_MC.WriteZFYInfo(ref info, password, ref WriteZFYInfo_iRet);
             }
+
+
+            if (LoginDevice == DeviceType.WST)
+            {
+                DChiDV_WST.ZFY_INFO info = new DChiDV_WST.ZFY_INFO();
+                info.cSerial = Encoding.Default.GetBytes(deviceinfo.cSerial.PadRight(8, '\0').ToArray());
+                info.userNo = Encoding.Default.GetBytes(deviceinfo.userNo.PadRight(7, '\0').ToArray());
+                info.userName = Encoding.Default.GetBytes(deviceinfo.userName.PadRight(33, '\0').ToArray());
+                info.unitNo = Encoding.Default.GetBytes(deviceinfo.unitNo.PadRight(13, '\0').ToArray());
+                info.unitName = Encoding.Default.GetBytes(deviceinfo.unitName.PadRight(33, '\0').ToArray());
+                DChiDV_WST.WriteZFYInfo(ref info, password , ref iRet);
+
+            }
+
+
+
             if (LoginDevice == DeviceType.EasyStorage ) /// debug
             {
                 BODYCAMDLL_API_YZ.ZFY_INFO info = new BODYCAMDLL_API_YZ.ZFY_INFO();
@@ -1208,7 +1287,7 @@ namespace H6
                 WriteZFYInfo_iRet =  BODYCAMDLL_API_YZ.BC_SetDevInfo(BCHandle, password,ref info);
                 
             }
-            if (WriteZFYInfo_iRet == 1)
+            if (WriteZFYInfo_iRet == 1 || iRet == 1)
                 return true;
             return false;
            
@@ -1315,6 +1394,7 @@ namespace H6
         private bool SetDeviceMSDC(DeviceType logindevice, string password)
         {
             int iRet_SetMSDC = -1;
+            uint iRet = 0;
             if (logindevice == DeviceType.EasyStorage)
             {
                 //BODYCAMDLL_API_YZ.SetMSDC(password, ref iRet_SetMSDC);
@@ -1332,6 +1412,16 @@ namespace H6
                 else
                     return false;
             }
+
+            if (logindevice == DeviceType.WST)
+            {
+                DChiDV_WST.SetMSDC(password, ref iRet);
+                if (iRet == 7)
+                    return true;
+                else
+                    return false;
+            }
+
                
             return false;
         }
@@ -1667,20 +1757,41 @@ namespace H6
           
             grbChangePassword.Enabled = false;
             comboUserID.Enabled = false;
-            btn_ChangePWd.Enabled = true;
+            if (LoginDevice == DeviceType.Cammpro || LoginDevice == DeviceType.EasyStorage)
+            {
+                btn_ChangePWd.Enabled = true;
+                btnEditServer.Enabled = true;
+                btnReadServer.Enabled = true;
+                btn_Wireles_Edit.Enabled = true;
+                btnRefreshWifi.Enabled = true;
+
+                
+                this.btnReadWireless.Enabled = true;
+                this.btnRefreshWifi.Enabled = true;
+                this.btn_Wireles_Edit.Enabled = true;
+            }
+  
+
+
+
+
+
+
+
             if (LoginDevice == DeviceType.Cammpro)
             {
                 comboServType.SelectedIndex = 0;
                 //btn_ChangePWd.Enabled = true;
 
             }
-            else
+            else if (LoginDevice == DeviceType.EasyStorage )
             {
                 comboServType.Enabled = true;
                 comboServType.SelectedIndex = 0;
             }
-            btnEditServer.Enabled = true;
-            btnReadServer.Enabled = true;
+            
+            
+
 
             //btn_FilePathChose.Enabled = true;
             //btn_UpdataFile.Enabled = true;
@@ -1695,11 +1806,25 @@ namespace H6
             if (!bCopyFile)
             {
                 if (LoginDevice == DeviceType.EasyStorage)
+                      BODYCAMDLL_API_YZ.BC_UnInitDevEx(BCHandle);
 
-                    BODYCAMDLL_API_YZ.BC_UnInitDevEx(BCHandle);
+                int iRet = 0;
+                if (LoginDevice == DeviceType.WST)
+                {
+                    DChiDV_WST.Release_Device(ref iRet);
+                    if (iRet == 1)
+                    {
+                        updateMessage(lb_StateInfo, "退出登录成功");
+                        InitUI();
+                        bCheckDevice = false;
+                    }
+                }
+
                 updateMessage(lb_StateInfo, "退出登录成功");
                 InitUI();
                 bCheckDevice = false;
+  
+        
             }
         }
 

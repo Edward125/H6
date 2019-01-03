@@ -1426,6 +1426,93 @@ namespace H6
     }
 
 
+    /// <summary>
+    /// 为视特 R3
+    /// </summary>
+    class DChiDV_WST
+    {
+        //执法仪信息结构体
+        //[StructLayout(LayoutKind.Sequential, Pack = 1)]
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
+        public struct ZFY_INFO
+        {
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
+            public byte[] cSerial;               //执法记录仪产品序号，不可为空
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 7)]
+            public byte[] userNo;                //执法记录仪使用者警号，不可为空
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 33)]
+            public byte[] userName;              //执法记录仪使用者姓名，管理系统使用警号关联时可为空
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 13)]
+            public byte[] unitNo;                //执法记录仪使用者单位编号，管理系统使用警号关联时可为空
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 33)]
+            public byte[] unitName;              //执法记录仪使用者单位名称，管理系统使用警号关联时可为空
+
+
+        };
+
+
+        public enum RESULT_FLAG
+        {
+            /// CONNECT_SUCCESS -> 0X01
+            CONNECT_SUCCESS = 1, //执法记录仪连接成功
+            CONNECT_FAILED,      //执法记录仪连接失败
+            CHECK_PWD_SUCCESS,   //执法记录仪管理员密码校验成功
+            CHECK_PWD_FAILED,    //执法记录仪管理员密码校验失败
+            SET_SYSTEMTIME_SUCCESS,   //执法记录仪系统时间同步成功
+            SET_SYSTEMTIME_FAILED,   //执法记录仪系统时间同步失败
+            MSDC_SUCCESS,         //执法记录仪转换移动磁盘模式成功
+            MSDC_FAILED,         //执法记录仪转换移动磁盘模式失败
+        }
+
+
+
+        
+        //DCHI_Dll Init_Device(char *IDCode,unsigned short int *iRet);
+        //DCHI_Dll GetIDCode(char *IDCode,unsigned short int *iRet);
+        //DCHI_Dll SetIDCode(char* IDCode,char *sPwd, unsigned short int *uRet);
+        //DCHI_Dll GetZFYInfo(ZFY_INFO *info,char *sPwd,unsigned short int *iRet);
+        //DCHI_Dll WriteZFYInfo(ZFY_INFO *info,char *sPwd,unsigned short int *iRet);
+        //DCHI_Dll SyncDevTime(char *sPwd,unsigned short int *iRet);
+        //DCHI_Dll SetMSDC(char *sPwd,unsigned short int *iRet);
+        //DCHI_Dll ReadDeviceResolution(int *Width,int *Height,char *sPwd,unsigned short int *iRet);
+        //DCHI_Dll ReadDeviceBatteryDumpEnergy(int *Battery,char *sPwd,unsigned short int *iRet);
+        //DCHI_Dll Release_Device(unsigned short int *iRet);
+
+
+        [DllImport("DChiDV.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int Init_Device(string IDCode, ref int iRet);
+
+        //[DllImport("DChiDV.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        //public static extern int Init_Device(out byte[] IDCode, ref int iRet);
+
+        [DllImport("DChiDV.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int GetIDCode(ref string IDCode, ref uint iRet);
+
+
+        [DllImport("DChiDV.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int Release_Device(ref int iRet);
+
+
+
+        // 设置为移动磁盘模式
+        [DllImport("DChiDV.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]    
+        public static extern int SetMSDC(string sPwd, ref uint iRet);
+        // 同步执法记录仪时间
+         [DllImport("DChiDV.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int SyncDevTime(string sPwd, ref uint iRet);
+        //读取当前录像分辨率
+         [DllImport("DChiDV.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ReadDeviceResolution(ref int Width, ref int Height, string sPwd, ref uint iRet);
+        //读取电量 百分比
+         [DllImport("DChiDV.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ReadDeviceBatteryDumpEnergy(ref int Battery, string sPwd, ref uint iRet);
+        //获取记录仪信息
+         [DllImport("DChiDV.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int GetZFYInfo(ref ZFY_INFO info, string sPwd, ref uint iRet);
+        //写入记录仪信息
+         [DllImport("DChiDV.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int WriteZFYInfo(ref ZFY_INFO info, string sPwd, ref uint iRet);
+    }
 
     #endregion
 
