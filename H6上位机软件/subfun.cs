@@ -1480,7 +1480,7 @@ namespace H6
 
 
         [DllImport("DChiDV.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern int Init_Device(string IDCode, ref int iRet);
+        public static extern int Init_Device(string IDCode, ref uint iRet);
 
         //[DllImport("DChiDV.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         //public static extern int Init_Device(out byte[] IDCode, ref int iRet);

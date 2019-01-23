@@ -993,11 +993,57 @@ namespace H6
 
 
             int Init_Device_iRet = -1;
+            uint iRet = 0;
             byte[] _IDCode = new byte[5];
-
-
             try
             {
+
+                //WST
+                tR3.Enabled = true;
+                tR3.Start();
+                DChiDV_WST.Init_Device("ABCDE", ref iRet);
+                if (iRet == 1)
+                {
+                    tR3.Enabled = false;
+                    LoginDevice = DeviceType.WST;
+                    //uint  i = 0;
+                    //DChiDV_WST.GetIDCode(ref IDCode, ref i );
+                    if (bR3USB)
+                        updateMessage(lb_StateInfo, "检测到设备成功,型号:R3,当前设备已经进入U盘模式,无法再次重新进入U盘.");
+                    else
+                        updateMessage(lb_StateInfo, "检测到设备成功,型号:R3.");
+                    this.btn_Logon.Enabled = true;
+                    this.btn_CheckDev.Enabled = false;
+                    this.tb_Password.Enabled = true;
+                    this.tb_Password.Focus();
+                    this.comboUserID.SelectedIndex = 0;
+                    comboUserID.Enabled = true;
+                    return;
+                }
+
+                //Eeay Storage
+                Init_Device_iRet = BODYCAMDLL_API_YZ.BC_ProbeDevEx(out _IDCode[0]);
+                if (Init_Device_iRet == 1)
+                {
+                    BCHandle = BODYCAMDLL_API_YZ.BC_InitDevEx(_IDCode);
+                    IDCode = System.Text.Encoding.Default.GetString(_IDCode, 0, _IDCode.Length);
+                    //int iRet = -1;
+                    //BCHandle =  BODYCAMDLL_API_YZ.Init_Device(IDCode, ref  iRet);
+                    if (BCHandle != IntPtr.Zero)
+                    {
+                        updateMessage(lb_StateInfo, "检测到设备" + IDCode + ".");
+                        LoginDevice = DeviceType.EasyStorage;
+                        this.btn_Logon.Enabled = true;
+                        this.btn_CheckDev.Enabled = false;
+                        this.tb_Password.Enabled = true;
+                        this.tb_Password.Focus();
+                        this.comboUserID.SelectedIndex = 0;
+                        comboUserID.Enabled = true;
+                        return;
+                    }
+
+                }
+
                  //Commpro
                  ZFYDLL_API_MC.Init_Device(IDCode, ref  Init_Device_iRet);
                  if (Init_Device_iRet == 1)
@@ -1012,55 +1058,6 @@ namespace H6
                      comboUserID.Enabled = true;
                      return;
                  }
-
-                //Eeay Storage
-                Init_Device_iRet = BODYCAMDLL_API_YZ.BC_ProbeDevEx (out _IDCode[0]);
-                if (Init_Device_iRet == 1)
-                {
-                    BCHandle = BODYCAMDLL_API_YZ.BC_InitDevEx(_IDCode);
-                    IDCode = System.Text.Encoding.Default.GetString(_IDCode, 0, _IDCode.Length);
-                    //int iRet = -1;
-                    //BCHandle =  BODYCAMDLL_API_YZ.Init_Device(IDCode, ref  iRet);
-                    if (BCHandle != IntPtr.Zero  )
-                    {
-                        updateMessage(lb_StateInfo, "检测到设备" + IDCode + ".");
-                        LoginDevice = DeviceType.EasyStorage;
-                        this.btn_Logon.Enabled = true;
-                        this.btn_CheckDev.Enabled = false;
-                        this.tb_Password.Enabled = true;
-                        this.tb_Password.Focus();
-                        this.comboUserID.SelectedIndex = 0;
-                        comboUserID.Enabled = true;
-                    }
-
-                }
-
-                //WST
-                tR3.Enabled = true;
-                tR3.Start();
-                DChiDV_WST.Init_Device("ABCDE", ref Init_Device_iRet);
-                //SendKeys.Send("{ENTER}");
-                if (Init_Device_iRet == 1)
-                {
-                    tR3.Enabled = false;
-                    LoginDevice = DeviceType.WST;
-                    //uint  i = 0;
-                    //DChiDV_WST.GetIDCode(ref IDCode, ref i );
-                    if (bR3USB)
-                        updateMessage(lb_StateInfo, "检测到设备成功,型号:R3,当前设备已经进入U盘模式,无法再次重新进入U盘.");
-                    else
-                        updateMessage(lb_StateInfo, "检测到设备成功,型号:R3.");
-                       
-                   
-                    this.btn_Logon.Enabled = true;
-                    this.btn_CheckDev.Enabled = false;
-                    this.tb_Password.Enabled = true;
-                    this.tb_Password.Focus();
-                    this.comboUserID.SelectedIndex = 0;
-                    comboUserID.Enabled = true;
-
-                 
-                }
                 else
                 {
                     updateMessage(lb_StateInfo, "未发现可登陆的设备,请重新连接设备重试.");
@@ -2000,6 +1997,8 @@ namespace H6
             {
                 if (bR3USB)
                     this.btn_SetMSDC.Enabled = false;
+                else
+                    this.btn_SetMSDC.Enabled = true;
             }
             else
                 this.btn_SetMSDC.Enabled = true;
