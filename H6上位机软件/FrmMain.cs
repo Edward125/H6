@@ -607,7 +607,11 @@ namespace H6
             //不能使用最小化窗口： 
             this.MinimizeBox = false;
             //私版
-            this.Text = "恒安执法记录仪管理软件,Ver:" + Application.ProductVersion;
+#if DEBUG
+            this.Text = "恒安执法记录仪管理软件内部版,Ver:" + Application.ProductVersion;
+#else
+            this.Text = "恒安执法记录仪管理软件,Release Ver:" + Application.ProductVersion;
+#endif
 
             InitUI();
             bRestart = false;
@@ -1000,6 +1004,7 @@ namespace H6
 
                 //WST
                 tR3.Enabled = true;
+                bR3USB = false;
                 tR3.Start();
                 DChiDV_WST.Init_Device("ABCDE", ref iRet);
                 if (iRet == 1)
@@ -1485,8 +1490,10 @@ namespace H6
                 this.tb_UnitName.Enabled = true;
                 this.btn_OK.Enabled = true;
 
+#if DEBUG
                 if (LoginDevice == DeviceType.Cammpro || LoginDevice  == DeviceType.WST )
                     this.tb_DevID.Enabled = true;
+#endif
                 
 
             }
@@ -1724,6 +1731,7 @@ namespace H6
                  // this.btn_UpdataFile.Enabled = true;
                   this.btn_SetMSDC.Enabled = false;
                   this.btn_4G.Enabled = false;
+                  btn_OK.Enabled = false;
 
                   tb_FilePath.Enabled = true;
                   updateMessage(lb_StateInfo, "执法仪已进入U盘模式.");
@@ -2015,6 +2023,7 @@ namespace H6
             this.tb_UserName.Enabled = true;
             this.tb_DevID.Enabled = true;
 
+
             //this.cb_FileType.Enabled = false; 
 
            // this.pg_Updata.Enabled = true;
@@ -2043,12 +2052,19 @@ namespace H6
             tb_4GAPN.Enabled = false;
             tb_4GPIN.Enabled = false;
 
-          
+       
             grbChangePassword.Enabled = false;
+
+
+
             comboUserID.Enabled = false;
             if (LoginDevice == DeviceType.Cammpro || LoginDevice == DeviceType.EasyStorage)
             {
+#if DEBUG
                 btn_ChangePWd.Enabled = true;
+#else
+                btn_ChangePWd.Enabled = false;
+#endif
                 btnEditServer.Enabled = true;
                 btnReadServer.Enabled = true;
                 btn_Wireles_Edit.Enabled = true;
